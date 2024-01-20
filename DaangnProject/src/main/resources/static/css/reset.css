@@ -1,0 +1,21 @@
+@charset 'UTF-8';
+
+*{margin: 0; padding: 0; box-sizing: border-box;}
+body{color: #333; background: #fff;}
+a{text-decoration: none; color: inherit;}
+img {
+  max-width: 100%;
+  border: 0 none transparent;
+  margin: 0; padding: 0;
+}
+label {
+  cursor: pointer;
+}
+ol,ul,li {
+  list-style: none;
+  margin: 0; padding: 0;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
