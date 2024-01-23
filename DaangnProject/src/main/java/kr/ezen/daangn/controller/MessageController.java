@@ -4,7 +4,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
-import kr.ezen.daangn.vo.Message;
+import kr.ezen.daangn.suport.Message;
 
 @Controller
 public class MessageController {

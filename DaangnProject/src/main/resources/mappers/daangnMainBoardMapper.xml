@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "./mybatis-3-mapper.dtd" >
-<mapper namespace="kr.ezen.daangn.dao.BoardDAO">
+<mapper namespace="kr.ezen.daangn.dao.DaangnMainBoardDAO">
 
-	<select id="selectList" parameterType="hashmap" resultType="BoardVO">
+	<select id="selectList" parameterType="hashmap" resultType="DaangnMainBoardVO">
 		select
 			R.*
 		from
@@ -17,10 +17,7 @@
 						daangn_board
 					<where>
 						<if test="search != null">
-							or subject like '%' || #{search} || '%'			
-						</if>
-						<if test="search != null">
-							or content like '%' || #{search} || '%'			
+							subject like '%' || #{search} || '%' or content like '%' || #{search} || '%'		
 						</if>
 					</where>
 					order by
@@ -36,9 +33,10 @@
 				rnum >= #{startNo}
 			]]>
 	</select>
-	<select id="selectByIdx" parameterType="int" resultType="BoardVO">
+	<select id="selectByIdx" parameterType="int" resultType="DaangnMainBoardVO">
 		select * from daangn_board where idx = #{idx}
 	</select>
+	
 	<select id="selectCount" parameterType="hashmap" resultType="int">
 		select
 			count(*)
@@ -46,10 +44,7 @@
 			daangn_board
 		<where>
 			<if test="search != null">
-				or subject like '%' || #{search} || '%'			
-			</if>
-			<if test="search != null">
-				or content like '%' || #{search} || '%'			
+				subject like '%' || #{search} || '%' or content like '%' || #{search} || '%'		
 			</if>
 		</where>
 	</select>

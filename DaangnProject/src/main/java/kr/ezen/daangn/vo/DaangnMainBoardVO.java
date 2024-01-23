@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class BoardVO {
+public class DaangnMainBoardVO {
 	private int idx;
 	private int ref; // user의 ref인데...
 	
@@ -19,7 +19,7 @@ public class BoardVO {
 	
 	private int count;			// 조회수
 	
-	private MyUserVO myUserVO;
-	private List<BoardFileVO> fileList; // 사진등록
+	private DaangnMemberVO memberVO;
+	private List<DaangnMainBoardFileVO> fileList; // 사진등록
 	
 }

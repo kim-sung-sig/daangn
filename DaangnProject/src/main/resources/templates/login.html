@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th=http://www.thymeleaf.org
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Log in with your credentials</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+<div class="container" style="margin: auto; width: 40%;margin-top: 50px;">
+    <form method="POST" action="login" class="form-group">
+        <h2 class="form-heading" style="text-align: center;">Log in</h2>
+        <div class="form-group">
+           	<div th:if="${error} or ${logout}" class="form-group row"> 
+				<span th:if="${error}" style="color: red;">없는 아이디 또는 비번이 틀립니다.</span>
+				<span th:if="${logout}" style="color: green;">성공적으로 로그아웃 했습니다. </span>
+			</div>
+            <input name="username" autocomplete="off" type="text" class="form-control" placeholder="Username" autofocus="autofocus" style="margin-bottom: 8px;"/>
+            <input name="password" autocomplete="off" type="password" class="form-control" placeholder="Password" style="margin-bottom: 8px;"/>
+           <div style="text-align: center;">
+	            <button class="btn btn-outline-danger btn-sm" type="submit">Log In</button>
+	            <input class="btn btn-outline-danger btn-sm" type="button" onclick="location.href='/'" value="Home"/>
+	            <input class="btn btn-outline-danger btn-sm" type="button" onclick="location.href='/join'" value="회원가입"/>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- /container -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script></body>
+</html>

@@ -1,4 +1,4 @@
-package kr.ezen.daangn.vo;
+package kr.ezen.daangn.suport;
 // 페이징을 하는 클래스를 만들어 보자
 // 어떤 데이터든 페이징이 가능하도록 Generic클래스로 만들자
 

@@ -1,4 +1,4 @@
-package kr.ezen.daangn.vo;
+package kr.ezen.daangn.suport;
 
 import lombok.Data;
 

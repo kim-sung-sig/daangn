@@ -3,7 +3,7 @@ package kr.ezen.daangn.vo;
 import lombok.Data;
 
 @Data
-public class BoardFileVO {
+public class DaangnMainBoardFileVO {
 	private int idx;
 	private int ref;	// board
 	

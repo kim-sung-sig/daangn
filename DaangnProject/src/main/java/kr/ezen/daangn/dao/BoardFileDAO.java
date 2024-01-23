@@ -5,12 +5,12 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import kr.ezen.daangn.vo.BoardFileVO;
+import kr.ezen.daangn.vo.DaangnMainBoardFileVO;
 
 @Mapper
 public interface BoardFileDAO {
 	// ref에 해당하는 파일 읽기
-	List<BoardFileVO> selectByRef(int ref) throws SQLException;
+	List<DaangnMainBoardFileVO> selectByRef(int ref) throws SQLException;
 	
-	void insert(BoardFileVO boardFileVO) throws SQLException;
+	void insert(DaangnMainBoardFileVO mainBoardFileVO) throws SQLException;
 }

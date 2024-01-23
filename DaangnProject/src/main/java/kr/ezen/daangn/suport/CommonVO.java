@@ -1,4 +1,4 @@
-package kr.ezen.daangn.vo;
+package kr.ezen.daangn.suport;
 
 import lombok.Getter;
 import lombok.ToString;
@@ -13,7 +13,9 @@ public class CommonVO {
 	private int currentPage=1;
 	private int sizeOfPage=10;
 	private int sizeOfBlock=10;
+	
 	private String search="";
+	
 	private String mode = "insert";
 	
 	public void setP(int p) {
