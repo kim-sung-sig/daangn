@@ -25,7 +25,7 @@
 				<div class="uk-margin">
 					<div class="uk-inline">
 						<span class="uk-form-icon" uk-icon="icon: user"></span>
-						<input name="username" id="username" type="text" onkeyup="useridCheck()" class="uk-input uk-form-width-medium" placeholder="아이디 입력" autofocus="autofocus"/>
+						<input name="username" id="username" type="text" onkeyup="useridCheck()" class="uk-input uk-form-width-medium" placeholder="아이디 입력" autofocus="autofocus" required="required"/>
 						<span id="message">사용가능한 아이디입니다.</span>
 					</div>
 				</div>
@@ -61,7 +61,7 @@
 				</div>
 				<div class="uk-margin">
 					<div class="uk-inline">
-						<input id="phone" name="phone" type="tel" class="uk-input uk-form-width-medium" placeholder="사용자 전화번호 입력" style="margin-bottom: 8px;" />					
+						<input id="phone" name="phone" type="tel" class="uk-input uk-form-width-medium" placeholder="사용자 전화번호 입력" required="required" />					
 					</div>
 				</div>
 				<div class="uk-margin">
@@ -76,16 +76,15 @@
 				<div class="uk-margin">
 					<div class="uk-inline">
 						<input type="text" name="postcode" id="postcode" class="uk-input uk-form-width-medium" aria-describedby="passwordHelpInline" readonly="readonly">
-						<input class="uk-button uk-button-default" type="button" value="우편번호 검색" onclick="daumPostcode()" />						
+						<input class="uk-button uk-button-default" type="button" value="우편번호 검색" onclick="daumPostcode()"/>						
 					</div>
 				</div>
 				<div class="uk-margin">
 					<div class="uk-inline">
-						<input name="stAddress" id="addr1" type="text" class="uk-input uk-form-width-medium" placeholder="사용자 주소"/>
-						<input name="dtAddress" id="addr2" type="text" class="uk-input uk-form-width-medium" placeholder="사용자 상세 주소"/>					
+						<input name="stAddress" id="addr1" type="text" class="uk-input uk-form-width-medium" placeholder="사용자 주소" readonly="readonly"/>
+						<input name="dtAddress" id="addr2" type="text" class="uk-input uk-form-width-medium" placeholder="사용자 상세 주소" required="required"/>					
 					</div>
 				</div>
-
 				<div style="text-align: center; margin: 50px 0 120px 0 ">
 					<button class="uk-button uk-button-primary" type="submit">회 원 가 입</button>
 					<input class="uk-button uk-button-primary" type="button" onclick="location.href='/'" value="홈으로" />

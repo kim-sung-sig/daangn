@@ -20,12 +20,12 @@
 				<span th:if="${error}" style="color: red;">없는 아이디 또는 비번이 틀립니다.</span>
 				<span th:if="${logout}" style="color: green;">성공적으로 로그아웃 했습니다. </span>
 			</div>
-            <input name="username" autocomplete="off" type="text" class="form-control" placeholder="Username" autofocus="autofocus" style="margin-bottom: 8px;"/>
-            <input name="password" autocomplete="off" type="password" class="form-control" placeholder="Password" style="margin-bottom: 8px;"/>
+            <input name="username" autocomplete="off" type="text" class="form-control" placeholder="Username" autofocus="autofocus" required="required"/>
+            <input name="password" autocomplete="off" type="password" class="form-control" placeholder="Password" required="required"/>
            <div style="text-align: center;">
 	            <button class="btn btn-outline-danger btn-sm" type="submit">Log In</button>
 	            <input class="btn btn-outline-danger btn-sm" type="button" onclick="location.href='/'" value="Home"/>
-	            <input class="btn btn-outline-danger btn-sm" type="button" onclick="location.href='member/join'" value="회원가입"/>
+	            <input class="btn btn-outline-danger btn-sm" type="button" onclick="location.href='/member/join'" value="회원가입"/>
             </div>
         </div>
     </form>

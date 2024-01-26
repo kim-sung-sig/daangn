@@ -42,10 +42,11 @@
 						</form>
 					</span>
 					<span>
-						<th:block th:if="session.user != null">
-							<a class="uk-button uk-button-default" href="/member/logout">로그아웃</a>						
+						<th:block th:if="${session.user != null}">
+							<a class="uk-button uk-button-default" href="/member/logout">로그아웃</a>					
+							<a class="uk-button uk-button-default" href="/member/home">마이페이지</a>					
 						</th:block>
-						<th:block th:if="session.user == null">
+						<th:block th:if="${session.user == null}">
 							<a class="uk-button uk-button-default" href="/member/login">로그인</a>						
 						</th:block>
 					</span>

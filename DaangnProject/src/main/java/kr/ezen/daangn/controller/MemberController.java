@@ -19,10 +19,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import kr.ezen.daangn.service.DaangnMemberService;
 import kr.ezen.daangn.vo.DaangnMemberVO;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @Configuration
 @RequestMapping(value = "/member")
+@Slf4j
 public class MemberController {
 	@Autowired
 	private DaangnMemberService daangnMemberService;
@@ -77,7 +79,16 @@ public class MemberController {
 	
 	@GetMapping(value = "/logout")
 	public String logout(HttpServletRequest request) {
+		log.info("logout 실행");
 		request.getSession().removeAttribute("user");
+		request.getSession().invalidate();
+		log.info("session.user =>{}", request.getSession().getAttribute("user"));
 		return "redirect:/";
+	}
+	
+	@GetMapping(value = "/home")
+	public String home(HttpServletRequest request, Model model) {
+		
+		return "login/home";
 	}
 }
