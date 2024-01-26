@@ -13,7 +13,7 @@ import kr.ezen.daangn.dao.DaangnMemberDAO;
 import kr.ezen.daangn.vo.DaangnMemberVO;
 import lombok.extern.slf4j.Slf4j;
 
-@Service(value = "daangnMemberService")
+@Service(value = "memberService")
 @Slf4j
 @Transactional
 public class DaangnMemberServiceImpl implements DaangnMemberService{

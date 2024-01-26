@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!--제이쿼리 추가-->
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <link rel="stylesheet" href="./css/uikit.min.css" />
 <script src="./js/uikit.min.js"></script>
 <script src="./js/uikit-icons.min"></script>
@@ -21,14 +20,12 @@
 			<div id="header-inner">
 				<div id="navi">
 					<h1 id="logo">
-						<img
-							src="https://i.namu.wiki/i/urKu84c6cV1U3tmZqPiopxkCnQOn96j3gA6Wf730iSTzz41XDOeqypSusjBVPXeHxGe8RJAOjMY11uywzcDqSA.svg"
-							alt="logo" />
+						<img src="https://i.namu.wiki/i/urKu84c6cV1U3tmZqPiopxkCnQOn96j3gA6Wf730iSTzz41XDOeqypSusjBVPXeHxGe8RJAOjMY11uywzcDqSA.svg" alt="logo" />
 					</h1>
 					<nav>
 						<ul>
-							<li><a href="/list">중고거래</a></li>
-							<li><a href="/list">중고거래</a></li>
+							<li><a href="/fleamarket">중고거래</a></li>
+							<li><a href="/list">생활꿀팁</a></li>
 							<li><a href="/list">중고거래</a></li>
 							<li><a href="/list">중고거래</a></li>
 							<li><a href="/list">중고거래</a></li>
@@ -37,14 +34,20 @@
 				</div>
 				<div id="search">
 					<span>
-						<form action="">
+						<form action="" method="get">
 							<div class="uk-margin">
 								<input class="uk-input uk-form-width-long chat" type="text"
 									placeholder="동네 물품을 검색해주세요!" aria-label="Large">
 							</div>
 						</form>
-					</span> <span>
-						<button class="uk-button uk-button-primary" type="button">체팅하기</button>
+					</span>
+					<span>
+						<th:block th:if="session.user != null">
+							<a class="uk-button uk-button-default" href="/member/logout">로그아웃</a>						
+						</th:block>
+						<th:block th:if="session.user == null">
+							<a class="uk-button uk-button-default" href="/member/login">로그인</a>						
+						</th:block>
 					</span>
 				</div>
 			</div>

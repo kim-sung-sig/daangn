@@ -26,18 +26,19 @@ public class SecurityConfig {
 		// 인증 설정
 		http.authorizeHttpRequests((authorize) -> {
 			authorize
-					// 지정 주소에 대한 권한 설정 : .permitAll() 은 권한이 없다.(누구나 접근 가능)
-					.requestMatchers("/", "/home", "/index","/main", "/dbinit").permitAll()
-					// 회원가입 폼과 회원가입 완료는 누구나 접근 가능 
-					.requestMatchers("/join","/joinok").permitAll()
-					.requestMatchers("/login/**").permitAll()
-					.requestMatchers("/list","/list/*").permitAll()
-					//.requestMatchers("/summernote").hasAnyRole("ADMIN","USER")
+					// mainPage
+					.requestMatchers("/").permitAll()
 					// 지정 주소에 대한 권한 설정 **은 하위폴더 포함 모두
 					.requestMatchers("/css/**", "/js/**", "/images/**", "/upload/**").permitAll()
+					//.requestMatchers("/","/dbinit").permitAll()
+					// 회원가입 폼과 회원가입 완료는 누구나 접근 가능 
+					.requestMatchers("/member","/member/**").permitAll()
+					// 중고거래 리스트 사이트!
+					.requestMatchers("/fleamarket", "/fleamarket/**").permitAll()
+					// 글을 보는 영역
+					.requestMatchers("/list","/list/*").permitAll()
 					// 지정 주소에 대한 권한 설정 : hasRole(권한)은 지정 권한이 있는 사용자만 접근이 가능하다.
 					.requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
-					.requestMatchers("/dba", "/dba/**").hasAnyRole("ADMIN", "DBA")
 					// 그 이외의 요청은 인증된 사용자만 접근이 가능하다.
 					.anyRequest().authenticated();
 		});
@@ -45,7 +46,7 @@ public class SecurityConfig {
 		// 사용자 로그인을 사용하겠다 (내가만든 로그인 페이지를 사용하겠다?)
 		http.formLogin((form) -> {
 			// 로그인 주소
-			form.loginPage("/login").permitAll()
+			form.loginPage("/member/login").permitAll()
 					// 로그인 폼의 name속성값이 username과 password가 아니라면 변경해준다.
 					.usernameParameter("username").passwordParameter("password")
 					// 로그인 성공후 이동할 주소 지정
