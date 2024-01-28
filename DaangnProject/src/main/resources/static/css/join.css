@@ -2,8 +2,8 @@ body, html {background: #ffffe6;font-family: "Noto Sans KR"; font-weight: 300; }
 h4 {font-family: "Noto Sans KR"; font-weight: 500;}
 h2 > img {max-width: 50%;}
 
-.uk-inline  { width: 100vw; display: flex; gap: 10px;}
 .uk-container-xsmall {width: 500px !important; height:auto; margin: 50px auto; padding: 50px; background-color: #fff; box-shadow: 3px 5px 10px #ccc;}
+.uk-inline  { width: 100vw; display: flex; gap: 10px;}
 .emails, #emailck {display: flex; gap: 10px;}
 .emails > .dot {display: flex; align-items: center;}
 .buttons {background-color: #5182e4;color: #fff;font-weight: bold; font-weight: 500; padding: 0 30px; margin-top: 50px; }

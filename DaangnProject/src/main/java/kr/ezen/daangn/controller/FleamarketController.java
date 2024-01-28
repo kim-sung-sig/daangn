@@ -22,12 +22,12 @@ public class FleamarketController {
 	@Autowired
 	private DaangnMemberService memberService;
 	
-	@GetMapping(value = {"", "/"})
+	@GetMapping(value = {"/", "/{region}", "/{region}/{gu}", "/{region}/{gu}/{dong}"})
 	public String list(Model model
 					   , @PathVariable(value = "region", required = false) String region
 					   , @PathVariable(value = "gu", required = false) String gu
 					   , @PathVariable(value = "dong", required = false) String dong) {
-		log.info("list 실행");
+		log.debug("list 실행");
 		// model 에서 해당부분의 맞는 리스트만 list에 담아주자! 페이징 처리는 따로 하지 않겠다.
 		return "list";
 	}

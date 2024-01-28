@@ -24,13 +24,15 @@
 			<div id="header-inner">
 				<div id="navi">
 					<h1 id="logo">
-						<img src="https://i.namu.wiki/i/urKu84c6cV1U3tmZqPiopxkCnQOn96j3gA6Wf730iSTzz41XDOeqypSusjBVPXeHxGe8RJAOjMY11uywzcDqSA.svg" alt="logo" />
+						<a href="/">
+							<img src="https://i.namu.wiki/i/urKu84c6cV1U3tmZqPiopxkCnQOn96j3gA6Wf730iSTzz41XDOeqypSusjBVPXeHxGe8RJAOjMY11uywzcDqSA.svg" alt="logo" />
+						</a>
 					</h1>
 					<nav>
 						<ul>
-							<li><a href="/fleamarket">중고거래</a></li>
+							<li><a href="/fleamarket/">중고거래</a></li>
+							<li><a href="/upload">내 물건 팔기</a></li>
 							<li><a href="/list">생활꿀팁</a></li>
-							<li><a href="/list">중고거래</a></li>
 							<li><a href="/list">중고거래</a></li>
 							<li><a href="/list">중고거래</a></li>
 						</ul>
@@ -48,7 +50,12 @@
 					<span>
 						<th:block th:if="${session.user != null}">
 							<a class="uk-button uk-button-default" href="/member/logout">로그아웃</a>					
-							<a class="uk-button uk-button-default" href="/member/home">마이페이지</a>					
+							<th:block th:if="${session.user.role == 'ROLE_ADMIN'}">
+								<a class="uk-button uk-button-default" href="/admin/home">관리자 페이지</a>													
+							</th:block>
+							<th:block th:if="${session.user.role != 'ROLE_ADMIN'}">													
+								<a class="uk-button uk-button-default" href="/member/home">마이페이지</a>					
+							</th:block>
 						</th:block>
 						<th:block th:if="${session.user == null}">
 							<a class="uk-button uk-button-default" href="/member/login">로그인</a>						
@@ -61,79 +68,7 @@
 		<main>
 			<div class="uk-container uk-container-large">
 				<section>
-					<div id="slide" style="width: 100%;height:100%;gap:50px; display: grid; grid-template-columns:repeat(4,1fr); justify-content: space-between;">
 					
-						<div class="uk-card uk-card-default" style="width: 300px">
-							<div class="uk-card-media-top">
-								<img src="./img/스크린샷(1).png" alt="이미지">
-							</div>
-							<div class="uk-card-body">
-								<h3 class="uk-card-title">Media Top</h3>
-								<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-									sed do eiusmod tempor incididunt.</p>
-							</div>
-						</div>
-						<div class="uk-card uk-card-default" style="width: 300px">
-							<div class="uk-card-media-top">
-								<img src="./img/스크린샷(1).png" alt="이미지">
-							</div>
-							<div class="uk-card-body">
-								<h3 class="uk-card-title">Media Top</h3>
-								<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-									sed do eiusmod tempor incididunt.</p>
-							</div>
-						</div>
-						<div class="uk-card uk-card-default" style="width: 300px">
-							<div class="uk-card-media-top">
-								<img src="./img/스크린샷(1).png" alt="이미지">
-							</div>
-							<div class="uk-card-body">
-								<h3 class="uk-card-title">Media Top</h3>
-								<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-									sed do eiusmod tempor incididunt.</p>
-							</div>
-						</div>
-						<div class="uk-card uk-card-default" style="width: 300px">
-							<div class="uk-card-media-top">
-								<img src="./img/스크린샷(1).png" alt="이미지">
-							</div>
-							<div class="uk-card-body">
-								<h3 class="uk-card-title">Media Top</h3>
-								<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-									sed do eiusmod tempor incididunt.</p>
-							</div>
-						</div>
-						<div class="uk-card uk-card-default" style="width: 300px">
-							<div class="uk-card-media-top">
-								<img src="./img/스크린샷(1).png" alt="이미지">
-							</div>
-							<div class="uk-card-body">
-								<h3 class="uk-card-title">Media Top</h3>
-								<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-									sed do eiusmod tempor incididunt.</p>
-							</div>
-						</div>
-						<div class="uk-card uk-card-default" style="width: 300px">
-							<div class="uk-card-media-top">
-								<img src="./img/스크린샷(1).png" alt="이미지">
-							</div>
-							<div class="uk-card-body">
-								<h3 class="uk-card-title">헤드셋 팝니다!</h3>
-								<p>구매한지 얼마 안됐습니다</p>
-							</div>
-						</div>
-						<div class="uk-card uk-card-default" style="width: 300px">
-							<div class="uk-card-media-top">
-								<img src="./img/스크린샷(1).png" alt="이미지">
-							</div>
-							<div class="uk-card-body">
-								<h3 class="uk-card-title">Media Top</h3>
-								<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-									sed do eiusmod tempor incididunt.</p>
-							</div>
-						</div>
-						
-					</div>
 				</section>
 			</div>
 		</main>

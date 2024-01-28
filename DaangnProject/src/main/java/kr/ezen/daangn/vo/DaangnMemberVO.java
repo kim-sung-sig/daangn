@@ -2,7 +2,6 @@ package kr.ezen.daangn.vo;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -25,15 +24,10 @@ public class DaangnMemberVO implements UserDetails{
 	private String nickName;				// 닉네임
 	
 	private String email;
-	private String phone;					// 전화 번호 (sms를 하진 않겠지만 카카오로그인을 구현 할 경우 필요)
 	
 	// address
 	private String stAddress;				// 도로명주소	(이름 추천)
 	private String dtAddress;				// 상세주소		(이름 추천)
-	
-	private Date birthDate;					// 생일
-	private int gender;						// (db에서 boolean저장불가 임시값 1 남 0 여
-	
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

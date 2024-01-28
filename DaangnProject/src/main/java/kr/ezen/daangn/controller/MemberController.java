@@ -1,9 +1,5 @@
 package kr.ezen.daangn.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Controller;
@@ -65,17 +61,12 @@ public class MemberController {
 		return "redirect:/";
 	}
 	@PostMapping(value = {"/joinok"})
-	public String joinOkPost(@ModelAttribute(value = "vo") DaangnMemberVO memberVO, @RequestParam(value = "email2") String email2, @RequestParam(value = "bd") String bd) {
-		// 내용검증을 해야하지만! 넘긴다!
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		try {
-			Date date = sdf.parse(bd);
-			memberVO.setBirthDate(date);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		memberVO.setEmail(memberVO.getEmail()+"@"+email2);
+	public String joinOkPost(Model model,@ModelAttribute(value = "vo") DaangnMemberVO memberVO, @RequestParam(value = "emailAddress") String emailAddress) {
+		log.info("joinOkPost 실행 {}",memberVO);
+		memberVO.setEmail(memberVO.getEmail()+"@"+emailAddress);
+//		model.addAttribute("vo", memberVO);
 		daangnMemberService.insert(memberVO);
+//		return "joinok";
 		return "redirect:/member/login";
 	}
 	

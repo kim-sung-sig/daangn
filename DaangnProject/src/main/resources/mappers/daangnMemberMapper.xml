@@ -15,11 +15,8 @@
 				, #{name}
 				, #{nickName}
 				, #{email}
-				, #{phone}
 				, #{stAddress}
 				, #{dtAddress}
-				, #{birthDate}
-				, #{gender}
 			)
 	</insert>
 	
@@ -29,7 +26,6 @@
 			daangn_member 
 		set 
 			nickName = #{nickName}
-			, phone = #{phone}
 			, email = #{email}
 			, stAddress = #{stAddress}
 			, dtAddress = #{dtAddress}

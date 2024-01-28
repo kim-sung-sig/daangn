@@ -17,7 +17,8 @@
 <script src="./js/upload.js"></script>
 </head>
 <body>
-	<div id="wrap">
+	<div class="uk-container uk-container-xsmall">
+		<h2 class="form-heading" style="text-align: center;"><img src="https://i.namu.wiki/i/urKu84c6cV1U3tmZqPiopxkCnQOn96j3gA6Wf730iSTzz41XDOeqypSusjBVPXeHxGe8RJAOjMY11uywzcDqSA.svg" alt="logo" /></h2>
 		<h2>내 물품 팔기</h2>
 		<form action="/uploadOk" method="post" enctype="multipart/form-data">
 			<input type="hidden" id="latitude" name="latitude"/>
@@ -29,20 +30,40 @@
 				
 				  <div class="image-preview" id="image-preview"></div>			
 			</div>
-			<p>제목</p>
-			<input type="text" id="subject" class="uk-input" placeholder="제목을 입력해주세요" autocomplete='off' required="required">
-			<p>가격</p>
-			<input type="number" id="price" class="uk-input" placeholder="가격을 입력해주세요." autocomplete='off' required="required">
-			<p>자세한 설명</p>
-			<textarea id="content" class="uk-textarea" name="content" style="resize: none; height: 200px" required="required"></textarea>
-			<p>거래희망장소</p>
-			<div id="map" style="width:800px;height:400px;"></div>
-			<p>상세주소</p>
-			<input type="text" id="detailAddress" name="detailAddress" class="uk-input" placeholder="상세주소 입력" autocomplete='off' required="required">
+			<div class="uk-margin">
+				<h4>제목</h4>
+				<div class="uk-inline">
+					<input type="text" name="subject" id="subject" class="uk-input" placeholder="제목을 입력해주세요" autocomplete='off' required="required">				
+				</div>
+			</div>
+			<div class="uk-margin">
+				<h4>가격</h4>
+				<div class="uk-inline">
+					<input type="number" name="price" id="price" class="uk-input" placeholder="가격을 입력해주세요." autocomplete='off' required="required">
+				</div>
+			</div>
+			<div class="uk-margin">
+				<h4>자세한 설명</h4>
+				<div class="uk-inline">
+					<textarea id="content" class="uk-textarea" name="content" style="resize: none; height: 200px" required="required"></textarea>
+				</div>
+			</div>
+			<div class="uk-margin">
+				<h4>거래희망장소</h4>
+				<div class="uk-inline">
+					<div id="map" style="width:500px;height:300px;"></div>				
+				</div>
+			</div>
+			<div class="uk-margin">
+				<h4>상세주소</h4>
+				<div class="uk-inline">
+					<input type="text" id="detailAddress" name="detailAddress" class="uk-input" placeholder="상세주소 입력" autocomplete='off' required="required">
+				</div>
+			</div>
 			
-			<div style="margin: 50px 0px;width: 100%; text-align: center;">
-				<input type="submit" class="uk-button uk-button-primary uk-button-large" value="글 등록하기"></input>
-				<input type="button" id="homeBtn" value="Home으로" class="uk-button uk-button-primary uk-button-large">			
+			<div class="uk-margin" style="text-align: right;">
+				<input type="submit" class="uk-button uk-button-primary uk-button-large" value="물건팔기"></input>
+				<input type="button" id="homeBtn" value="이전페이지" class="uk-button uk-button-primary uk-button-large">			
 			</div>
 		</form>
 	</div>

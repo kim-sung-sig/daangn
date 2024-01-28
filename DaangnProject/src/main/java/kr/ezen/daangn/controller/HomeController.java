@@ -1,9 +1,13 @@
 package kr.ezen.daangn.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import jakarta.servlet.http.HttpServletRequest;
+
 
 @Controller
 public class HomeController {
@@ -14,13 +18,16 @@ public class HomeController {
 	}
 	//===========================================================================================
 	
-// 딱! 한번만 실행해야한다!
+	@GetMapping(value = "/upload")
+	public String upload(HttpServletRequest request) {
+		return "upload";
+	}
+	
+	//딱! 한번만 실행해야한다!
 //	@Autowired
 //	private JdbcTemplate jdbcTemplate;
-//	
 //	@Autowired
-//	private BCryptPasswordEncoder passwordEncoder;
-	
+//	private BCryptPasswordEncoder passwordEncoder;	
 //	@GetMapping("/dbinit") // 기존에 등록된 비번을 암호화 해서 변경한다. 1번만 실행하고 지워줘라~~~
 //	public String dbInit() {
 //		jdbcTemplate.update("update daangn_member set password=? where username=?", passwordEncoder.encode("123456"),"admin");

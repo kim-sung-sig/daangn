@@ -24,30 +24,28 @@
 </head>
 <body>
 	<div class="uk-container uk-container-xsmall">
-		<form method="POST" action="joinok" class="form-group">
-			<h2 class="form-heading" style="text-align: center;" ><img src="https://i.namu.wiki/i/urKu84c6cV1U3tmZqPiopxkCnQOn96j3gA6Wf730iSTzz41XDOeqypSusjBVPXeHxGe8RJAOjMY11uywzcDqSA.svg" alt="logo" />
-					</h2>
+		<form method="POST" action="/member/joinok" id="joinForm">
+			<h2 class="form-heading" style="text-align: center;"><img src="https://i.namu.wiki/i/urKu84c6cV1U3tmZqPiopxkCnQOn96j3gA6Wf730iSTzz41XDOeqypSusjBVPXeHxGe8RJAOjMY11uywzcDqSA.svg" alt="logo" /></h2>
 			<div class="form-group">
 				<div class="uk-margin">
-					<h4>아이디</h4>
+					<h4>아이디</h4><span id="message"></span>
 					<div class="uk-inline">
 						<span class="uk-form-icon" uk-icon="icon: user"></span>
-						<input id="username" name="username" type="text" onkeyup="useridCheck()" class="uk-input uk-form" placeholder="아이디 입력" autofocus="autofocus" required="required"/>
-						<span id="message"></span>
+						<input id="username" name="username" type="text" autocomplete="off" class="uk-input uk-form" placeholder="아이디를 8~20자 이내로 작성해주세요." autofocus="autofocus" required="required"/>
 					</div>
 				</div>
 				<div class="uk-margin">
-					<h4>비밀번호</h4>
+					<h4>비밀번호</h4><span id="pwmessage"></span>
 					<div class="uk-inline">
 			            <span class="uk-form-icon" uk-icon="icon: lock"></span>
-			            <input id="password" name="password" type="password" class="uk-input" placeholder="비밀번호 입력" required="required" aria-label="Not clickable icon">
+			            <input id="password" name="password" type="password" class="uk-input" placeholder="비밀번호를 특수문자,숫자 포함 8~20자 이내로 작성해주세요." required="required" aria-label="Not clickable icon">
 			        </div>				
 				</div>
 				<div class="uk-margin">
-					<h4>비밀번호 재확인</h4>
+					<h4>비밀번호 재확인</h4><span id="pwmessage2"></span>
 					<div class="uk-inline">
 			            <span class="uk-form-icon" uk-icon="icon: lock"></span>
-			            <input id="password2" type="password" class="uk-input" placeholder="비밀번호 입력" required="required" aria-label="Not clickable icon">
+			            <input id="password2" type="password" class="uk-input" placeholder="비밀번호 재확인" required="required" aria-label="Not clickable icon">
 			        </div>				
 				</div>
 				<div class="uk-margin">
@@ -72,45 +70,24 @@
 			            <input type="button" id="sendEmail" class="uk-button uk-button-default" value="메일 인증">
 					</div>
 				</div>
-				
 				<div class="uk-margin" id="emailCheckBox">
 					<h4>인증번호 입력</h4>
 					<div class="uk-inlin" id="emailck">
 						<input type="text" id="check" class="uk-input" placeholder="인증번호를 입력해주세요">
 						<input type="button" id="checkMail" class="uk-button uk-button-default" value="인증번호체크">
-						
 					</div>
 				</div>
-				<!-- 
-				<div class="uk-margin">
-					<h4>전화번호</h4>
-					<div class="uk-inline">
-						<input id="phone" name="phone" type="tel" class="uk-input " placeholder="사용자 전화번호 입력" required="required" />					
-					</div>
-				</div>
-				<div class="uk-margin">
-					<h4>생년월일</h4>
-					<div class="uk-inline">
-						<input id="bd" name="bd" type="date" class="uk-input uk-form-width-medium" pattern="yyyy-MM-dd" required="required"/>						
-					</div>
-				</div>
-				<div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
-					<h4>성별</h4>
-					<label><input class="uk-radio" type="radio" name="gender" value="1" checked>남</label>
-					<label><input class="uk-radio" type="radio" name="gender" value="0">여</label>
-				</div>				
-				 -->
 				<div class="uk-margin">
 					<h4>주소지</h4>
 					<div class="uk-inline">
-						<input type="text" name="postcode" id="postcode" class="uk-input " aria-describedby="passwordHelpInline" readonly="readonly">
-						<input class="uk-button uk-button-default" type="button" value="우편번호 검색" onclick="daumPostcode()"/>						
+						<input type="text" name="postcode" id="postcode" class="uk-input " aria-describedby="passwordHelpInline" readonly="readonly" required="required">
+						<input id="daum" class="uk-button uk-button-default" type="button" value="우편번호 검색" onclick="daumPostcode()"/>						
 					</div>
 				</div>
 				<div class="uk-margin">
 					<div class="uk-inline">
-						<input name="stAddress" id="addr1" type="text" class="uk-input " placeholder="사용자 주소" readonly="readonly"/>
-						<input name="dtAddress" id="addr2" type="text" class="uk-input " placeholder="사용자 상세 주소" required="required"/>					
+						<input name="stAddress" id="addr1" type="text" class="uk-input" placeholder="사용자 주소" readonly="readonly" required="required"/>
+						<input name="dtAddress" id="addr2" type="text" class="uk-input" placeholder="사용자 상세 주소" required="required"/>					
 					</div>
 				</div>
 				<div class="uk-margin" style="text-align: right;">

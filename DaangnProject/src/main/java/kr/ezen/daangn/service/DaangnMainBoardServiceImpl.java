@@ -21,7 +21,6 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 	@Override
 	public List<DaangnMainBoardVO> selectList(CommonVO commonVO) {
 		List<DaangnMainBoardVO> list = null;
-		
 		return list;
 	}
 

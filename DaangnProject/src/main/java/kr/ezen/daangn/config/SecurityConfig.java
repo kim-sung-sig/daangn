@@ -32,10 +32,10 @@ public class SecurityConfig {
 					.requestMatchers("/css/**", "/js/**", "/img/**", "/upload/**").permitAll()
 					//.requestMatchers("/","/dbinit").permitAll()
 					// 회원가입 폼과 회원가입 완료는 누구나 접근 가능 
-					.requestMatchers("/member/login/userIdCheck","/member/login","/member/logout","/member/join","/member/joinok","/member/send").permitAll()
+					.requestMatchers("/member/login/useridcheck","/member/login","/member/logout","/member/join","/member/joinok","/member/send").permitAll()
 					.requestMatchers("/member/home").hasRole("USER")
 					// 중고거래 리스트 사이트!
-					.requestMatchers("/fleamarket").permitAll()
+					.requestMatchers("/fleamarket/**").permitAll()
 					// 지정 주소에 대한 권한 설정 : hasRole(권한)은 지정 권한이 있는 사용자만 접근이 가능하다.
 					.requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
 					// 그 이외의 요청은 인증된 사용자만 접근이 가능하다.

@@ -1,5 +1,4 @@
 $(function() {
-	
 	// 지도!!
 	// 위도 경도를 구하는 함수
 	navigator.geolocation.getCurrentPosition((position) => {
