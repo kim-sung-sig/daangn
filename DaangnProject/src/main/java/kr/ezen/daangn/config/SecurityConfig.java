@@ -29,10 +29,10 @@ public class SecurityConfig {
 					// mainPage
 					.requestMatchers("/").permitAll()
 					// 지정 주소에 대한 권한 설정 **은 하위폴더 포함 모두
-					.requestMatchers("/css/**", "/js/**", "/images/**", "/upload/**").permitAll()
+					.requestMatchers("/css/**", "/js/**", "/img/**", "/upload/**").permitAll()
 					//.requestMatchers("/","/dbinit").permitAll()
 					// 회원가입 폼과 회원가입 완료는 누구나 접근 가능 
-					.requestMatchers("/member/login","/member/logout","/member/join","member/joinok").permitAll()
+					.requestMatchers("/member/login/userIdCheck","/member/login","/member/logout","/member/join","/member/joinok","/member/send").permitAll()
 					.requestMatchers("/member/home").hasRole("USER")
 					// 중고거래 리스트 사이트!
 					.requestMatchers("/fleamarket").permitAll()

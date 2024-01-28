@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th=http://www.thymeleaf.org
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+<title>로그인</title>
+<!-- UIkit CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css" />
+<!-- UIkit JS -->
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
+<!-- jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<link rel="stylesheet" href="../css/login.css" />
+</head>
+<body>
+	<div class="uk-section-container">
+		<div class="uk-container uk-container-xlarge">
+			<div class="uk-card uk-card-default uk-position-center">
+				<div class="uk-flex uk-width-1">
+					<div class="uk-card-body">
+						<div>
+						<h2 class="form-heading" style="text-align: center;"><img src="https://i.namu.wiki/i/urKu84c6cV1U3tmZqPiopxkCnQOn96j3gA6Wf730iSTzz41XDOeqypSusjBVPXeHxGe8RJAOjMY11uywzcDqSA.svg" alt="logo" />
+						</h2>
+							<h4 class="uk-text-bolder uk-margin-small-bottom uk-text-emphasis uk-text-large">로그인</h4>
+							<p class="uk-margin-small-top uk-text-small">계정에 접속하려면 아이디와 비밀번호를 입력하세요.</p>
+						</div>
+						<div th:if="${error} or ${logout}" class="form-group row">
+							<span th:if="${error}" style="color: red;">없는 아이디 또는 비번이 틀립니다.</span>
+							<span th:if="${logout}" style="color: green;">성공적으로 로그아웃 했습니다.</span>
+						</div>
+						<form method="POST" action="login">
+							<div class="uk-margin">
+								<div class="uk-inline uk-width-1">
+									<label class="uk-margin-small-bottom uk-text-bold uk-text-secondary">
+										아이디 <input name="username" class="uk-input uk-margin-small-top uk-text-meta uk-text-small" type="text" placeholder="아이디를 입력해주세요." autofocus="autofocus" autocomplete="off" required="required" />
+									</label>
+								</div>
+							</div>
+							<div class="uk-margin uk-width-1">
+								<div class="uk-inline uk-width-1">
+									<label class="uk-margin-small-bottom uk-text-bold uk-text-secondary">
+										비밀번호 <input name="password" class="uk-input uk-margin-small-top uk-text-meta uk-text-small" type="password" placeholder="비밀번호를 입력해주세요." autocomplete="off" required="required" />
+									</label>
+								</div>
+							</div>
+
+							<div class="uk-margin-small">
+								<button type="submit" class="uk-button uk-width-1">로그인</button>
+							</div>
+							<div class="uk-margin-small">
+								<input class="uk-button uk-width-1" type="button" onclick="location.href='/member/join'" value="회원가입" />
+							</div>
+							<div class="uk-margin-small">
+								<input class="uk-button uk-width-1" type="button" onclick="location.href='/'" value="Home" />
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

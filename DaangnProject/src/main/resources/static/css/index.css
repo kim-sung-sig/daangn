@@ -1,3 +1,26 @@
+@charset 'UTF-8';
+*{margin: 0; padding: 0; box-sizing: border-box;}
+body{color: #333; background: #fff;}
+a{text-decoration: none; color: #333;}
+
+img {
+  max-width: 100%;
+  border: 0 none transparent;
+  margin: 0; padding: 0;
+}
+label {
+  cursor: pointer;
+}
+ol,ul,li {
+  list-style: none;
+  margin: 0; padding: 0;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+body, html {font-family: "Noto Sans KR"; font-weight: 300; }
+
 #wrap{width: 100%;height: calc(100vh - 64px);}
 header{width: 100%;}
 #header-inner{max-width: 1200px;margin: 0 auto;align-items: center;display: flex;justify-content: space-between;}
@@ -8,7 +31,7 @@ nav>ul>li>a{padding: 10px 5px;font-weight: 600; font-size: 16px;}
 nav>ul>li>a:hover{color: blue;}
 #search{display: flex;}
 #search>span{margin-right: 10px; height: 40px}
-main{width: 100%; height: calc(100vh - 139.27px); background: #FFFAE0;}
+main{width: 100%; height: calc(100vh - 139.27px); background: linear-gradient(rgb(255, 255, 185), rgb(255, 151, 121, 0.7));}
 .chat{width: 320px}
 
 footer{width: 100%; background: #333; height: 64px;}

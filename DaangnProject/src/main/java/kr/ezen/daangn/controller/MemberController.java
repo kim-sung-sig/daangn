@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import kr.ezen.daangn.service.DaangnMemberService;
+import kr.ezen.daangn.service.MailService;
 import kr.ezen.daangn.vo.DaangnMemberVO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberController {
 	@Autowired
 	private DaangnMemberService daangnMemberService;
-
+	
 	@GetMapping(value = "/login")
 	public String login(@RequestParam(value = "error", required = false) String error,
 			@RequestParam(value = "logout", required = false) String logout, Model model) {
@@ -36,7 +37,7 @@ public class MemberController {
 			model.addAttribute("error", "error");
 		if (logout != null)
 			model.addAttribute("logout", "logout");
-		return "login/login";
+		return "login";
 	}
 
 	// 회원가입 폼
@@ -47,13 +48,14 @@ public class MemberController {
 			session.invalidate();
 			return "redirect:/";
 		}
-		return "login/join";
+		return "join";
 	}
-	@GetMapping(value = "/login/userIdCheck", produces = "text/plain;charset=UTF-8")
+	@GetMapping(value = "/login/useridcheck", produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String userIdCheck(@RequestParam(value = "username") String username) {
 		return daangnMemberService.selectCountByUsername(username)+""; // 1 or 0
 	}
+	
 	@GetMapping(value = {"/joinok"})
 	public String joinOkGet(HttpSession session) {
 		if(session.getAttribute("user") != null) { // 나쁜사람 방지
@@ -88,7 +90,19 @@ public class MemberController {
 	
 	@GetMapping(value = "/home")
 	public String home(HttpServletRequest request, Model model) {
-		
-		return "login/home";
+		return "home";
 	}
+	
+	@Autowired
+	private MailService mailService;
+	
+	// 회원가입중 필요한 이메일 인증을 보내는 주소
+    @GetMapping(value = "/send", produces = "text/plain" )
+    @ResponseBody
+    public String send(@RequestParam(value = "to") String to) {
+    	log.info("send : to=>{}",to);
+    	String result = mailService.mailSend(to); // 인증번호!
+    	log.info("send Success?:{}", result);
+    	return result;
+    }
 }
