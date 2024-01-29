@@ -7,7 +7,7 @@ $(function() {
 			$("#message").html("한글은 입력할 수 없습니다.").css('color', 'red');
 			return ;
 		}
-		if(username.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi) >= 0){
+		if(username.search(/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi) >= 0){
 			$("#message").html("특수문자는 입력할 수 없습니다.").css('color', 'red');
 			return ;
 		}
@@ -147,13 +147,13 @@ $(function() {
 			$("#password2").focus();
 			return false;			
 		}
-		if($("#name").val().search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi) >= 0){
+		if($("#name").val().search(/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi) >= 0){
 			alert('이름에는 특수문자를 사용할 수 없습니다.');
 			$("#name").val("");
 			$("#name").focus();
 			return false;			
 		}
-		if($("#nickName").val().search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi) >= 0){
+		if($("#nickName").val().search(/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi) >= 0){
 			alert('닉네임에는 특수문자를 사용할 수 없습니다.');
 			$("#nickName").val("");
 			$("#nickName").focus();

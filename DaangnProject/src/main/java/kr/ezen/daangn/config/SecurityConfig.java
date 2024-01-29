@@ -27,15 +27,17 @@ public class SecurityConfig {
 		http.authorizeHttpRequests((authorize) -> {
 			authorize
 					// mainPage
-					.requestMatchers("/").permitAll()
+					.requestMatchers("/","/dbinit").permitAll()
 					// 지정 주소에 대한 권한 설정 **은 하위폴더 포함 모두
-					.requestMatchers("/css/**", "/js/**", "/img/**", "/upload/**").permitAll()
+					.requestMatchers("/css/**", "/js/**", "/img/**").permitAll()
 					//.requestMatchers("/","/dbinit").permitAll()
 					// 회원가입 폼과 회원가입 완료는 누구나 접근 가능 
 					.requestMatchers("/member/login/useridcheck","/member/login","/member/logout","/member/join","/member/joinok","/member/send").permitAll()
 					.requestMatchers("/member/home").hasRole("USER")
 					// 중고거래 리스트 사이트!
-					.requestMatchers("/fleamarket/**").permitAll()
+					.requestMatchers("/fleamarket/**").permitAll() // 검색용
+					.requestMatchers("/upload").hasAnyRole("USER","ADMIN")
+					
 					// 지정 주소에 대한 권한 설정 : hasRole(권한)은 지정 권한이 있는 사용자만 접근이 가능하다.
 					.requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
 					// 그 이외의 요청은 인증된 사용자만 접근이 가능하다.

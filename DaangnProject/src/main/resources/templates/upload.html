@@ -20,15 +20,15 @@
 	<div class="uk-container uk-container-xsmall">
 		<h2 class="form-heading" style="text-align: center;"><img src="https://i.namu.wiki/i/urKu84c6cV1U3tmZqPiopxkCnQOn96j3gA6Wf730iSTzz41XDOeqypSusjBVPXeHxGe8RJAOjMY11uywzcDqSA.svg" alt="logo" /></h2>
 		<h2>내 물품 팔기</h2>
-		<form action="/uploadOk" method="post" enctype="multipart/form-data">
+		<form action="/uploadok" method="post" enctype="multipart/form-data" id="uploadForm">
 			<input type="hidden" id="latitude" name="latitude"/>
 			<input type="hidden" id="longitude" name="longitude"/>
+			<input type="hidden" id="loc" name="loc"><!-- 서울특별시 강서구 화곡1동 -->
 			<div id="fileBox">
 				<div class="dropzone" id="dropzone">
-				    <p>사진을 드래그 앤 드롭하세요.</p>
-				  </div>
-				
-				  <div class="image-preview" id="image-preview"></div>			
+					<p>사진을 드래그 앤 드롭하세요.</p>
+				</div>
+				<div class="image-preview" id="image-preview"></div>			
 			</div>
 			<div class="uk-margin">
 				<h4>제목</h4>
@@ -57,17 +57,14 @@
 			<div class="uk-margin">
 				<h4>상세주소</h4>
 				<div class="uk-inline">
-					<input type="text" id="detailAddress" name="detailAddress" class="uk-input" placeholder="상세주소 입력" autocomplete='off' required="required">
+					<input type="text" id="detailAddress" name="location" class="uk-input" placeholder="상세주소 입력" autocomplete='off' required="required">
 				</div>
 			</div>
-			
 			<div class="uk-margin" style="text-align: right;">
 				<input type="submit" class="uk-button uk-button-primary uk-button-large" value="물건팔기"></input>
 				<input type="button" id="homeBtn" value="이전페이지" class="uk-button uk-button-primary uk-button-large">			
 			</div>
 		</form>
 	</div>
-	
-	
 </body>
 </html>

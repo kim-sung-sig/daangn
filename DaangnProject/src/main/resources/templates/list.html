@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="UTF-8" />
 	<title>당근 중고 장터</title>
@@ -157,6 +157,20 @@
 								<p class="regDate">게시일 2023.12.31</p>
 							</div>
 						</div>
+						<th:block th:each="vo : ${list}">
+							<div class="uk-card uk-card-default" style="width: 300px">
+							<div class="uk-card-media-top">
+								<img src="https://source.unsplash.com/1500x706" alt="">
+							</div>
+							<div class="uk-card-body">
+								<h4 class="uk-card-title">[[${vo.subject}]]</h4>
+								<p class="price">[[${vo.price}]]</p>
+								<span class="city">[[${vo.loc}]]</span>
+								<p class="like"><span>관심 6</span>&nbsp;<span>채팅 5</span>&nbsp;<span>조회수 [[${vo.count}]]</span></p>
+								<p class="regDate">게시일 2023.12.31</p>
+							</div>
+						</div>
+						</th:block>
 					</div>
 				</section>
 			</div>

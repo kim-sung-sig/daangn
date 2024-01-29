@@ -4,34 +4,25 @@
 
 	<select id="selectList" parameterType="hashmap" resultType="DaangnMainBoardVO">
 		select
-			R.*
+			*
 		from
-			(
-				select
-					rownum rnum, Q.*
-				from
-					(
-					select
-						*
-					from
-						daangn_board
-					<where>
-						<if test="search != null">
-							subject like '%' || #{search} || '%' or content like '%' || #{search} || '%'		
-						</if>
-					</where>
-					order by
-						idx desc
-					) Q
-				where
-					<![CDATA[
-						rownum <= #{endNo}
-					]]> 
-			) R
-		where
-			<![CDATA[
-				rnum >= #{startNo}
-			]]>
+			daangn_board
+		<where>
+			<if test="region != null">
+				and loc like '%' || #{region} || '%'
+			</if>
+			<if test="gu != null">
+				and loc like '%' || #{gu} || '%'
+			</if>
+			<if test="dong != null">
+				and loc like '%' || #{dong} || '%'
+			</if>
+			<if test="search != null">
+				and subject like '%' || #{search} || '%' or content like '%' || #{search} || '%'		
+			</if>
+		</where>
+			order by
+				idx desc
 	</select>
 	<select id="selectByIdx" parameterType="int" resultType="DaangnMainBoardVO">
 		select * from daangn_board where idx = #{idx}

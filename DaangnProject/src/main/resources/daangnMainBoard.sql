@@ -9,7 +9,7 @@ CREATE TABLE daangn_board(
 	latitude NUMBER NOT NULL,
 	longitude NUMBER NOT NULL,
 	location varchar2(200) NOT NULL,
-	count NUMBER NOT NULL
+	count NUMBER DEFAULT 0
 )
 
 SELECT * FROM daangn_board;

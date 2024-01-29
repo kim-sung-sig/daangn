@@ -1,8 +1,5 @@
 package kr.ezen.daangn.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -18,12 +15,14 @@ public class HomeController {
 	}
 	//===========================================================================================
 	
+	// 글작성
 	@GetMapping(value = "/upload")
 	public String upload(HttpServletRequest request) {
 		return "upload";
 	}
 	
-	//딱! 한번만 실행해야한다!
+	
+	// 딱! 한번만 실행해야한다!
 //	@Autowired
 //	private JdbcTemplate jdbcTemplate;
 //	@Autowired

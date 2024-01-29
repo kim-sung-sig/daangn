@@ -1,5 +1,7 @@
 package kr.ezen.daangn.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Controller;
@@ -10,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import kr.ezen.daangn.service.DaangnMainBoardService;
 import kr.ezen.daangn.service.DaangnMemberService;
+import kr.ezen.daangn.suport.CommonVO;
+import kr.ezen.daangn.vo.DaangnMainBoardVO;
+import kr.ezen.daangn.vo.DaangnMemberVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -28,7 +33,15 @@ public class FleamarketController {
 					   , @PathVariable(value = "gu", required = false) String gu
 					   , @PathVariable(value = "dong", required = false) String dong) {
 		log.debug("list 실행");
-		// model 에서 해당부분의 맞는 리스트만 list에 담아주자! 페이징 처리는 따로 하지 않겠다.
+		
+		
+		CommonVO commonVO = new CommonVO(region,gu,dong,""); // 검색어는 우선 비워두겠다.
+		List<DaangnMainBoardVO> list = mainBoardService.selectList(commonVO);
+		for(DaangnMainBoardVO boardVO : list) {
+			DaangnMemberVO memberVO = memberService.selectByIdx(boardVO.getRef());
+			boardVO.setMemberVO(memberVO);
+		}
+		model.addAttribute("list", list);
 		return "list";
 	}
 }

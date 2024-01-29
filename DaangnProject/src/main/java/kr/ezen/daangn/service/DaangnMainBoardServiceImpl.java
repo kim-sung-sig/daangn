@@ -1,6 +1,7 @@
 package kr.ezen.daangn.service;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,15 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 	@Override
 	public List<DaangnMainBoardVO> selectList(CommonVO commonVO) {
 		List<DaangnMainBoardVO> list = null;
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("region", commonVO.getRegion());
+		map.put("gu", commonVO.getGu());
+		map.put("dong", commonVO.getDong());
+		try {
+			list = mainBoardDAO.selectList(map);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return list;
 	}
 

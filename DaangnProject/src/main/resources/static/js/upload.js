@@ -51,7 +51,8 @@ $(function() {
 
 신뢰할 수 있는 거래를 위해 자세히 적어주세요.
 과학기술정보통신부, 한국 인터넷진흥원과 함께해요.`;
-						$("#content").attr("placeholder", content)
+						$("#content").attr("placeholder", content);
+						$("#loc").val(result[i].address_name);
 						break;
 					}
 				}
@@ -128,4 +129,55 @@ $(function() {
         alert('최대 10장까지 선택할 수 있습니다.');
       }
     });
+    
+    
+    // 서브밋 될때
+    $("#uploadForm").submit(function(){
+		let value = $("#subject").val();
+		if(value.trim().length == 0){
+			alert('제목을 입력해주세요.');
+			$("#subject").val("");
+			$("#subject").focus();
+			return false;
+		}
+		
+		if(value.search(/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi) >= 0){
+			alert('제목에는 특수문자는 사용할 수 없습니다.');
+			$("#subject").val("");
+			$("#subject").focus();
+			return false;
+		}
+		
+		value = $("#content").val();
+		if(value.trim().length == 0){
+			alert('내용을 입력해주세요.');
+			$("#content").val("");
+			$("#content").focus();
+			return false;
+		}
+		
+		if(value.search(/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi) >= 0){
+			alert('내용에는 특수문자는 사용할 수 없습니다.');
+			$("#content").val("");
+			$("#content").focus();
+			return false;
+		}
+		
+		value = $("#detailAddress").val();
+		if(value.trim().length == 0){
+			alert('상세주소를 입력해주세요.');
+			$("#detailAddress").val("");
+			$("#detailAddress").focus();
+			return false;
+		}
+		
+		if(value.search(/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi) >= 0){
+			alert('상세주소에는 특수문자는 사용할 수 없습니다.');
+			$("#detailAddress").val("");
+			$("#detailAddress").focus();
+			return false;
+		}
+		alert('상품을 등록했습니다.')
+		return false;
+	})
 });
