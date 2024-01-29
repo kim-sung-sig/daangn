@@ -59,7 +59,7 @@
 				<div class="main-top">
 					<h3>중고 물품 리스트</h3>
 					<div class="region">
-						<select>
+						<select class="uk-select">
 							<option>지역을 선택하세요.</option>
 							<option>강서구</option>
 							<option>양천구</option>
@@ -159,17 +159,17 @@
 						</div>
 						<th:block th:each="vo : ${list}">
 							<div class="uk-card uk-card-default" style="width: 300px">
-							<div class="uk-card-media-top">
-								<img src="https://source.unsplash.com/1500x706" alt="">
+								<div class="uk-card-media-top">
+									<img src="https://source.unsplash.com/1500x706" alt="">
+								</div>
+								<div class="uk-card-body">
+									<h4 class="uk-card-title">[[${vo.subject}]]</h4>
+									<p class="price">[[${#numbers.formatInteger(vo.price, 0, 'COMMA')}]]원</p>
+									<span class="city">[[${vo.loc}]]</span>
+									<p class="like"><span>관심 6</span>&nbsp;<span>채팅 5</span>&nbsp;<span>조회수 [[${vo.readCount}]]</span></p>
+									<p class="regDate">게시일 [[${#dates.format(vo.regDate,'yyyy-MM-dd')}]]</p>
+								</div>
 							</div>
-							<div class="uk-card-body">
-								<h4 class="uk-card-title">[[${vo.subject}]]</h4>
-								<p class="price">[[${vo.price}]]</p>
-								<span class="city">[[${vo.loc}]]</span>
-								<p class="like"><span>관심 6</span>&nbsp;<span>채팅 5</span>&nbsp;<span>조회수 [[${vo.count}]]</span></p>
-								<p class="regDate">게시일 2023.12.31</p>
-							</div>
-						</div>
 						</th:block>
 					</div>
 				</section>

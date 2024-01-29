@@ -12,10 +12,9 @@ import kr.ezen.daangn.vo.DaangnMainBoardVO;
 public interface DaangnMainBoardDAO {
 	// 리스트 주기
 	List<DaangnMainBoardVO> selectList(HashMap<String, Object> map) throws SQLException;
-	// 갯수새기
-	int selectCount(HashMap<String, Object> map) throws SQLException;
-	
 	// 한개 얻기
 	DaangnMainBoardVO selectByIdx(int idx) throws SQLException;
 	
+	// 유저idx 에 해당하는 글 주기
+	List<DaangnMainBoardVO> selectByRef(int ref) throws SQLException;
 }

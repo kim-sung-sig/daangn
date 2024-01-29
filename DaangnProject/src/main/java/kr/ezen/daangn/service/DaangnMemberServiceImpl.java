@@ -9,7 +9,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.ezen.daangn.dao.DaangnMainBoardDAO;
 import kr.ezen.daangn.dao.DaangnMemberDAO;
+import kr.ezen.daangn.vo.DaangnMainBoardVO;
 import kr.ezen.daangn.vo.DaangnMemberVO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,6 +22,9 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 	
 	@Autowired
 	private DaangnMemberDAO daangnMemberDAO;
+	
+	@Autowired
+	private DaangnMainBoardDAO daangnMainBoardDAO;
 	
 	@Override
 	public DaangnMemberVO loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -168,5 +173,16 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 			e.printStackTrace();
 		}
 		return count;
+	}
+
+	@Override
+	public List<DaangnMainBoardVO> selectMainBoardByMemberIdx(int idx) {
+		List<DaangnMainBoardVO> list = null;
+		try {
+			list = daangnMainBoardDAO.selectByRef(idx);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 }

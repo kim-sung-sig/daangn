@@ -10,4 +10,5 @@ public interface DaangnMainBoardService {
 	List<DaangnMainBoardVO> selectList(CommonVO commonVO);
 	// 2. 1개 글 보기!
 	DaangnMainBoardVO selectByIdx(int idx);
+
 }

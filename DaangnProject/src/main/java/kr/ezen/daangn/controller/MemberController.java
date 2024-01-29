@@ -1,5 +1,7 @@
 package kr.ezen.daangn.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Controller;
@@ -13,8 +15,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import kr.ezen.daangn.service.DaangnMainBoardService;
 import kr.ezen.daangn.service.DaangnMemberService;
 import kr.ezen.daangn.service.MailService;
+import kr.ezen.daangn.vo.DaangnMainBoardVO;
 import kr.ezen.daangn.vo.DaangnMemberVO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,6 +29,8 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberController {
 	@Autowired
 	private DaangnMemberService daangnMemberService;
+	@Autowired
+	private DaangnMainBoardService daangnMainBoardService;
 	
 	@GetMapping(value = "/login")
 	public String login(@RequestParam(value = "error", required = false) String error,
@@ -79,11 +85,6 @@ public class MemberController {
 		return "redirect:/";
 	}
 	
-	@GetMapping(value = "/home")
-	public String home(HttpServletRequest request, Model model) {
-		return "home";
-	}
-	
 	@Autowired
 	private MailService mailService;
 	
@@ -96,4 +97,15 @@ public class MemberController {
     	log.info("send Success?:{}", result);
     	return result;
     }
+    
+    
+    @GetMapping(value = "/home")
+	public String home(HttpServletRequest request, Model model) {
+    	log.info("home 실행");
+    	DaangnMemberVO memberVO = (DaangnMemberVO) request.getSession().getAttribute("user");
+    	List<DaangnMainBoardVO> mainBoardList = daangnMemberService.selectMainBoardByMemberIdx(memberVO.getIdx());
+    	
+    	model.addAttribute("boardList", mainBoardList);
+		return "home";
+	}
 }

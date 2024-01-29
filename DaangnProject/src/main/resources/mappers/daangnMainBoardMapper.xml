@@ -24,19 +24,12 @@
 			order by
 				idx desc
 	</select>
+	
 	<select id="selectByIdx" parameterType="int" resultType="DaangnMainBoardVO">
 		select * from daangn_board where idx = #{idx}
 	</select>
 	
-	<select id="selectCount" parameterType="hashmap" resultType="int">
-		select
-			count(*)
-		from
-			daangn_board
-		<where>
-			<if test="search != null">
-				subject like '%' || #{search} || '%' or content like '%' || #{search} || '%'		
-			</if>
-		</where>
+	<select id="selectByRef" parameterType="int" resultType="DaangnMainBoardVO">
+		select * from daangn_board where ref = #{ref}
 	</select>
 </mapper>

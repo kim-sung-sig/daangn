@@ -33,22 +33,16 @@ nav>ul>li>a:hover{color: #d05300;}
 #search>span{margin-right: 10px; height: 40px}
 .chat{width: 320px}
 
-
 main{width: 100%; padding: 160px 0;}
-.main-top {display: flex; justify-content: space-between;}
-.uk-select{width: 180px}
-/*.main-top > .region > select {padding: 10px 50px 10px 0; border-radius: 5px;}*/
-select:focus {outline: none; }
 
 .uk-card-media-top {height: 200px} 
 .uk-card-media-top > img {height: 200px;}
-.uk-card-title {margin: 0 !important}
 .uk-card-body {display: flex; flex-direction: column; justify-content: center; padding: 15px 40px;}
 .uk-card-body > h4 {font-size: 20px; margin: 5px}
-.uk-card-body > .price {font-weight: 500; margin: 0}
+.uk-card-body > .price {font-weight: 500; margin: 5px}
 .uk-card-body > .regDate {font-size: 12px; margin: 0 0 0 0 !important;}
 .uk-card-body > .like, .city {font-size: 14px; margin: 0 0 5px 0 !important;}
 
 
 .uk-container{ width: 1000px !important;}
-footer{width: 100%; background: #333; height: 64px;}
+

@@ -1,5 +1,6 @@
 package kr.ezen.daangn.vo;
 
+import java.util.Date;
 import java.util.List;
 
 import lombok.Data;
@@ -18,8 +19,8 @@ public class DaangnMainBoardVO {
 	private String location;	// 상세위치
 	private String loc;			// 서울시 강서구 화곡1동 이런값을 가지는 데이터
 	
-	private int count;			// 조회수
-								// 게시일...
+	private int readCount;		// 조회수
+	private Date regDate;		// 게시일
 	//==================================================
 	
 	private DaangnMemberVO memberVO;				// 유저 정보담기

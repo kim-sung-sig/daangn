@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,10 +11,62 @@
 <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<title>Document</title>
-
+<link href="../css/home.css" rel="stylesheet">
+<script src="../js/home.js"></script>
+<title>마이페이지</title>
 </head>
 <body>
-	마이페이지 입니다.!
+	<div id="wrap">
+		<header id="header">
+			<div id="header-inner">
+				<div id="navi">
+					<h1 id="logo">
+						<a href="/">
+							<img src="https://i.namu.wiki/i/urKu84c6cV1U3tmZqPiopxkCnQOn96j3gA6Wf730iSTzz41XDOeqypSusjBVPXeHxGe8RJAOjMY11uywzcDqSA.svg" alt="logo" />
+						</a>
+					</h1>
+					<nav>
+						<ul>
+							<li><a href="/fleamarket/">중고거래</a></li>
+							<li><a href="/upload">내 물건 팔기</a></li>
+							<li><a href="/list">생활꿀팁</a></li>
+							<li><a href="/list">중고거래</a></li>
+							<li><a href="/list">중고거래</a></li>
+						</ul>
+					</nav>
+				</div>
+				<div id="search">
+					<span>
+						<form action="" method="get">
+							<div class="uk-margin">
+								<input class="uk-input uk-form-width-long chat" type="text"
+									placeholder="동네 물품을 검색해주세요!" aria-label="Large">
+							</div>
+						</form>
+					</span>
+					<span>
+						<th:block th:if="${session.user != null}">
+							<a class="uk-button uk-button-default" href="/member/logout">로그아웃</a>					
+						</th:block>
+						<th:block th:if="${session.user == null}">
+							<a class="uk-button uk-button-default" href="/member/login">로그인</a>						
+						</th:block>
+					</span>
+				</div>
+			</div>
+		</header>
+		
+		
+		<main>
+			<div class="uk-container">
+				<div class="main-top">
+					<h3>마이페이지 입니다.</h3>
+				</div>
+			</div>
+			<div class="uk-container">
+				
+			</div>
+		</main>
+	</div>
 </body>
 </html>

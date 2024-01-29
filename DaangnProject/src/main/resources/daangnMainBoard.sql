@@ -1,5 +1,7 @@
 CREATE SEQUENCE daangn_board_idx_seq;
 
+DROP TABLE DAANGN_BOARD ;
+
 CREATE TABLE daangn_board(
 	idx NUMBER PRIMARY KEY ,
 	REF NUMBER NOT NULL,
@@ -9,11 +11,14 @@ CREATE TABLE daangn_board(
 	latitude NUMBER NOT NULL,
 	longitude NUMBER NOT NULL,
 	location varchar2(200) NOT NULL,
-	count NUMBER DEFAULT 0
-)
+	loc varchar2(200) NOT NULL,
+	readCount NUMBER DEFAULT 0,
+	regDate TIMESTAMP DEFAULT SYSDATE
+);
 
 SELECT * FROM daangn_board;
+INSERT INTO DAANGN_BOARD VALUES (daangn_board_idx_seq.nextval,6,'세탁기팔아요','내용',35000,37.54024495118844,126.83891917835108,'화곡','화곡역 1번출구',0, SYSDATE);
 
-INSERT INTO DAANGN_BOARD values(daangn_board_idx_seq.nextval,1,'제목','내용',12345,54.000,74.000,'화곡',0);--4번
-INSERT INTO DAANGN_BOARD values(daangn_board_idx_seq.nextval,2,'asdf','내용',12345,54.000,74.000,'화곡',0);
-INSERT INTO DAANGN_BOARD values(daangn_board_idx_seq.nextval,3,'qwer','내용',12345,54.000,74.000,'화곡',0);
+INSERT INTO DAANGN_BOARD VALUES (daangn_board_idx_seq.nextval,2,'닌텐도 팔아요','내용',5200,37.54024495118844,126.83891917835108,'화곡','화곡역 1번출구',0, SYSDATE);
+
+INSERT INTO DAANGN_BOARD VALUES (daangn_board_idx_seq.nextval,3,'그림팝니다','내용',68000,37.54024495118844,126.83891917835108,'화곡','화곡역 1번출구',0, SYSDATE);

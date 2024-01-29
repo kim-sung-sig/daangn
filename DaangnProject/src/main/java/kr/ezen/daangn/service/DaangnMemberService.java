@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import kr.ezen.daangn.vo.DaangnMainBoardVO;
 import kr.ezen.daangn.vo.DaangnMemberVO;
 
 public interface DaangnMemberService extends UserDetailsService{
@@ -31,4 +32,8 @@ public interface DaangnMemberService extends UserDetailsService{
 	
 	// 중복확인
 	int selectCountByUsername(String username);
+	
+	
+	// 유저가 쓴 글 보여주기!
+	List<DaangnMainBoardVO> selectMainBoardByMemberIdx(int idx);
 }
