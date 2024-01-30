@@ -11,7 +11,8 @@
 	<script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
 	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="../css/list.css">
+	<link rel="stylesheet" href="/css/list.css">
+	<script src="/js/list.js"></script>
 </head>
 <body>
 	<div id="wrap">
@@ -59,14 +60,50 @@
 				<div class="main-top">
 					<h3>중고 물품 리스트</h3>
 					<div class="region">
-						<select class="uk-select">
-							<option>지역을 선택하세요.</option>
-							<option>강서구</option>
-							<option>양천구</option>
-							<option>구로구</option>
-							<option>영등포구</option>
-							<option>마포구</option>
+						<select class="uk-select" id="r1">
+							<option th:selected="${region eq null}">지역을 선택하세요.</option>
+							<option th:value="서울시" th:selected="${region == '서울시'}">서울시</option>
 						</select>
+						<th:block th:if="${region != null}">
+							<select class="uk-select" id="r2">
+								<option th:selected="${gu eq null}">지역을 선택하세요.</option>
+								<option th:selected="${gu == '강남구'}">강남구</option>
+								<option th:selected="${gu == '강동구'}">강동구</option>
+								<option th:selected="${gu == '강북구'}">강북구</option>
+								<option th:selected="${gu == '강서구'}">강서구</option>
+								<option th:selected="${gu == '관악구'}">관악구</option>
+								<option th:selected="${gu == '광진구'}">광진구</option>
+								<option th:selected="${gu == '구로구'}">구로구</option>
+								<option th:selected="${gu == '금천구'}">금천구</option>
+								<option th:selected="${gu == '노원구'}">노원구</option>
+								<option th:selected="${gu == '도봉구'}">도봉구</option>
+								<option th:selected="${gu == '동대문구'}">동대문구</option>
+								<option th:selected="${gu == '동작구'}">동작구</option>
+								<option th:selected="${gu == '마포구'}">마포구</option>
+								<option th:selected="${gu == '서대문구'}">서대문구</option>
+								<option th:selected="${gu == '서초구'}">서초구</option>
+								<option th:selected="${gu == '성동구'}">성동구</option>
+								<option th:selected="${gu == '성북구'}">성북구</option>
+								<option th:selected="${gu == '송파구'}">송파구</option>
+								<option th:selected="${gu == '양천구'}">양천구</option>
+								<option th:selected="${gu == '영등포구'}">영등포구</option>
+								<option th:selected="${gu == '용산구'}">용산구</option>
+								<option th:selected="${gu == '은평구'}">은평구</option>
+								<option th:selected="${gu == '종로구'}">종로구</option>
+								<option th:selected="${gu == '중구'}">중구</option>
+								<option th:selected="${gu == '중량구'}">중량구</option>
+							</select>
+						</th:block>
+						<th:block th:if="${gu != null}">
+							<select class="uk-select">
+								<option>지역을 선택하세요.</option>
+								<option>강서구</option>
+								<option>양천구</option>
+								<option>구로구</option>
+								<option>영등포구</option>
+								<option>마포구</option>
+							</select>
+						</th:block>
 					</div>
 				</div>
 			</div>
@@ -166,8 +203,8 @@
 									<h4 class="uk-card-title">[[${vo.subject}]]</h4>
 									<p class="price">[[${#numbers.formatInteger(vo.price, 0, 'COMMA')}]]원</p>
 									<span class="city">[[${vo.loc}]]</span>
-									<p class="like"><span>관심 6</span>&nbsp;<span>채팅 5</span>&nbsp;<span>조회수 [[${vo.readCount}]]</span></p>
-									<p class="regDate">게시일 [[${#dates.format(vo.regDate,'yyyy-MM-dd')}]]</p>
+									<p class="like"><span>관심 6</span>ㆍ<span>채팅 5</span>ㆍ<span>조회수 [[${vo.readCount}]]</span></p>
+									<p class="regDate">게시일 [[${#dates.format(vo.regDate,'yyyy.MM.dd')}]]</p>
 								</div>
 							</div>
 						</th:block>
@@ -176,6 +213,6 @@
 			</div>
 		</main>
 	</div>
-	<footer> </footer>
+	<footer></footer>
 </body>
 </html>

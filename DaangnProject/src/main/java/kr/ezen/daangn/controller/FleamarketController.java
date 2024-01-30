@@ -27,7 +27,7 @@ public class FleamarketController {
 	@Autowired
 	private DaangnMemberService memberService;
 	
-	@GetMapping(value = {"/", "/{region}", "/{region}/{gu}", "/{region}/{gu}/{dong}"})
+	@GetMapping(value = {"","/", "/{region}", "/{region}/{gu}", "/{region}/{gu}/{dong}"})
 	public String list(Model model
 					   , @PathVariable(value = "region", required = false) String region
 					   , @PathVariable(value = "gu", required = false) String gu
@@ -40,6 +40,15 @@ public class FleamarketController {
 		for(DaangnMainBoardVO boardVO : list) {
 			DaangnMemberVO memberVO = memberService.selectByIdx(boardVO.getRef());
 			boardVO.setMemberVO(memberVO);
+		}
+		if(region != null){
+			model.addAttribute("region", region);
+		}
+		if(gu != null){
+			model.addAttribute("gu", gu);
+		}
+		if(dong != null){
+			model.addAttribute("dong", dong);
 		}
 		model.addAttribute("list", list);
 		return "list";
