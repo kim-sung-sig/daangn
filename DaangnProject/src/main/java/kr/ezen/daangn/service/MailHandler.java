@@ -2,10 +2,10 @@ package kr.ezen.daangn.service;
 
 import java.io.UnsupportedEncodingException;
 
+import org.springframework.lang.NonNull;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
-import io.micrometer.common.lang.NonNull;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
@@ -23,22 +23,22 @@ public class MailHandler {
 	}
 
 	// 이 이메일이 누구로부터 가는가.. 실제로 써본결과 그다지 중요하지 않은듯..잘 모르겠습니다.
-	public void setFrom(String email, String name) throws UnsupportedEncodingException, MessagingException {
+	public void setFrom(@NonNull String email, @NonNull String name) throws UnsupportedEncodingException, MessagingException {
 		messageHelper.setFrom(email, name);
 	}
 
 	// 누구에게 보낼 것인가.. 보낼사람의 이메일
-	public void setTo(String email) throws MessagingException {
+	public void setTo(@NonNull String email) throws MessagingException {
 		messageHelper.setTo(email);
 	}
 
 	// 보낼때 제목
-	public void setSubject(String subject) throws MessagingException {
+	public void setSubject(@NonNull String subject) throws MessagingException {
 		messageHelper.setSubject(subject);
 	}
 
 	// 보낼 메일의 내용.. 두번째 파라미터는 html을 적용할 것인가 아닌가. true시 html형식으로 작성하면 html형식으로 보임..
-	public void setText(String text) throws MessagingException {
+	public void setText(@NonNull String text) throws MessagingException {
 		messageHelper.setText(text, true);
 	}
 

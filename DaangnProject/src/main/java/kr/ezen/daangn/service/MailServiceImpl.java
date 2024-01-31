@@ -17,6 +17,7 @@ public class MailServiceImpl implements MailService{
 	@Autowired
 	private JavaMailSender javaMailSender; // 메일을 보내기 위한 객체
 	
+	@SuppressWarnings("null")
 	@Override
 	public String mailSend(String to) {
 		log.debug("mailsend({}) 실행", to);
