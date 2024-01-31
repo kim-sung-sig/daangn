@@ -20,7 +20,9 @@ $(function() {
 			if (username.indexOf(" ") != -1) {
 			} else {
 				// Ajax를 호출하여 처리 한다.
-				axios.get('/member/login/useridcheck?username=' + username)
+				axios.post('/member/login/useridcheck',{
+					'username': username
+				})
 				.then(function(response) {
 					if (response.data * 1 == 0) {
 						$("#message").html("사용가능한 아이디입니다.").css('color', 'blue');

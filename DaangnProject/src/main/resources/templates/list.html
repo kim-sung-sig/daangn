@@ -61,12 +61,12 @@
 					<h3>중고 물품 리스트</h3>
 					<div class="region">
 						<select class="uk-select" id="r1">
-							<option th:selected="${region eq null}">지역을 선택하세요.</option>
-							<option th:value="서울시" th:selected="${region == '서울시'}">서울시</option>
+							<option th:selected="${region eq null}" value="0">지역을 선택하세요.</option>
+							<option th:value="서울특별시" th:selected="${region == '서울특별시'}">서울특별시</option>
 						</select>
 						<th:block th:if="${region != null}">
 							<select class="uk-select" id="r2">
-								<option th:selected="${gu eq null}">지역을 선택하세요.</option>
+								<option th:selected="${gu eq null}" value="0">지역을 선택하세요.</option>
 								<option th:selected="${gu == '강남구'}">강남구</option>
 								<option th:selected="${gu == '강동구'}">강동구</option>
 								<option th:selected="${gu == '강북구'}">강북구</option>
