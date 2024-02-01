@@ -40,18 +40,14 @@ public class FleamarketController {
 		list.forEach((boardVO)->{
 			boardVO.setMemberVO(memberService.selectByIdx(boardVO.getIdx()));
 		});
-		model.addAttribute("regionList", mainBoardService.regionList(region, gu, dong));
-		if(region != null){
+		model.addAttribute("regionList", mainBoardService.regionList(null,null,null));
+		if (region != null) {
 			model.addAttribute("region", region);
-			model.addAttribute("guList", mainBoardService.regionList(region, gu, dong));
+			model.addAttribute("guList", mainBoardService.regionList(region, null, null));			
 		}
-		if(gu != null){
+		if (gu != null) {
 			model.addAttribute("gu", gu);
-			model.addAttribute("dongList", mainBoardService.regionList(region, gu, dong));
-		}
-		if(dong != null){
-			model.addAttribute("dong", dong);
-			model.addAttribute("dongList", mainBoardService.regionList(region, gu, dong));
+			model.addAttribute("dongList", mainBoardService.regionList(region, gu, null));			
 		}
 		model.addAttribute("list", list);
 		return "list";

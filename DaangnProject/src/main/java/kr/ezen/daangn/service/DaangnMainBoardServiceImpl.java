@@ -18,9 +18,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.ezen.daangn.dao.DaangnMainBoardDAO;
 import kr.ezen.daangn.suport.CommonVO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
+import lombok.extern.slf4j.Slf4j;
 
 @Service(value = "mainBoardService")
 @Transactional
+@Slf4j
 public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 
 	@Autowired
@@ -40,17 +42,18 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 					list.add(regionNames.next());
 				}
 			} else if (gu == null){ // 리턴 (서울시)=>강서구, 양천구 ...
-				JsonNode regionNode = jsonNode.get(region);
+				JsonNode regionNode = jsonNode.path(region);
 				Iterator<String> guNames = regionNode.fieldNames();
 				while (guNames.hasNext()) {
 					list.add(guNames.next());
 				}
 			} else { // 리턴 ( 서울시, 강서구) => 화곡1동, 신월동, 목3동  or (서울시, 강서구, 화곡1동) => 화곡1동, 신월동, 목3동
-				JsonNode regionNode = jsonNode.get(region);
-				JsonNode guNode = regionNode.get(gu);
-				Iterator<String> dongNames = guNode.fieldNames();
-				while (dongNames.hasNext()) {
-					list.add(dongNames.next());
+				JsonNode guNode = jsonNode.path(region).path(gu);
+				log.info("-".repeat(120));
+				if (guNode.isArray()) {
+					for (JsonNode dongNode : guNode) {
+						list.add(dongNode.asText());
+					}
 				}
 			}
 		} catch (IOException e) {
