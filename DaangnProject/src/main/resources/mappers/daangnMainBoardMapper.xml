@@ -8,19 +8,25 @@
 		from
 			daangn_board
 		<where>
-			<if test="region != null">
-				and loc like '%' || #{region} || '%'
-			</if>
-			<if test="gu != null">
-				and loc like '%' || #{gu} || '%'
-			</if>
-			<if test="dong != null">
-				and loc like '%' || #{dong} || '%'
-			</if>
-			<if test="search != null">
-				and subject like '%' || #{search} || '%' or content like '%' || #{search} || '%'		
-			</if>
-		</where>
+	        <trim prefix="AND" suffixOverrides="AND">
+	            <if test="region != null">
+	                LOC LIKE '%' || #{region} || '%' AND
+	            </if>
+	            <if test="gu != null">
+	                LOC LIKE '%' || #{gu} || '%' AND
+	            </if>
+	            <if test="dong != null">
+	                LOC LIKE '%' || #{dong} || '%' AND
+	            </if>
+	            <if test="search != null">
+	                (
+	                    SUBJECT LIKE '%' || #{search} || '%'
+	                    OR CONTENT LIKE '%' || #{search} || '%'
+	                )
+	                AND
+	            </if>
+	        </trim>
+   		</where>
 			order by
 				idx desc
 	</select>

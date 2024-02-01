@@ -35,14 +35,9 @@
 					</nav>
 				</div>
 				<div id="search">
-					<span>
-						<form action="" method="get">
-							<div class="uk-margin">
-								<input class="uk-input uk-form-width-long chat" type="text"
-									placeholder="동네 물품을 검색해주세요!" aria-label="Large">
-							</div>
-						</form>
-					</span>
+					<form action="" method="get" id="searchForm">
+						<input class="uk-input uk-form-width-long chat" type="text" placeholder="동네 물품을 검색해주세요!" aria-label="Large" name="search" id="searchText">
+					</form>
 					<span>
 						<th:block th:if="${session.user != null}">
 							<a class="uk-button uk-button-default" href="/member/logout">로그아웃</a>					

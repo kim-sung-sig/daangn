@@ -69,6 +69,7 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 		map.put("region", commonVO.getRegion());
 		map.put("gu", commonVO.getGu());
 		map.put("dong", commonVO.getDong());
+		map.put("search", commonVO.getSearch());
 		try {
 			list = mainBoardDAO.selectList(map);
 		} catch (SQLException e) {

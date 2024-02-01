@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import kr.ezen.daangn.service.DaangnMainBoardService;
 import kr.ezen.daangn.service.DaangnMemberService;
@@ -31,11 +32,12 @@ public class FleamarketController {
 	public String list(Model model
 					   , @PathVariable(value = "region", required = false) String region
 					   , @PathVariable(value = "gu", required = false) String gu
-					   , @PathVariable(value = "dong", required = false) String dong) {
-		log.debug("list 실행");
+					   , @PathVariable(value = "dong", required = false) String dong
+					   , @RequestParam(value = "search", required = false) String search) {
+		log.debug("list 실행 region: {}, gu: {}, dong: {}, search: {}", region, gu, dong, search);
 		
 		
-		CommonVO commonVO = new CommonVO(region,gu,dong,""); // 검색어는 우선 비워두겠다.
+		CommonVO commonVO = new CommonVO(region, gu, dong, search); // 검색어는 우선 비워두겠다.
 		List<DaangnMainBoardVO> list = mainBoardService.selectList(commonVO);
 		list.forEach((boardVO)->{
 			boardVO.setMemberVO(memberService.selectByIdx(boardVO.getIdx()));
