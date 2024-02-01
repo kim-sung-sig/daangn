@@ -10,5 +10,12 @@ public interface DaangnMainBoardService {
 	List<DaangnMainBoardVO> selectList(CommonVO commonVO);
 	// 2. 1개 글 보기!
 	DaangnMainBoardVO selectByIdx(int idx);
-
+	
+	// 3. 글쓰기
+	
+	// 4. 글삭제하기
+	
+	// 0. 지역리스트 뿌리기
+	List<String> regionList(String region, String gu, String dong);
+	
 }

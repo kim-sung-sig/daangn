@@ -37,18 +37,21 @@ public class FleamarketController {
 		
 		CommonVO commonVO = new CommonVO(region,gu,dong,""); // 검색어는 우선 비워두겠다.
 		List<DaangnMainBoardVO> list = mainBoardService.selectList(commonVO);
-		for(DaangnMainBoardVO boardVO : list) {
-			DaangnMemberVO memberVO = memberService.selectByIdx(boardVO.getRef());
-			boardVO.setMemberVO(memberVO);
-		}
+		list.forEach((boardVO)->{
+			boardVO.setMemberVO(memberService.selectByIdx(boardVO.getIdx()));
+		});
+		model.addAttribute("regionList", mainBoardService.regionList(region, gu, dong));
 		if(region != null){
 			model.addAttribute("region", region);
+			model.addAttribute("guList", mainBoardService.regionList(region, gu, dong));
 		}
 		if(gu != null){
 			model.addAttribute("gu", gu);
+			model.addAttribute("dongList", mainBoardService.regionList(region, gu, dong));
 		}
 		if(dong != null){
 			model.addAttribute("dong", dong);
+			model.addAttribute("dongList", mainBoardService.regionList(region, gu, dong));
 		}
 		model.addAttribute("list", list);
 		return "list";
