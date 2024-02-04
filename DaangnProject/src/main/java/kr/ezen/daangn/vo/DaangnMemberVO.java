@@ -28,6 +28,11 @@ public class DaangnMemberVO implements UserDetails{
 	// address
 	private String stAddress;				// 도로명주소	(이름 추천)
 	private String dtAddress;				// 상세주소		(이름 추천)
+	//====================================================================
+	
+	private DaangnFileVO userProfile;		// 프로필 사진!
+	// 유저평
+	
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

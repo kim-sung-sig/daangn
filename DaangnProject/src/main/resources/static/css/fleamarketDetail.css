@@ -1,0 +1,42 @@
+body, html {font-family: "Noto Sans KR"; font-weight: 300; }
+
+
+main{width: 100%; padding: 110px 0;}
+.main-top {display: flex; justify-content: space-between;}
+
+.uk-container{ width: 650px !important;}
+.uk-position-relative{overflow: hidden; border-radius: 20px;}
+.uk-slider-items > li {width: 100%; height: 500px; display: flex; align-items: center; overflow: hidden;}
+.uk-slider-items > li > img {max-width: 100% !important; height: auto;}
+
+.uk-card-default .uk-card-header{padding: 10px 40px; border: none;}
+.uk-card-default .uk-card-footer{border: none;}
+
+.uk-card-body {padding: 20px 40px;}
+.uk-card-body .regDate {margin: 0; font-size: 14px}
+.uk-card-body > .text-card {line-height: 2}
+
+.uk-card-footer {font-size:14px; line-height: 0.5}
+.uk-card-default {height: auto;}
+.uk-width-expand {display: flex; justify-content: space-between; align-items: center;}
+.uk-width-expand p {margin: 0 0 0 0!important;  font-size: 14px;}
+.uk-width-expand h4 {font-size: 16px; font-weight: 500;}
+#mapText p{font-weight: 500 }
+#mapText p span{font-weight: 300 }
+
+
+footer {width: 100%; height: 65px;position: fixed; bottom: 0; left: 0; z-index: 999; box-shadow: 0 0 3px #ccc;}
+
+#footer-inner{width: 650px;background:#fff; margin: auto; height: 65px; padding: 0 40px; display: flex; align-items: center;}
+
+#likeHeart{width: 65px; height: 65px; display: flex; align-items: center; justify-content: center;}
+
+#likeHeart a.active svg path{fill: red}
+
+#footerBox{width:505px;display: flex; justify-content: space-between; padding-left: 20px}
+#footerBox > div { display: flex; align-items: center;}
+
+#footer-inner .uk-button {background: #FF8A3D; border-radius: 10px}
+
+
+.hr {width: 100%; height: 1px; background: #e5e5e5}

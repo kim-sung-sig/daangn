@@ -84,51 +84,34 @@ $(function() {
 	});
 	
 	
-	
-	// 사진 업로드
-	const dropzone = document.getElementById('dropzone');
-    const imagePreview = document.getElementById('image-preview');
-    let imageFiles = [];
+	// 사진 업로드 하기!
+    document.getElementById('fileInput').addEventListener('change', function (event) {
+        // 선택된 파일 가져오기
+        var files = event.target.files;
 
-    dropzone.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      dropzone.classList.add('active');
+        // 파일 미리보기를 표시할 엘리먼트
+        var previewElement = document.getElementById('preview');
+
+        // 파일마다 미리보기를 생성
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            var reader = new FileReader();
+
+            // 파일의 내용을 읽어 데이터 URL로 변환
+            reader.readAsDataURL(file);
+
+            // 읽기가 완료된 후 실행되는 콜백 함수
+            reader.onload = function () {
+                // 미리보기 이미지를 생성하여 추가
+                var img = document.createElement('img');
+                img.src = reader.result;
+                img.alt = 'Preview';
+                img.className = 'uk-responsive-width uk-margin-small-right';
+                previewElement.appendChild(img);
+            };
+        }
     });
-
-    dropzone.addEventListener('dragleave', () => {
-      dropzone.classList.remove('active');
-    });
-
-    dropzone.addEventListener('drop', (e) => {
-      e.preventDefault();
-      dropzone.classList.remove('active');
-
-      const files = Array.from(e.dataTransfer.files);
-
-      // 이미지 파일만 선택
-      const imageFilesToAdd = files.filter(file => file.type.startsWith('image/'));
-      const remainingSlots = 10 - imageFiles.length;
-
-      if (imageFilesToAdd.length <= remainingSlots) {
-        imageFiles = imageFiles.concat(imageFilesToAdd);
-
-        // 이미지 미리보기 생성
-        imagePreview.innerHTML = '';
-        imageFiles.forEach(file => {
-          const reader = new FileReader();
-
-          reader.onload = (e) => {
-            const image = document.createElement('img');
-            image.src = e.target.result;
-            imagePreview.appendChild(image);
-          };
-
-          reader.readAsDataURL(file);
-        });
-      } else {
-        alert('최대 10장까지 선택할 수 있습니다.');
-      }
-    });
+    
     
     
     // 서브밋 될때
@@ -178,6 +161,6 @@ $(function() {
 			return false;
 		}
 		alert('상품을 등록했습니다.')
-		return false;
+		return true;
 	})
 });

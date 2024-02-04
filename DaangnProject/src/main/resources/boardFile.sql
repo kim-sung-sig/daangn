@@ -5,6 +5,6 @@ CREATE TABLE daangn_board_file(
 	REF NUMBER NOT NULL,
 	originFileName varchar2(1000) NOT NULL,
 	saveFileName varchar2(1000) NOT null
-)
+);
 
 SELECT * FROM daangn_board_file;

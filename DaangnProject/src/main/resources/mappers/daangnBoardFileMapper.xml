@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "./mybatis-3-mapper.dtd" >
+<mapper namespace="kr.ezen.daangn.dao.DaangnBoardFileDAO">
+	
+	<!-- 파일 저장하기 -->
+	<insert id="insertFile" parameterType="DaangnFileVO">
+		insert into daangn_board_file values (daangn_board_file_idx_seq.nextval, #{ref}, #{originFileName}, #{saveFileName})
+	</insert>
+	
+	<!-- 1. 파일 삭제하기 (게시글에 대한) -->
+	<delete id="deleteLike" parameterType="int">
+		delete from	daangn_board_file where ref = #{ref}	   
+	</delete>
+	
+	<!-- 게시글에 대한 사진 얻기 -->
+	<select id="selectFileByBoardIdx" parameterType="int" resultType="DaangnFileVO">
+		select * from daangn_board_file where ref = #{ref}
+	</select>
+	
+</mapper>

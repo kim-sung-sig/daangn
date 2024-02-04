@@ -17,4 +17,7 @@ public interface DaangnMainBoardDAO {
 	
 	// 유저idx 에 해당하는 글 주기
 	List<DaangnMainBoardVO> selectByRef(int ref) throws SQLException;
+	
+	// 글 저장 후 idx 리턴
+	int insert(DaangnMainBoardVO mainBoardVO) throws SQLException;
 }

@@ -11,8 +11,9 @@
 	<script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
 	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="/css/list.css">
-	<script src="/js/list.js"></script>
+	<link rel="stylesheet" href="/css/header.css">
+	<link rel="stylesheet" href="/css/fleamarket.css">
+	<script src="/js/fleamarket.js"></script>
 </head>
 <body>
 	<div id="wrap">
@@ -161,8 +162,10 @@
 								<p class="regDate">게시일 2023.12.31</p>
 							</div>
 						</div>
+						
+						
 						<th:block th:each="vo : ${list}">
-							<div class="uk-card uk-card-default" style="width: 300px">
+							<div class="uk-card uk-card-default" style="width: 300px" th:onclick="detail([[${vo.idx}]])">
 								<div class="uk-card-media-top">
 									<img src="https://source.unsplash.com/1500x706" alt="">
 								</div>
@@ -170,7 +173,7 @@
 									<h4 class="uk-card-title">[[${vo.subject}]]</h4>
 									<p class="price">[[${#numbers.formatInteger(vo.price, 0, 'COMMA')}]]원</p>
 									<span class="city">[[${vo.loc}]]</span>
-									<p class="like"><span>관심 6</span>ㆍ<span>채팅 5</span>ㆍ<span>조회수 [[${vo.readCount}]]</span></p>
+									<p class="like"><span>관심 [[${vo.countLike}]]</span>ㆍ<span>채팅 5</span>ㆍ<span>조회수 [[${vo.readCount}]]</span></p>
 									<p class="regDate">게시일 [[${#dates.format(vo.regDate,'yyyy.MM.dd')}]]</p>
 								</div>
 							</div>
@@ -180,6 +183,7 @@
 			</div>
 		</main>
 	</div>
+	
 	<footer></footer>
 </body>
 </html>

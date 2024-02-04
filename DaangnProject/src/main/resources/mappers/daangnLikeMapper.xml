@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "./mybatis-3-mapper.dtd" >
+<mapper namespace="kr.ezen.daangn.dao.DaangnLikeDAO">
+	
+	<!-- 좋아요 저장하기 -->
+	<insert id="insertLike" parameterType="DaangnLikeVO">
+		insert into daangn_like_tb values(daangn_like_tb_idx_seq.nextval, #{userIdx}, #{boardIdx})
+	</insert>
+	
+	<!-- 좋아요 삭제하기 -->
+	<delete id="deleteLike" parameterType="DaangnLikeVO">
+		delete from	daangn_like_tb where userIdx = #{userIdx} and boardIdx = #{boardIdx}	   
+	</delete>
+	
+	<!-- 게시글당 좋아요 개수 가져오기 -->
+	<select id="countLike" parameterType="int" resultType="int">
+		select count(*) from daangn_like_tb where boardIdx = #{boardIdx}
+	</select>
+	
+	<!-- 유저가 누른 좋아요 목록 가져오기 -->
+	<select id="selectLikeByUseridx" parameterType="int" resultType="int">
+		select boardRef from daangn_like_tb where userIdx = #{userIdx}
+	</select>
+	
+	<!-- 하트 중복확인 0,1 리턴-->
+	<select id="select" parameterType="DaangnLikeVO" resultType="int">
+		select count(*) from daangn_like_tb where userIdx = #{userIdx} and boardIdx = #{boardIdx}
+	</select>
+	  
+</mapper>

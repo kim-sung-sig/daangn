@@ -38,3 +38,8 @@ $(function(){
 		}
 	})
 })
+
+
+function detail(idx){
+	location.href = "/fleamarketDetail/" + idx;
+}

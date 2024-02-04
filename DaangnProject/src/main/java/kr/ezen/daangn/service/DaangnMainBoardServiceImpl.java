@@ -20,13 +20,13 @@ import kr.ezen.daangn.suport.CommonVO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
 import lombok.extern.slf4j.Slf4j;
 
-@Service(value = "mainBoardService")
+@Service(value = "daangnMainBoardService")
 @Transactional
 @Slf4j
 public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 
 	@Autowired
-	DaangnMainBoardDAO mainBoardDAO;
+	private DaangnMainBoardDAO mainBoardDAO;
 	
 	// 0.
 	@Override
@@ -87,5 +87,16 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 			e.printStackTrace();
 		}
 		return mainBoardVO;
+	}
+
+	@Override
+	public int saveMainBoard(DaangnMainBoardVO mainBoardVO) {
+		int result = 0;
+		try {
+			result = mainBoardDAO.insert(mainBoardVO);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 }

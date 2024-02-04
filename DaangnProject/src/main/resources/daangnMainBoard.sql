@@ -1,7 +1,7 @@
-CREATE SEQUENCE daangn_board_idx_seq;
 DROP SEQUENCE daangn_board_idx_seq;
 DROP TABLE DAANGN_BOARD ;
 
+CREATE SEQUENCE daangn_board_idx_seq;
 CREATE TABLE daangn_board(
 	idx NUMBER PRIMARY KEY ,
 	REF NUMBER NOT NULL,

@@ -22,9 +22,11 @@ public class DaangnMainBoardVO {
 	private int readCount;		// 조회수
 	private Date regDate;		// 게시일
 	//==================================================
+	// db세팅끝
 	
-	private DaangnMemberVO memberVO;				// 유저 정보담기
-	private List<DaangnMainBoardFileVO> fileList;	// 사진등록
+	private DaangnMemberVO member;					// 유저 정보담기
+	private List<DaangnFileVO> boardfileList;		// 사진등록
+	private int countLike;							// 좋아요 수
 													// 체팅 수 읽기?
 	
 }
