@@ -6,8 +6,8 @@ main{width: 100%; padding: 130px 0;}
 /*.main-top > .region > select {padding: 10px 50px 10px 0; border-radius: 5px;}*/
 select:focus {outline: none; }
 .uk-card {cursor: pointer;}
-.uk-card-media-top {height: 200px} 
-.uk-card-media-top > img {height: 200px;}
+.uk-card-media-top {height: 200px; overflow: hidden; display: flex; align-items: center;} 
+.uk-card-media-top > img {}
 .uk-card-title {margin: 0 !important}
 .uk-card-body {display: flex; flex-direction: column; justify-content: center; padding: 15px 40px;}
 .uk-card-body > h4 {font-size: 20px; margin: 5px}
