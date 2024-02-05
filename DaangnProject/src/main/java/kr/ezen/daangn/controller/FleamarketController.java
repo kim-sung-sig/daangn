@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpSession;
+import kr.ezen.daangn.service.DaangnBoardFileService;
 import kr.ezen.daangn.service.DaangnLikeService;
 import kr.ezen.daangn.service.DaangnMainBoardService;
 import kr.ezen.daangn.service.DaangnMemberService;
@@ -31,6 +32,8 @@ public class FleamarketController {
 	private DaangnMemberService daangnMemberService;
 	@Autowired
 	private DaangnLikeService daangnLikeService;
+	@Autowired
+	private DaangnBoardFileService daangnBoardFileService;
 	
 	// 리스트보기
 	@GetMapping(value = {"/fleamarket","/fleamarket/", "/fleamarket/{region}", "/fleamarket/{region}/{gu}", "/fleamarket/{region}/{gu}/{dong}"})
@@ -44,10 +47,13 @@ public class FleamarketController {
 		CommonVO commonVO = new CommonVO(region, gu, dong, search);
 		List<DaangnMainBoardVO> list = daangnMainBoardService.selectList(commonVO);
 		list.forEach((boardVO)->{
-			boardVO.setMember(daangnMemberService.selectByIdx(boardVO.getIdx()));
+			boardVO.setMember(daangnMemberService.selectByIdx(boardVO.getRef()));
 			boardVO.setCountLike(daangnLikeService.countLike(boardVO.getIdx()));
+			boardVO.setBoardFileList(daangnBoardFileService.selectFileByBoardIdx(boardVO.getIdx()));
 		});
+		model.addAttribute("list", list);
 		
+		// 추가로 지역정보리스트 리턴!
 		model.addAttribute("regionList", daangnMainBoardService.regionList(null,null,null));
 		if (region != null) {
 			model.addAttribute("region", region);
@@ -57,9 +63,6 @@ public class FleamarketController {
 			model.addAttribute("gu", gu);
 			model.addAttribute("dongList", daangnMainBoardService.regionList(region, gu, null));			
 		}
-		
-		model.addAttribute("list", list);
-		
 		return "fleamarket";
 	}
 	
@@ -68,16 +71,15 @@ public class FleamarketController {
 	@GetMapping(value = "/fleamarketDetail/{idx}")
 	private String fleamarketDetail(Model model, HttpSession session, @PathVariable(value = "idx") int idx){
 		DaangnMainBoardVO board = daangnMainBoardService.selectByIdx(idx);
-		log.info("board: {}", board);
 		// 유저 정보
 		board.setMember(daangnMemberService.selectByIdx(board.getRef()));
 		// 파일
-		
+		board.setBoardFileList(daangnBoardFileService.selectFileByBoardIdx(board.getIdx()));
 		// 좋아요수
-		log.info("좋아요 수 : {}", daangnLikeService.countLike(board.getIdx()));
 		board.setCountLike(daangnLikeService.countLike(board.getIdx()));
 		// 체팅수
 		
+		log.info("fleamarketDetail/idx 실행 => idx : {} , board : {}", idx, board);
 		
 		// 좋아요 했는지 안했는지 체크
 		if(session.getAttribute("user") != null) {
@@ -87,7 +89,6 @@ public class FleamarketController {
 			likeVO.setBoardIdx(idx);
 			model.addAttribute("likeCheck", daangnLikeService.select(likeVO));
 		}
-		
 		model.addAttribute("board", board);
 		return "fleamarketDetail";
 	}

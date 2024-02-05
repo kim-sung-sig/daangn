@@ -10,7 +10,7 @@ import kr.ezen.daangn.vo.DaangnFileVO;
 @Mapper
 public interface DaangnBoardFileDAO {
 	// ref에 해당하는 파일 읽기
-	List<DaangnFileVO> selectByRef(int ref) throws SQLException;
+	List<DaangnFileVO> selectFileByBoardIdx(int boardIdx) throws SQLException;
 	
 	void insertFile(DaangnFileVO FileVO) throws SQLException;
 	

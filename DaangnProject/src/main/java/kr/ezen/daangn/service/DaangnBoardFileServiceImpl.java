@@ -20,6 +20,11 @@ public class DaangnBoardFileServiceImpl implements DaangnBoardFileService{
 	@Override
 	public List<DaangnFileVO> selectFileByBoardIdx(int boardIdx) {
 		List<DaangnFileVO> fileList = null;
+		try {
+			fileList = daangnBoardFileDAO.selectFileByBoardIdx(boardIdx);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return fileList;
 	}
 
@@ -34,7 +39,11 @@ public class DaangnBoardFileServiceImpl implements DaangnBoardFileService{
 
 	@Override
 	public void deleteByRef(int boardIdx) {
-		
+		try {
+			daangnBoardFileDAO.deleteLike(boardIdx);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
