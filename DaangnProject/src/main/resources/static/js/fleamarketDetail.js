@@ -57,4 +57,29 @@ $(function(){
 			});
 		}
 	})
+	
+	// 시간 바꾸기!
+	let times = document.querySelectorAll(".regDate")
+	times.forEach(time => {
+		let postedDateObj = new Date(time.innerHTML);
+		let currentDateObj = new Date();
+		let timeDiff = Math.abs(currentDateObj.getTime() - postedDateObj.getTime());
+		let diffDays = Math.floor(timeDiff / (1000 * 3600 * 24));
+		if (diffDays < 1) {
+            let diffHours = Math.floor(timeDiff / (1000 * 3600));
+            if (diffHours < 1) {
+                let diffMinutes = Math.floor(timeDiff / (1000 * 60));
+                console.log( diffMinutes + "분 전");
+                time.innerHTML = diffMinutes + "분 전";
+            } else {
+				time.innerHTML = diffHours + "시간 전";
+            }
+        } else if (diffDays < 7) {
+			time.innerHTML = diffDays + "일 전";
+        } else {
+			time.innerHTML = diffDays + "일 전"
+		}
+	})
 })
+
+

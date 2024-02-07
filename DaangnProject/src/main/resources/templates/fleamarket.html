@@ -75,12 +75,13 @@
 					</div>
 				</div>
 			</div>
+			
 			<div class="uk-container">
 				<section>
 					<div id="slide" style="width: 100%;height:100%;gap:50px; display: grid; grid-template-columns:repeat(3, 1fr); justify-content: space-between;">
 						<div class="uk-card uk-card-default" style="width: 300px">
 							<div class="uk-card-media-top">
-								<img src="https://source.unsplash.com/1500x700" alt="">
+								<img src="https://source.unsplash.com/1500x1500" alt="">
 							</div>
 							<div class="uk-card-body">
 								<h4 class="uk-card-title">중고 드라이기 팝니다.</h4>
@@ -92,7 +93,7 @@
 						</div>
 						<div class="uk-card uk-card-default" style="width: 300px">
 							<div class="uk-card-media-top">
-								<img src="https://source.unsplash.com/1500x701" alt="">
+								<img src="https://source.unsplash.com/1500x1501" alt="">
 							</div>
 							<div class="uk-card-body">
 								<h4 class="uk-card-title">중고 드라이기 팝니다.</h4>
@@ -104,7 +105,7 @@
 						</div>
 						<div class="uk-card uk-card-default" style="width: 300px">
 							<div class="uk-card-media-top">
-								<img src="https://source.unsplash.com/1500x702" alt="">
+								<img src="https://source.unsplash.com/1500x1502" alt="">
 							</div>
 							<div class="uk-card-body">
 								<h4 class="uk-card-title">중고 드라이기 팝니다.</h4>
@@ -116,7 +117,7 @@
 						</div>
 						<div class="uk-card uk-card-default" style="width: 300px">
 							<div class="uk-card-media-top">
-								<img src="https://source.unsplash.com/1500x703" alt="">
+								<img src="https://source.unsplash.com/1500x1503" alt="">
 							</div>
 							<div class="uk-card-body">
 								<h4 class="uk-card-title">중고 드라이기 팝니다.</h4>
@@ -128,19 +129,7 @@
 						</div>
 						<div class="uk-card uk-card-default" style="width: 300px">
 							<div class="uk-card-media-top">
-								<img src="https://source.unsplash.com/1500x704" alt="">
-							</div>
-							<div class="uk-card-body">
-								<h4 class="uk-card-title">중고 드라이기 팝니다.</h4>
-								<p class="price">40,000원</p>
-								<span class="city">서울 강서구 화곡동</span>
-								<p class="like"><span uk-icon="heart">관심</span>&nbsp;<span>채팅 20</span>&nbsp;<span>조회수 123</span></p>
-								<p class="regDate">게시일 2023.12.31</p>
-							</div>
-						</div>
-						<div class="uk-card uk-card-default" style="width: 300px">
-							<div class="uk-card-media-top">
-								<img src="https://source.unsplash.com/1500x705" alt="">
+								<img src="https://source.unsplash.com/1500x1504" alt="">
 							</div>
 							<div class="uk-card-body">
 								<h4 class="uk-card-title">중고 드라이기 팝니다.</h4>
@@ -152,7 +141,7 @@
 						</div>
 						<div class="uk-card uk-card-default" style="width: 300px">
 							<div class="uk-card-media-top">
-								<img src="https://source.unsplash.com/1500x706" alt="">
+								<img src="https://source.unsplash.com/1500x1505" alt="">
 							</div>
 							<div class="uk-card-body">
 								<h4 class="uk-card-title">중고 드라이기 팝니다.</h4>
@@ -162,7 +151,6 @@
 								<p class="regDate">게시일 2023.12.31</p>
 							</div>
 						</div>
-						
 						
 						<th:block th:each="vo : ${list}">
 							<div class="uk-card uk-card-default" style="width: 300px" th:onclick="detail([[${vo.idx}]])">
@@ -181,6 +169,7 @@
 								</div>
 							</div>
 						</th:block>
+						
 					</div>
 				</section>
 			</div>
