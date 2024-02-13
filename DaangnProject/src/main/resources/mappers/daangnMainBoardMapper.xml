@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "./mybatis-3-mapper.dtd" >
 <mapper namespace="kr.ezen.daangn.dao.DaangnMainBoardDAO">
 
-	<select id="selectList" parameterType="hashmap" resultType="DaangnMainBoardVO">
+	<select id="selectList" parameterType="CommonVO" resultType="DaangnMainBoardVO">
 		select
 			*
 		from

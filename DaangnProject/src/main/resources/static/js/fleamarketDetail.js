@@ -80,6 +80,16 @@ $(function(){
 			time.innerHTML = diffDays + "일 전"
 		}
 	})
+	
+	$("#chatBtn").submit(function(){
+		// 1. 로그인 했는지 안했는지 확인한다.!
+		// ajax로 호출해서 로그인 되어잇는지 확인하자!
+		// 이걸하면! 좋아요에서도 쓸수 있을듯하다.
+		
+		// 2. 로그인이 되어있다면 체팅방으로 가자!
+		alert('체팅방은 준비가 되지않았습니다.')
+		return false;
+	})
 })
 
 

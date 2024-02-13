@@ -15,9 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import kr.ezen.daangn.dao.DaangnBoardFileDAO;
+import kr.ezen.daangn.dao.DaangnCommentDAO;
 import kr.ezen.daangn.dao.DaangnMainBoardDAO;
-import kr.ezen.daangn.suport.CommonVO;
+import kr.ezen.daangn.dao.DaangnMemberDAO;
+import kr.ezen.daangn.vo.CommonVO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
+import kr.ezen.daangn.vo.DaangnMemberVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Service(value = "daangnMainBoardService")
@@ -27,7 +31,12 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 
 	@Autowired
 	private DaangnMainBoardDAO mainBoardDAO;
-	
+	@Autowired
+	private DaangnMemberDAO memberDAO;
+	@Autowired
+	private DaangnBoardFileDAO boardFileDAO;
+	@Autowired
+	private DaangnCommentDAO commentDAO;
 	// 0.
 	@Override
 	public List<String> regionList(String region , String gu , String dong ) {
@@ -62,22 +71,30 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 		return list;
 	}
 	
+	
+	/**
+	 * @discription 목록보여주기
+	 * @param CommonVO
+	 * @return List<DaangnMainBoardVO>
+	 */
 	@Override
 	public List<DaangnMainBoardVO> selectList(CommonVO commonVO) {
 		List<DaangnMainBoardVO> list = null;
-		HashMap<String, Object> map = new HashMap<>();
-		map.put("region", commonVO.getRegion());
-		map.put("gu", commonVO.getGu());
-		map.put("dong", commonVO.getDong());
-		map.put("search", commonVO.getSearch());
 		try {
-			list = mainBoardDAO.selectList(map);
+			list = mainBoardDAO.selectList(commonVO);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return list;
 	}
-
+	
+	
+	
+	/**
+	 * @discription 한개 보여주기
+	 * @param idx
+	 * @return DaangnMainBoardVO
+	 */
 	@Override
 	public DaangnMainBoardVO selectByIdx(int idx) {
 		DaangnMainBoardVO mainBoardVO = null;

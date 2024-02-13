@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	
+	<!--제이쿼리 추가-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<!-- UIkit CSS -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css" />
+	<!-- UIkit JS -->
+	<script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="/css/header.css">
+
+	<link rel="stylesheet" href="/css/fleamarket.css">
+	<script src="/js/fleamarket.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+	<div id="chatMessages"></div>
+    <input type="text" id="messageInput" />
+    <button onclick="sendMessage()">전송</button>
+	<script>
+        var socket = new SockJS('/ws');
+        var stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, function(frame) {
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/topic/messages', function(messageOutput) {
+                showMessage(JSON.parse(messageOutput.body));
+            });
+        });
+
+        function sendMessage() {
+            var messageInput = document.getElementById('messageInput');
+            var message = messageInput.value;
+            stompClient.send("/app/chat", {}, message);
+            messageInput.value = '';
+        }
+
+        function showMessage(message) {
+            var chatMessages = document.getElementById('chatMessages');
+            var p = document.createElement('p');
+            p.appendChild(document.createTextNode(message));
+            chatMessages.appendChild(p);
+        }
+    </script>
+</body>
+</html>

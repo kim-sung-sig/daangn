@@ -15,7 +15,7 @@ import kr.ezen.daangn.service.DaangnBoardFileService;
 import kr.ezen.daangn.service.DaangnLikeService;
 import kr.ezen.daangn.service.DaangnMainBoardService;
 import kr.ezen.daangn.service.DaangnMemberService;
-import kr.ezen.daangn.suport.CommonVO;
+import kr.ezen.daangn.vo.CommonVO;
 import kr.ezen.daangn.vo.DaangnLikeVO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
 import kr.ezen.daangn.vo.DaangnMemberVO;

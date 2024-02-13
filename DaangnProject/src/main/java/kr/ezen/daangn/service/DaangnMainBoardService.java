@@ -2,7 +2,7 @@ package kr.ezen.daangn.service;
 
 import java.util.List;
 
-import kr.ezen.daangn.suport.CommonVO;
+import kr.ezen.daangn.vo.CommonVO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
 
 public interface DaangnMainBoardService {
@@ -18,5 +18,5 @@ public interface DaangnMainBoardService {
 	// 3. 글쓰기
 	int saveMainBoard(DaangnMainBoardVO mainBoardVO);
 	// 4. 글삭제하기
-
+	
 }

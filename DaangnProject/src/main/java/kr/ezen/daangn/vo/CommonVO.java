@@ -1,4 +1,4 @@
-package kr.ezen.daangn.suport;
+package kr.ezen.daangn.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
