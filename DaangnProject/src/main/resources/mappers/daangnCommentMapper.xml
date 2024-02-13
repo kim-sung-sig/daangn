@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "./mybatis-3-mapper.dtd" >
+<mapper namespace="kr.ezen.daangn.dao.DaangnCommentDAO">
+
+	<!-- 1. userIdx에 해당하는 댓글 주기 -->
+	<select id="selectCommentByUserIdx" parameterType="int" resultType="DaangnCommentVO">
+		select * from Daangn_comment where userIdx = #{userIdx} order by desc
+	</select>
+	
+	<insert id="insertComment" parameterType="DaangnCommentVO">
+		insert into Daangn_comment values (Daangn_comment_idx_seq.nextval, #{userIdx}, #{writerIdx}, #{eval}, #{content}, sysdate)
+	</insert>
+	
+	<update id="updateComment" parameterType="DaangnCommentVO">
+		update Daangn_comment set content = #{content}, regDate = sysdate, eval = #{eval} where idx = #{idx}
+	</update>
+	
+	<!-- 글 댓글지우기? -->
+	<delete id="deleteCommentByIdx" parameterType="int">
+		delete from Daangn_comment where idx = #{idx}
+	</delete>
+	<!-- UserIdx에 해당하는 댓글 지우기 -->
+	<delete id="deleteCommentByUserIdx" parameterType="int">
+		delete from Daangn_comment where userIdx = #{userIdx}
+	</delete>
+
+	<!-- 댓글 평점 합계 계산하기 -->
+	<select id="selectEvalByUserIdx" parameterType="int" resultType="float">
+		select AVG(eval) from Daangn_comment where userIdx = #{userIdx}
+	</select>
+	
+	
+	<!-- 마이페이지 용 -->
+	<!-- 2. writerIdx에 해당하는 댓글 -->
+	
+</mapper>
