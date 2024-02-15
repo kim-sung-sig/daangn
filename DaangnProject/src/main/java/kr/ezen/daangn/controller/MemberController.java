@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import kr.ezen.daangn.service.DaangnLikeService;
 import kr.ezen.daangn.service.DaangnMainBoardService;
 import kr.ezen.daangn.service.DaangnMemberService;
 import kr.ezen.daangn.service.MailService;
@@ -33,6 +34,10 @@ public class MemberController {
 	private DaangnMemberService daangnMemberService;
 	@Autowired
 	private DaangnMainBoardService daangnMainBoardService;
+	@Autowired
+	private DaangnLikeService daangnLikeService;
+	@Autowired
+	private MailService mailService;
 	
 	@GetMapping(value = "/login")
 	public String login(@RequestParam(value = "error", required = false) String error,
@@ -88,9 +93,6 @@ public class MemberController {
 		return "redirect:/";
 	}
 	
-	@Autowired
-	private MailService mailService;
-	
 	// 회원가입중 필요한 이메일 인증을 보내는 주소
     @GetMapping(value = "/send", produces = "text/plain" )
     @ResponseBody
@@ -103,12 +105,41 @@ public class MemberController {
     
     
     @GetMapping(value = "/home")
-	public String home(HttpServletRequest request, Model model) {
+	public String home(HttpSession session, Model model) {
+    	if(session.getAttribute("user") == null) {
+    		return "redirect:/";
+    	}
     	log.info("home 실행");
-    	DaangnMemberVO memberVO = (DaangnMemberVO) request.getSession().getAttribute("user");
-    	List<DaangnMainBoardVO> mainBoardList = daangnMemberService.selectMainBoardByMemberIdx(memberVO.getIdx());
+    	DaangnMemberVO memberVO = (DaangnMemberVO) session.getAttribute("user");
+    	// 0. 유저 프로필 사진 넣어주기
     	
-    	model.addAttribute("boardList", mainBoardList);
+    	model.addAttribute("user", memberVO);
+    	// 1. 유저가 좋아요한 목록들 (관심목록)
+    	// 2. 유저가 쓴글 (판매내역)
+    	// 3. 프로필보기(여기서 프로필수정 및 비번변경 가능 탈퇴)
+    	// 4. ++ 구매내역?
 		return "home";
 	}
+    
+    @GetMapping(value = "/homeLike")
+    @SuppressWarnings("null")
+    public String homeLike(HttpSession session, Model model) {
+    	if(session.getAttribute("user") == null) {
+    		return "redirect:/";
+    	}
+    	log.info("homeLike 실행");
+    	
+    	DaangnMemberVO memberVO = (DaangnMemberVO) session.getAttribute("user");
+    	// 1. 유저가 좋아요한 목록들 (관심목록)
+    	List<DaangnMainBoardVO> boardList = null;
+    	List<Integer> likeList = daangnLikeService.selectLikeByUseridx(memberVO.getIdx());
+    	for(Integer i : likeList) {
+    		DaangnMainBoardVO boardVO = daangnMainBoardService.selectByIdx(i);
+    		if(boardVO != null) {
+    			boardList.add(boardVO);    			
+    		}
+    	}
+    	model.addAttribute("boardList", boardList); // 관심목록 넘겨주기!
+    	return "home";
+    }
 }

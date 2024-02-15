@@ -95,7 +95,7 @@ public class HomeController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return "uploadOk";
+		return "/";
 	}
 	
 	// 딱! 한번만 실행해야한다!
