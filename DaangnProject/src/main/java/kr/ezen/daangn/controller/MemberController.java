@@ -114,14 +114,13 @@ public class MemberController {
     	// 0. 유저 프로필 사진 넣어주기
     	
     	model.addAttribute("user", memberVO);
-    	// 1. 유저가 좋아요한 목록들 (관심목록)
-    	// 2. 유저가 쓴글 (판매내역)
+    	
     	// 3. 프로필보기(여기서 프로필수정 및 비번변경 가능 탈퇴)
     	// 4. ++ 구매내역?
 		return "home";
 	}
     
-    @GetMapping(value = "/homeLike")
+    @GetMapping(value = "/home/Like")
     @SuppressWarnings("null")
     public String homeLike(HttpSession session, Model model) {
     	if(session.getAttribute("user") == null) {
@@ -140,6 +139,19 @@ public class MemberController {
     		}
     	}
     	model.addAttribute("boardList", boardList); // 관심목록 넘겨주기!
-    	return "home";
+    	return "homeLike";
+    }
+    
+    @GetMapping(value = "/home/sell")
+    public String homeSell(HttpSession session, Model model) {
+    	if(session.getAttribute("user") == null) {
+    		return "redirect:/";
+    	}
+    	log.info("homeSell 실행");
+    	DaangnMemberVO memberVO = (DaangnMemberVO) session.getAttribute("user");
+    	// 2. 유저가 쓴글 (판매내역)
+    	List<DaangnMainBoardVO> boardList = daangnMainBoardService.selectByUserIdx(memberVO.getIdx()); // 사진도 넘겨주나?
+    	model.addAttribute("boardList", boardList); // 관심목록 넘겨주기!
+    	return "homeSell";
     }
 }

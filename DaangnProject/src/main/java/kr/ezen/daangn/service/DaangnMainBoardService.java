@@ -19,4 +19,7 @@ public interface DaangnMainBoardService {
 	int saveMainBoard(DaangnMainBoardVO mainBoardVO);
 	// 4. 글삭제하기
 	
+	
+	// 5. 유저가 쓴글 보여주기
+	List<DaangnMainBoardVO> selectByUserIdx(int userIdx);
 }

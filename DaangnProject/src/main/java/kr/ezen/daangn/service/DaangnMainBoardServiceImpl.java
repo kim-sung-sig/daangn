@@ -105,7 +105,9 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 		}
 		return mainBoardVO;
 	}
-
+	/**
+	 * @discription 저장하기
+	 */
 	@Override
 	public int saveMainBoard(DaangnMainBoardVO mainBoardVO) {
 		int result = 0;
@@ -115,5 +117,22 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 			e.printStackTrace();
 		}
 		return result;
+	}
+	
+	
+	
+	
+	/**
+	 * @discription 유저가 쓴글 주기!
+	 */
+	@Override
+	public List<DaangnMainBoardVO> selectByUserIdx(int userIdx) {
+		List<DaangnMainBoardVO> list = null;
+		try {
+			list = mainBoardDAO.selectByRef(userIdx);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 }
