@@ -6,8 +6,9 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class ChatRoomVO {
-	private long roomIdx;
-	private long user1; // 이 두값을 정렬된 상태로 넘기겟다 user1 < user2
-	private long user2;
-
+	private int roomIdx;
+	private int userIdx;
+	private int boardIdx;
+	
+	private int boardUserIdx;
 }

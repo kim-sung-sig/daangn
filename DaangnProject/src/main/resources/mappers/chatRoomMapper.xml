@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "./mybatis-3-mapper.dtd" >
+<mapper namespace="kr.ezen.daangn.dao.DaangnChatRoomDAO">
+
+	<select id="selectChatRoom" parameterType="int" resultType="ChatRoomVO">
+		select * from chatroom where roomIdx = #{chatRoomIdx}
+	</select>
+	
+	<insert id="createChatRoom" parameterType="ChatRoomVO">
+		<selectKey keyColumn="idx" keyProperty="idx" resultType="int" order="BEFORE">
+			select chatRoom_idx_seq.nextval from dual
+		</selectKey>
+		insert into chatRoom values (#{idx, jdbcType=INTEGER}, #{userIdx}, #{boardIdx})
+	</insert>
+	
+	<select id="selectChatRoomByUserIdx" parameterType="int" resultType="ChatRoomVO">
+		select * from chatRoom where userIdx = #{userIdx}
+	</select>
+	
+	<delete id="deleteChatRoom" parameterType="int">
+		delete from chatRoom where roomIdx = #{roomIdx}
+	</delete>
+	
+	<select id="findChatRoom" parameterType="ChatRoomVO" resultType="int">
+		select
+			count(*)
+		from
+			chatRoom
+		where
+			(userIdx = #{userIdx} and boardIdx = #{boardIdx})
+	</select>
+</mapper>

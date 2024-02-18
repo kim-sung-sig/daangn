@@ -30,13 +30,13 @@ import lombok.extern.slf4j.Slf4j;
 public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 
 	@Autowired
-	private DaangnMainBoardDAO mainBoardDAO;
+	private DaangnMainBoardDAO daangnMainBoardDAO;
 	@Autowired
-	private DaangnMemberDAO memberDAO;
+	private DaangnMemberDAO daangnMemberDAO;
 	@Autowired
-	private DaangnBoardFileDAO boardFileDAO;
+	private DaangnBoardFileDAO daangnBoardFileDAO;
 	@Autowired
-	private DaangnCommentDAO commentDAO;
+	private DaangnCommentDAO daangnCommentDAO;
 	// 0.
 	@Override
 	public List<String> regionList(String region , String gu , String dong ) {
@@ -81,7 +81,7 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 	public List<DaangnMainBoardVO> selectList(CommonVO commonVO) {
 		List<DaangnMainBoardVO> list = null;
 		try {
-			list = mainBoardDAO.selectList(commonVO);
+			list = daangnMainBoardDAO.selectList(commonVO);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -99,7 +99,7 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 	public DaangnMainBoardVO selectByIdx(int idx) {
 		DaangnMainBoardVO mainBoardVO = null;
 		try {
-			mainBoardVO = mainBoardDAO.selectByIdx(idx);
+			mainBoardVO = daangnMainBoardDAO.selectByIdx(idx);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -112,7 +112,7 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 	public int saveMainBoard(DaangnMainBoardVO mainBoardVO) {
 		int result = 0;
 		try {
-			result = mainBoardDAO.insert(mainBoardVO);
+			result = daangnMainBoardDAO.insert(mainBoardVO);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -129,7 +129,7 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 	public List<DaangnMainBoardVO> selectByUserIdx(int userIdx) {
 		List<DaangnMainBoardVO> list = null;
 		try {
-			list = mainBoardDAO.selectByRef(userIdx);
+			list = daangnMainBoardDAO.selectByRef(userIdx);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

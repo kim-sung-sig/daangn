@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "./mybatis-3-mapper.dtd" >
+<mapper namespace="kr.ezen.daangn.dao.DaangnChatMessageDAO">
+
+	<select id="selectChatByChatRoomIdx" parameterType="int" resultType="ChatMessageVO">
+		select * from chatMessage where chatRoom = #{chatRoomIdx} order by idx 
+	</select>
+	
+	<insert id="insertChat" parameterType="ChatMessageVO">
+		insert into chatMessage values (chatMessage_idx_seq.nextval, #{chatRoom}, #{sender}, #{content}, sysdate, 1)
+	</insert>
+	
+	<update id="updateChat" parameterType="ChatMessageVO">
+		update chatMessage set readed = 0 where chatRoom = #{chatRoom} and sender = #{sender}
+	</update>
+	
+	<select id="unreadCount" parameterType="ChatMessageVO">
+		select count(*) from chatMessage where chatRoom = #{chatRoom} and sender = #{sender} and readed = 1
+	</select>
+	
+	<delete id="deleteChat" parameterType="int">
+		delete from chatMessage where idx = #{idx}
+	</delete>
+</mapper>

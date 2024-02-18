@@ -15,8 +15,8 @@ import kr.ezen.daangn.vo.DaangnLikeVO;
 import kr.ezen.daangn.vo.DaangnMemberVO;
 import lombok.extern.slf4j.Slf4j;
 
-@Controller
 @Slf4j
+@Controller
 @RequestMapping(value = "/api")
 public class ApiController {
 	@Autowired

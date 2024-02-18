@@ -10,5 +10,5 @@ public class CommonVO {
 	private String region;
 	private String gu;
 	private String dong;
-	private String search="";
+	private String search;
 }
