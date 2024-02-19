@@ -35,6 +35,8 @@ public class SecurityConfig {
 					.requestMatchers("/member/home").hasRole("USER")
 					// 중고거래 리스트 사이트!
 					.requestMatchers("/fleamarket/**").permitAll() // 검색용
+					.requestMatchers("/chat/**").permitAll()
+					//.requestMatchers("/chat/**").hasAnyRole("USER", "ADMIN")
 					.requestMatchers("/upload","/uploadOk").hasAnyRole("USER","ADMIN")
 					
 					// 지정 주소에 대한 권한 설정 : hasRole(권한)은 지정 권한이 있는 사용자만 접근이 가능하다.

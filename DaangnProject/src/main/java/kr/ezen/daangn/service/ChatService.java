@@ -32,8 +32,8 @@ public class ChatService {
     }
     
     // 1. 체팅방 만들기
-    public long creatChatRoom(ChatRoomVO chatRoomVO) {
-    	long result = 0;
+    public int creatChatRoom(ChatRoomVO chatRoomVO) {
+    	int result = 0;
     	try {
     		if(daangnChatRoomDAO.findChatRoom(chatRoomVO) == 0) { // 없으면 만들기!
     			daangnChatRoomDAO.createChatRoom(chatRoomVO);    			

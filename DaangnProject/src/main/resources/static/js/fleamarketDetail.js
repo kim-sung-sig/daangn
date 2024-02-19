@@ -82,12 +82,22 @@ $(function(){
 	})
 	
 	$("#chatBtn").submit(function(){
-		// 1. 로그인 했는지 안했는지 확인한다.!
-		// ajax로 호출해서 로그인 되어잇는지 확인하자!
-		// 이걸하면! 좋아요에서도 쓸수 있을듯하다.
+		axios.post("/chat/createChatRoom",{
+			'boardIdx': $("#boardIdx").val()
+		})
+		.then(function (res) {
+			data = res.data;
+			console.log(data);
+			if(data==1){
+				// 채팅방이 있던가 채팅방을 만들었으면
+			} else {
+				alert("로그인후 이용가능합니다.")
+			}
+		})
+		.catch(function (err) {
+			console.log(err);
+		});
 		
-		// 2. 로그인이 되어있다면 체팅방으로 가자!
-		alert('체팅방은 준비가 되지않았습니다.')
 		return false;
 	})
 })

@@ -1,6 +1,7 @@
 package kr.ezen.daangn.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -10,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -21,7 +23,9 @@ import kr.ezen.daangn.vo.ChatMessageVO;
 import kr.ezen.daangn.vo.ChatRoomVO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
 import kr.ezen.daangn.vo.DaangnMemberVO;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Controller
 @RequestMapping("/chat")
 public class ChatRoomController {
@@ -84,10 +88,16 @@ public class ChatRoomController {
 	}
 	@PostMapping("/createChatRoom")
 	@ResponseBody
-	public String creathChatRoomPost(HttpSession session, ChatRoomVO chatRoomVO) {
+	public String creathChatRoomPost(HttpSession session, @RequestBody ChatRoomVO chatRoomVO) {
+		DaangnMemberVO memberVO = (DaangnMemberVO) session.getAttribute("user");
+		if(memberVO == null) {
+			return "0";
+		}
+		log.info("chatRoom :{}", chatRoomVO);
 		// 1. 체팅방이 있는지 확인한다. (없으면 만들고 숫자를 넘기고 그 주소로가자, 있으면 숫자를 넘기고 그 주소로 가자)
-		Long result = chatService.creatChatRoom(chatRoomVO);
-		return ""+result;
+		// int result = chatService.creatChatRoom(chatRoomVO);
+		return "100";
+		//return ""+result;
 	}
 	
 	

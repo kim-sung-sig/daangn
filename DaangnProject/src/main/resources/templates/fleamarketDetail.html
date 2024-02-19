@@ -136,7 +136,7 @@
 						[[${#numbers.formatInteger(board.price, 0, 'COMMA')}]]원		
 					</div>
 					<div>
-						<form th:action="@{/searchRoom}" method="post" id="chatBtn">
+						<form th:action="@{/chat/createChatRoom}" method="post" id="chatBtn">
 							<input type="hidden" name="boardIdx" th:value="${board.idx}">						
 							<button class="uk-button uk-button-primary">채팅하기</button>				
 						</form>
