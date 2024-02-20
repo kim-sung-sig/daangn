@@ -2,8 +2,12 @@
 <!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "./mybatis-3-mapper.dtd" >
 <mapper namespace="kr.ezen.daangn.dao.DaangnChatRoomDAO">
 
-	<select id="selectChatRoom" parameterType="int" resultType="ChatRoomVO">
+	<select id="selectChatRoomByIdx" parameterType="int" resultType="ChatRoomVO">
 		select * from chatroom where roomIdx = #{chatRoomIdx}
+	</select>
+	
+	<select id="selectChatRoom" parameterType="ChatRoomVO" resultType="ChatRoomVO">
+		select * from chatroom where (userIdx = #{userIdx} and boardIdx = #{boardIdx})
 	</select>
 	
 	<insert id="createChatRoom" parameterType="ChatRoomVO">

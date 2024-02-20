@@ -47,7 +47,7 @@ public class FleamarketController {
 		CommonVO commonVO = new CommonVO(region, gu, dong, search);
 		List<DaangnMainBoardVO> list = daangnMainBoardService.selectList(commonVO);
 		list.forEach((boardVO)->{
-			boardVO.setMember(daangnMemberService.selectByIdx(boardVO.getRef()));
+			boardVO.setMember(daangnMemberService.selectAllByIdx(boardVO.getRef()));
 			boardVO.setCountLike(daangnLikeService.countLike(boardVO.getIdx()));
 			boardVO.setBoardFileList(daangnBoardFileService.selectFileByBoardIdx(boardVO.getIdx()));
 		});
@@ -72,7 +72,7 @@ public class FleamarketController {
 	private String fleamarketDetail(Model model, HttpSession session, @PathVariable(value = "idx") int idx){
 		DaangnMainBoardVO board = daangnMainBoardService.selectByIdx(idx);
 		// 유저 정보
-		board.setMember(daangnMemberService.selectByIdx(board.getRef()));
+		board.setMember(daangnMemberService.selectAllByIdx(board.getRef()));
 		// 파일
 		board.setBoardFileList(daangnBoardFileService.selectFileByBoardIdx(board.getIdx()));
 		// 좋아요수

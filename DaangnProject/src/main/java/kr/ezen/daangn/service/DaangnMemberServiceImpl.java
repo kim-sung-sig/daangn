@@ -60,7 +60,7 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 	public void update(DaangnMemberVO memberVO) {
 		if(memberVO != null) {
 			try {
-				DaangnMemberVO dbMemberVO = daangnMemberDAO.selectByIdx(memberVO.getIdx());
+				DaangnMemberVO dbMemberVO = daangnMemberDAO.selectAllByIdx(memberVO.getIdx());
 				BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 				if(passwordEncoder.matches(memberVO.getPassword(), dbMemberVO.getPassword())) {
 					daangnMemberDAO.update(memberVO);					
@@ -75,7 +75,7 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 	public void updateRole(DaangnMemberVO memberVO) {
 		if(memberVO != null) {
 			try {
-				DaangnMemberVO dbMemberVO = daangnMemberDAO.selectByIdx(memberVO.getIdx());
+				DaangnMemberVO dbMemberVO = daangnMemberDAO.selectAllByIdx(memberVO.getIdx());
 				BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 				if(passwordEncoder.matches(memberVO.getPassword(), dbMemberVO.getPassword())) {
 					daangnMemberDAO.updateRole(memberVO);					
@@ -90,7 +90,7 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 	public void updatePassword(DaangnMemberVO memberVO) {
 		if(memberVO != null) {
 			try {
-				DaangnMemberVO dbMemberVO = daangnMemberDAO.selectByIdx(memberVO.getIdx());
+				DaangnMemberVO dbMemberVO = daangnMemberDAO.selectAllByIdx(memberVO.getIdx());
 				BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 				if(passwordEncoder.matches(memberVO.getPassword(), dbMemberVO.getPassword())) {
 					daangnMemberDAO.updatePassword(memberVO);					
@@ -105,7 +105,7 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 	public void deleteByIdx(DaangnMemberVO memberVO) {
 		if(memberVO != null) {
 			try {
-				DaangnMemberVO dbMemberVO = daangnMemberDAO.selectByIdx(memberVO.getIdx());
+				DaangnMemberVO dbMemberVO = daangnMemberDAO.selectAllByIdx(memberVO.getIdx());
 				BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 				if(passwordEncoder.matches(memberVO.getPassword(), dbMemberVO.getPassword())) {
 					daangnMemberDAO.deleteByIdx(memberVO.getIdx());					
@@ -120,7 +120,7 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 	public void deleteByUsername(DaangnMemberVO memberVO) {
 		if(memberVO != null) {
 			try {
-				DaangnMemberVO dbMemberVO = daangnMemberDAO.selectByIdx(memberVO.getIdx());
+				DaangnMemberVO dbMemberVO = daangnMemberDAO.selectAllByIdx(memberVO.getIdx());
 				BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 				if(passwordEncoder.matches(memberVO.getPassword(), dbMemberVO.getPassword())) {
 					daangnMemberDAO.deleteByUsername(memberVO.getUsername());					
@@ -142,6 +142,16 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 		return memberVO;
 	}
 
+	@Override
+	public DaangnMemberVO selectAllByIdx(int idx) {
+		DaangnMemberVO memberVO = null;
+		try {
+			memberVO = daangnMemberDAO.selectAllByIdx(idx);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return memberVO;
+	}
 	@Override
 	public DaangnMemberVO selectByIdx(int idx) {
 		DaangnMemberVO memberVO = null;

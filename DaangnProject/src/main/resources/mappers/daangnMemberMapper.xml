@@ -68,9 +68,13 @@
 		select * from daangn_member where username = #{username}
 	</select>
 	
-	<!-- idx로 얻기 -->
-	<select id="selectByIdx" parameterType="int" resultType="DaangnMemberVO">
+	<!-- idx로 모두 얻기 -->
+	<select id="selectAllByIdx" parameterType="int" resultType="DaangnMemberVO">
 		select * from daangn_member where idx = #{idx}
+	</select>
+	<!-- idx로 idx와 nickName만 얻기 -->
+	<select id="selectByIdx" parameterType="int" resultType="DaangnMemberVO">
+		select idx, nickName from daangn_member where idx = #{idx}
 	</select>
 	
 	<!-- 모두 얻기 (admin용)-->

@@ -24,7 +24,9 @@ public interface DaangnMemberService extends UserDetailsService{
 	
 	// selectByUsername
 	DaangnMemberVO selectByUsername(String username);
-	// selectByIdx
+	// idx로 모두 얻기
+	DaangnMemberVO selectAllByIdx(int idx);
+	// idx로 idx, nickName만 얻기
 	DaangnMemberVO selectByIdx(int idx);
 	
 	// selectAll

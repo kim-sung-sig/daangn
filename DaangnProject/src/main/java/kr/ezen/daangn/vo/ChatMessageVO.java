@@ -15,5 +15,5 @@ public class ChatMessageVO {
 	
 	
 	private ChatRoomVO chatRoomVO;			// 여기에서 boardIdx를 이용해 board를 구하고 board의 ref를 이용해 ??
-	private DaangnMemberVO senderMember;	// 보낸이의 정보를 담을 vo
+	private String nickName;	// 보낸이의 정보를 담을 vo
 }

@@ -25,7 +25,11 @@ public interface DaangnMemberDAO {
 	
 	// 로그인
 	DaangnMemberVO selectByUsername(String username) throws SQLException;
-	// idx로 얻기
+	
+	// idx로 모두 얻기
+	DaangnMemberVO selectAllByIdx(int idx) throws SQLException;
+	
+	// idx로 idx와 nickName만 얻기
 	DaangnMemberVO selectByIdx(int idx) throws SQLException;
 	
 	// 모두 얻기

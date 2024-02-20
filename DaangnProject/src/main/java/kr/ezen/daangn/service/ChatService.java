@@ -24,7 +24,7 @@ public class ChatService {
     public ChatRoomVO selectChatRoom(int chatRoomIdx){
     	ChatRoomVO ChatRoom = null;
     	try {
-    		ChatRoom = daangnChatRoomDAO.selectChatRoom(chatRoomIdx);
+    		ChatRoom = daangnChatRoomDAO.selectChatRoomByIdx(chatRoomIdx);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -38,6 +38,9 @@ public class ChatService {
     		if(daangnChatRoomDAO.findChatRoom(chatRoomVO) == 0) { // 없으면 만들기!
     			daangnChatRoomDAO.createChatRoom(chatRoomVO);    			
     			result = chatRoomVO.getRoomIdx();
+    		} else { // 있으면 roomIdx넘겨주기
+    			ChatRoomVO dbChatRoomVO = daangnChatRoomDAO.selectChatRoom(chatRoomVO);
+    			result = dbChatRoomVO.getRoomIdx();
     		}
 		} catch (SQLException e) {
 			e.printStackTrace();

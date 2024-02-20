@@ -11,8 +11,9 @@ import kr.ezen.daangn.vo.ChatRoomVO;
 public interface DaangnChatRoomDAO {
 	
 	// 0. 채팅방 조회
-	ChatRoomVO selectChatRoom(int chatRoomIdx) throws SQLException;
-    
+	ChatRoomVO selectChatRoomByIdx(int chatRoomIdx) throws SQLException;
+	
+	ChatRoomVO selectChatRoom(ChatRoomVO chatRoom) throws SQLException;
 	// 1. 채팅방 생성(기본키 리턴)
     void createChatRoom(ChatRoomVO chatRoom) throws SQLException;
     

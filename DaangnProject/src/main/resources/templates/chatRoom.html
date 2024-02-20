@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,8 +23,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 </head>
 <body>
-	<div id="chatMessages"></div>
-    <input type="text" id="messageInput" />
+	<input type="hidden" id="chatRoomIdx" th:value="${chatRoomIdx}">
+	<input type="hidden" id="sender" th:value="${sender}">
+	<ul id="chatMessages">
+	
+	</ul>
+    <input type="text" id="message" />
     <button id="send-message-btn">전송</button>
 	<script>
 		$(function() {
@@ -32,8 +36,10 @@
 		    var sock = new SockJS("/ws");
 		    var ws = Stomp.over(sock);
 		    
-		    var roomIdx = localStorage.getItem('wschat.chatRoomIdx');
-		    var sender = localStorage.getItem('wschat.sender');
+		    // var roomIdx = localStorage.getItem('wschat.chatRoomIdx');
+		    //var sender = localStorage.getItem('wschat.sender');
+		    const roomIdx = $("#chatRoomIdx").val();
+		    const sender = $("#sender").val();
 		    console.log(roomIdx);
 		    console.log(sender);
 		    var messages = [];
@@ -50,12 +56,13 @@
 	
 		    function sendMessage() {
 		        var message = $('#message').val();
-		        ws.send("/pub/chat/message", {}, JSON.stringify({roomIdx: roomIdx, sender: sender, message: message}));
+		        ws.send("/pub/chat/message", {}, JSON.stringify({'chatRoom': roomIdx, 'sender': sender, 'content': message}));
 		        $('#message').val('');
 		    }
 	
 		    function recvMessage(recv) {
-		        var message = {"sender": recv.sender, "message": recv.message};
+		    	console.log(recv);
+		        var message = {"nickName": recv.nickName, "content": recv.content, "regDate": recv.regDate};
 		        messages.unshift(message);
 		        // 메시지를 UI에 업데이트
 		        updateMessagesUI();
@@ -67,17 +74,17 @@
 		            var recv = JSON.parse(message.body);
 		            recvMessage(recv);
 		        });
-		        ws.send("/pub/chat/message", {}, JSON.stringify({roomIdx: roomIdx, sender: sender}));
+		        // ws.send("/pub/chat/message", {}, JSON.stringify({roomIdx: roomIdx, sender: sender}));
 		    }, function(error) {
 		        alert("error " + error);
 		    });
 	
 		    // UI 업데이트 함수
 		    function updateMessagesUI() {
-		        var $messageList = $('#message-list');
+		        var $messageList = $('#chatMessages');
 		        $messageList.empty();
 		        messages.forEach(function(message) {
-		            var $messageItem = $('<li>').text(message.sender + ': ' + message.message);
+		            var $messageItem = $('<li>').text(message.nickName + ': ' + message.content + ": "+ message.regDate);
 		            $messageList.append($messageItem);
 		        });
 		    }

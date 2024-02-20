@@ -64,7 +64,7 @@ public class ChatRoomController {
 		DaangnMemberVO memberVO = (DaangnMemberVO) session.getAttribute("user");
 		ChatRoomVO chatRoomVO = chatService.selectChatRoom(chatRoomIdx);
 		DaangnMainBoardVO boardVO = daangnMainBoardService.selectByIdx(chatRoomVO.getBoardIdx());
-		chatRoomVO.setBoardUserIdx(daangnMemberService.selectByIdx(boardVO.getRef()).getIdx());
+		chatRoomVO.setBoardUserIdx(daangnMemberService.selectAllByIdx(boardVO.getRef()).getIdx());
 		// 또한 chatRoom이 가지는 유저의 idx가 아닌경우
 		if(memberVO.getIdx() != chatRoomVO.getUserIdx() && memberVO.getIdx() != chatRoomVO.getBoardUserIdx()) { // 채팅의 주인이 아닌경우
 			return "redirect:/";
@@ -74,6 +74,7 @@ public class ChatRoomController {
 		// 유저의 채팅내용을 찾아 model에 넘겨준다
 		model.addAttribute("chatMessageList", chatMessageList);
 		model.addAttribute("chatRoomIdx", chatRoomIdx);
+		model.addAttribute("sender", memberVO.getIdx());
 		return "chatRoom";
 	}
 	
@@ -100,15 +101,4 @@ public class ChatRoomController {
 		//return "100";
 		return ""+result;
 	}
-	
-	
-	// 메시지 받는 주소!("/chat/message")
-	@MessageMapping("/message")
-    public void message(ChatMessageVO message) {		
-		// 메시지 보내기
-        messagingTemplate.convertAndSend("/sub/chat/room/" + message.getChatRoom(), message);
-        // 메시지 저장
-    	log.info("message : {}", message);
-//        chatService.insertMessage(message);
-    }
 }
