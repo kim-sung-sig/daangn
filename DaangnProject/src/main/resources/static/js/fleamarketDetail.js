@@ -88,7 +88,8 @@ $(function(){
 		.then(function (res) {
 			data = res.data;
 			console.log(data);
-			if(data==1){
+			if(data!=0){
+				location.href="/chat/room/"+data;
 				// 채팅방이 있던가 채팅방을 만들었으면
 			} else {
 				alert("로그인후 이용가능합니다.")

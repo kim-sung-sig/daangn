@@ -25,31 +25,69 @@
 <body>
 	<div id="chatMessages"></div>
     <input type="text" id="messageInput" />
-    <button onclick="sendMessage()">전송</button>
+    <button id="send-message-btn">전송</button>
 	<script>
-        var socket = new SockJS('/ws');
-        var stompClient = Stomp.over(socket);
+		$(function() {
+		    // WebSocket 및 Stomp 초기화
+		    var sock = new SockJS("/ws");
+		    var ws = Stomp.over(sock);
+		    
+		    var roomIdx = localStorage.getItem('wschat.chatRoomIdx');
+		    var sender = localStorage.getItem('wschat.sender');
+		    console.log(roomIdx);
+		    console.log(sender);
+		    var messages = [];
+			
+		    function findRoom() {
+		        $.ajax({
+		            method: 'GET',
+		            url: '/chat/room/' + roomIdx,
+		            success: function(response) {
+		                var room = response;
+		            }
+		        });
+		    }
+	
+		    function sendMessage() {
+		        var message = $('#message').val();
+		        ws.send("/pub/chat/message", {}, JSON.stringify({roomIdx: roomIdx, sender: sender, message: message}));
+		        $('#message').val('');
+		    }
+	
+		    function recvMessage(recv) {
+		        var message = {"sender": recv.sender, "message": recv.message};
+		        messages.unshift(message);
+		        // 메시지를 UI에 업데이트
+		        updateMessagesUI();
+		    }
+	
+		    // pub/sub 이벤트
+		    ws.connect({}, function(frame) {
+		        ws.subscribe("/sub/chat/room/" + roomIdx, function(message) {
+		            var recv = JSON.parse(message.body);
+		            recvMessage(recv);
+		        });
+		        ws.send("/pub/chat/message", {}, JSON.stringify({roomIdx: roomIdx, sender: sender}));
+		    }, function(error) {
+		        alert("error " + error);
+		    });
+	
+		    // UI 업데이트 함수
+		    function updateMessagesUI() {
+		        var $messageList = $('#message-list');
+		        $messageList.empty();
+		        messages.forEach(function(message) {
+		            var $messageItem = $('<li>').text(message.sender + ': ' + message.message);
+		            $messageList.append($messageItem);
+		        });
+		    }
+	
+		    // 메시지 전송 버튼 클릭 이벤트 핸들러
+		    $('#send-message-btn').click(function() {
+		        sendMessage();
+		    });
+		});
 
-        stompClient.connect({}, function(frame) {
-            console.log('Connected: ' + frame);
-            stompClient.subscribe('/topic/messages', function(messageOutput) {
-                showMessage(JSON.parse(messageOutput.body));
-            });
-        });
-
-        function sendMessage() {
-            var messageInput = document.getElementById('messageInput');
-            var message = messageInput.value;
-            stompClient.send("/app/chat", {}, message);
-            messageInput.value = '';
-        }
-
-        function showMessage(message) {
-            var chatMessages = document.getElementById('chatMessages');
-            var p = document.createElement('p');
-            p.appendChild(document.createTextNode(message));
-            chatMessages.appendChild(p);
-        }
     </script>
 </body>
 </html>

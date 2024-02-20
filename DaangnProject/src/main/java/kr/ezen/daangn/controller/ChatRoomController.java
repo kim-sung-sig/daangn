@@ -73,7 +73,7 @@ public class ChatRoomController {
 		List<ChatMessageVO> chatMessageList = chatService.selectMessageByChatRoomIdx(chatRoomIdx);
 		// 유저의 채팅내용을 찾아 model에 넘겨준다
 		model.addAttribute("chatMessageList", chatMessageList);
-		
+		model.addAttribute("chatRoomIdx", chatRoomIdx);
 		return "chatRoom";
 	}
 	
@@ -93,11 +93,12 @@ public class ChatRoomController {
 		if(memberVO == null) {
 			return "0";
 		}
+		chatRoomVO.setUserIdx(memberVO.getIdx());
 		log.info("chatRoom :{}", chatRoomVO);
 		// 1. 체팅방이 있는지 확인한다. (없으면 만들고 숫자를 넘기고 그 주소로가자, 있으면 숫자를 넘기고 그 주소로 가자)
-		// int result = chatService.creatChatRoom(chatRoomVO);
-		return "100";
-		//return ""+result;
+		int result = chatService.creatChatRoom(chatRoomVO);
+		//return "100";
+		return ""+result;
 	}
 	
 	
@@ -107,6 +108,7 @@ public class ChatRoomController {
 		// 메시지 보내기
         messagingTemplate.convertAndSend("/sub/chat/room/" + message.getChatRoom(), message);
         // 메시지 저장
-        chatService.insertMessage(message);
+    	log.info("message : {}", message);
+//        chatService.insertMessage(message);
     }
 }
