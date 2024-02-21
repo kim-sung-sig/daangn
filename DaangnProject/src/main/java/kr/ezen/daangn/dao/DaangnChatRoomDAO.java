@@ -20,10 +20,13 @@ public interface DaangnChatRoomDAO {
     // 2. 채팅방 조회!
     List<ChatRoomVO> selectChatRoomByUserIdx(int userIdx) throws SQLException;
     
-    // 3. 채팅방 삭제
+    // 3. boardIdx에 해당하는 ChatRoom갯수얻기
+    int selectCountByBoardIdx(int boardIdx) throws SQLException;
+    
+    // 4. 채팅방 삭제
     void deleteChatRoom(long roomIdx) throws SQLException;
     
-    // 4. 채팅방 있는지 없는지 확인!(idx 리턴)
+    // 5. 채팅방 있는지 없는지 확인!(idx 리턴)
     int findChatRoom(ChatRoomVO chatRoom) throws SQLException;
     
 }

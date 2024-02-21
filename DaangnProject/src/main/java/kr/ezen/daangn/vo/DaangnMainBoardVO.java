@@ -27,6 +27,5 @@ public class DaangnMainBoardVO {
 	private DaangnMemberVO member;					// 유저 정보담기
 	private List<DaangnFileVO> boardFileList;		// 사진등록
 	private int countLike;							// 좋아요 수
-													// 체팅 수 읽기?
-	
+	private int chatRoomCount;						// 체팅 수 읽기?
 }

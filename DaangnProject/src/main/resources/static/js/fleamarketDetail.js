@@ -32,6 +32,7 @@ $(function(){
 				data = res.data;
 				if(data==1){
 					$("#likeHeart > a").removeClass("active");
+					$("#countLike").text('관심 ' + (Number($("#countLike").text().substring(3)) - 1));
 				} else {
 					alert("오류가 발생했습니다.")
 				}
@@ -48,6 +49,7 @@ $(function(){
 				data = res.data;
 				if(data==1){
 					$("#likeHeart > a").addClass("active");
+					$("#countLike").text('관심 ' + (Number($("#countLike").text().substring(3)) + 1));
 				} else {
 					alert("로그인후 이용가능합니다.")
 				}

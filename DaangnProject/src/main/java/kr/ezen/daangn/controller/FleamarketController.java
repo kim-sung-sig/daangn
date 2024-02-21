@@ -42,15 +42,11 @@ public class FleamarketController {
 					   , @PathVariable(value = "gu", required = false) String gu
 					   , @PathVariable(value = "dong", required = false) String dong
 					   , @RequestParam(value = "search", required = false) String search) {
-		log.debug("list 실행 region: {}, gu: {}, dong: {}, search: {}", region, gu, dong, search);
+		log.debug("list 실행 region: {}, gu: {}, dong: {}, search: {}, p: {}", region, gu, dong, search);
 
 		CommonVO commonVO = new CommonVO(region, gu, dong, search);
 		List<DaangnMainBoardVO> list = daangnMainBoardService.selectList(commonVO);
-		list.forEach((boardVO)->{
-			boardVO.setMember(daangnMemberService.selectAllByIdx(boardVO.getRef()));
-			boardVO.setCountLike(daangnLikeService.countLike(boardVO.getIdx()));
-			boardVO.setBoardFileList(daangnBoardFileService.selectFileByBoardIdx(boardVO.getIdx()));
-		});
+		
 		model.addAttribute("list", list);
 		
 		// 추가로 지역정보리스트 리턴!
@@ -71,13 +67,6 @@ public class FleamarketController {
 	@GetMapping(value = "/fleamarketDetail/{idx}")
 	private String fleamarketDetail(Model model, HttpSession session, @PathVariable(value = "idx") int idx){
 		DaangnMainBoardVO board = daangnMainBoardService.selectByIdx(idx);
-		// 유저 정보
-		board.setMember(daangnMemberService.selectAllByIdx(board.getRef()));
-		// 파일
-		board.setBoardFileList(daangnBoardFileService.selectFileByBoardIdx(board.getIdx()));
-		// 좋아요수
-		board.setCountLike(daangnLikeService.countLike(board.getIdx()));
-		// 체팅수
 		
 		log.info("fleamarketDetail/idx 실행 => idx : {} , board : {}", idx, board);
 		

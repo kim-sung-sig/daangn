@@ -21,6 +21,10 @@
 		select * from chatRoom where userIdx = #{userIdx}
 	</select>
 	
+	<select id="selectCountByBoardIdx" parameterType="int" resultType="int">
+		select count(*) from chatRoom where boardIdx = #{boardIdx}
+	</select>
+	
 	<delete id="deleteChatRoom" parameterType="int">
 		delete from chatRoom where roomIdx = #{roomIdx}
 	</delete>

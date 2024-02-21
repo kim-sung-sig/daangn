@@ -16,7 +16,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.ezen.daangn.dao.DaangnBoardFileDAO;
+import kr.ezen.daangn.dao.DaangnChatRoomDAO;
 import kr.ezen.daangn.dao.DaangnCommentDAO;
+import kr.ezen.daangn.dao.DaangnLikeDAO;
 import kr.ezen.daangn.dao.DaangnMainBoardDAO;
 import kr.ezen.daangn.dao.DaangnMemberDAO;
 import kr.ezen.daangn.vo.CommonVO;
@@ -37,6 +39,11 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 	private DaangnBoardFileDAO daangnBoardFileDAO;
 	@Autowired
 	private DaangnCommentDAO daangnCommentDAO;
+	@Autowired
+	private DaangnLikeDAO daangnLikeDAO;
+	@Autowired
+	private DaangnChatRoomDAO daangnChatRoomDAO;
+	
 	// 0.
 	@Override
 	public List<String> regionList(String region , String gu , String dong ) {
@@ -73,7 +80,7 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 	
 	
 	/**
-	 * @discription 목록보여주기
+	 * 목록보여주기 페이징처리
 	 * @param CommonVO
 	 * @return List<DaangnMainBoardVO>
 	 */
@@ -82,37 +89,48 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 		List<DaangnMainBoardVO> list = null;
 		try {
 			list = daangnMainBoardDAO.selectList(commonVO);
+			for(DaangnMainBoardVO boardVO : list) {
+				boardVO.setMember(daangnMemberDAO.selectByIdx(boardVO.getRef()));						// 유저정보
+				boardVO.setCountLike(daangnLikeDAO.countLike(boardVO.getIdx()));						// 좋아요수
+				boardVO.setBoardFileList(daangnBoardFileDAO.selectFileByBoardIdx(boardVO.getIdx()));	// 파일
+				boardVO.setChatRoomCount(daangnChatRoomDAO.selectCountByBoardIdx(boardVO.getIdx()));
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return list;
 	}
-	
-	
-	
+
 	/**
-	 * @discription 한개 보여주기
-	 * @param idx
+	 * 한개 보기
+	 * @param int idx
 	 * @return DaangnMainBoardVO
 	 */
 	@Override
 	public DaangnMainBoardVO selectByIdx(int idx) {
-		DaangnMainBoardVO mainBoardVO = null;
+		DaangnMainBoardVO boardVO = null;
 		try {
-			mainBoardVO = daangnMainBoardDAO.selectByIdx(idx);
+			boardVO = daangnMainBoardDAO.selectByIdx(idx);
+			boardVO.setMember(daangnMemberDAO.selectByIdx(boardVO.getRef()));						// 유저정보
+			boardVO.setCountLike(daangnLikeDAO.countLike(boardVO.getIdx()));						// 좋아요수
+			boardVO.setBoardFileList(daangnBoardFileDAO.selectFileByBoardIdx(boardVO.getIdx()));	// 파일
+			boardVO.setChatRoomCount(daangnChatRoomDAO.selectCountByBoardIdx(boardVO.getIdx()));	// 채팅 수
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return mainBoardVO;
+		return boardVO;
 	}
+	
+	
 	/**
-	 * @discription 저장하기
+	 * 저장하기
+	 * @param DaangnMainBoardVO
 	 */
 	@Override
-	public int saveMainBoard(DaangnMainBoardVO mainBoardVO) {
+	public int saveMainBoard(DaangnMainBoardVO boardVO) {
 		int result = 0;
 		try {
-			result = daangnMainBoardDAO.insert(mainBoardVO);
+			result = daangnMainBoardDAO.insert(boardVO);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -120,16 +138,21 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 	}
 	
 	
-	
-	
 	/**
-	 * @discription 유저가 쓴글 주기!
+	 * 유저가 쓴 글 주기!
+	 * @param int userIdx
+	 * @return List<DaangnMainBoardVO>
 	 */
 	@Override
 	public List<DaangnMainBoardVO> selectByUserIdx(int userIdx) {
 		List<DaangnMainBoardVO> list = null;
 		try {
 			list = daangnMainBoardDAO.selectByRef(userIdx);
+			for(DaangnMainBoardVO boardVO : list) {
+				boardVO.setMember(daangnMemberDAO.selectByIdx(boardVO.getRef()));						// 유저정보
+				boardVO.setCountLike(daangnLikeDAO.countLike(boardVO.getIdx()));						// 좋아요수
+				boardVO.setBoardFileList(daangnBoardFileDAO.selectFileByBoardIdx(boardVO.getIdx()));	// 파일
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
