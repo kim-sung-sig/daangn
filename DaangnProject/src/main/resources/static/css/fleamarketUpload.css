@@ -1,0 +1,27 @@
+body, html {background: #ffffe6;font-family: "Noto Sans KR"; font-weight: 300; }
+h4 {font-family: "Noto Sans KR"; font-weight: 500;}
+h2 > img {max-width: 50%;}
+.uk-container-xsmall {width: 500px !important; height:auto; margin: 50px auto; padding: 50px; background-color: #fff; box-shadow: 3px 5px 10px #ccc;}
+.uk-inline  { width: 100vw; display: flex; gap: 10px;}
+
+.uk-input, .uk-textarea{border-radius: 10px}
+
+#fileBtn {cursor: pointer; color: #338BF1;}
+
+#file-drop-area {
+	padding: 30px 30px; border: 1px dashed #8f8f8f;
+	display: flex; align-items: center;justify-content: center;
+}
+#file-drop-area.highlight {background: #f1f1f1 !important;}
+
+#preview{
+	display: grid;
+    grid-template-columns: repeat(2, 1fr)
+}
+.previewImgBox{
+	width: 100%;
+	position: relative;
+	padding: 0;
+}
+.previewImgBox img{width: 250px; height: auto;}
+.imgCancleBtn{position: absolute; top: 0; right: 0; cursor: pointer; background: #fff;}

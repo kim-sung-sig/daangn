@@ -9,10 +9,10 @@ import lombok.Data;
 public class DaangnMainBoardVO {
 	private int idx;
 	private int ref; // user의 idx
-	
+	// 생활꿀팁이 생긴다면! 카테고리 번호를 부여해야함
 	private String subject;		// 제목
 	private String content;		// 내용
-	private int price;			// 가격
+	private int price;			// 가격 // 중거거래만 가격있음 나머진 0
 	
 	private double latitude;	// 위도 kakaoMap에 표시하기 위한 값들 
 	private double longitude;	// 경도

@@ -84,37 +84,117 @@ $(function() {
 	});
 	
 	
-	// 사진 업로드 하기!
-    document.getElementById('fileInput').addEventListener('change', function (event) {
-        // 선택된 파일 가져오기
-        var files = event.target.files;
-
-        // 파일 미리보기를 표시할 엘리먼트
-        var previewElement = document.getElementById('preview');
-
-        // 파일마다 미리보기를 생성
-        for (var i = 0; i < files.length; i++) {
-            var file = files[i];
-            var reader = new FileReader();
-
-            // 파일의 내용을 읽어 데이터 URL로 변환
-            reader.readAsDataURL(file);
-
-            // 읽기가 완료된 후 실행되는 콜백 함수
-            reader.onload = function () {
-                // 미리보기 이미지를 생성하여 추가
-                var img = document.createElement('img');
-                img.src = reader.result;
-                img.alt = 'Preview';
-                img.className = 'uk-responsive-width uk-margin-small-right';
-                previewElement.appendChild(img);
-            };
-        }
+	// 1. 파일 선택 버튼 클릭시 파일 선택 창 열기
+	$("#fileBtn").click(function () {
+        $("#fileInput").click();
+    });
+    $("#fileInput").change(function(){
+		const files = Array.from($(this)[0].files);
+		insertFiles(files);
+	})
+	// 2. 드래그 앤 드롭 영역 설정
+    const fileDropArea = document.getElementById('file-drop-area');
+    
+    // 3. dragover 이벤트 처리
+    fileDropArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        fileDropArea.classList.add('highlight');
+    });
+    // 4. dragleave 이벤트 처리
+    fileDropArea.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        fileDropArea.classList.remove('highlight');
     });
     
+    // 5. drop 이벤트 처리
+    fileDropArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        fileDropArea.classList.remove('highlight');
+        const files = e.dataTransfer.files;
+        insertFiles(files);
+    });
+    /**
+	 * 파일 최대크기에 도달햇는지 확인하는 함수
+	 */
+    function isMaxfileCount(){
+		let result = false;
+		let files = document.querySelectorAll(".inputFile");
+		if(files.length >= 5){
+			result = true;
+			alert("파일은 최대 5개만 올릴 수 있습니다.")
+		}
+		return result;
+	}
+	/**
+	 * file이 사진인지 아닌지 판단하는 함수
+	 */
+	function isImage(file) {
+	    return file.type.startsWith('image/');
+	}
+	/**
+	 * fileBox에 inputfile을 넣어주고 미리보기를 만드는 함수
+	 */
+	function insertFiles(files){
+		const fileBox = document.querySelector("#fileBox");
+		const previewElement = document.querySelector('#preview');
+        for (let i = 0; i < files.length; i++) {
+            if(!isMaxfileCount()){
+	            let reader = new FileReader();
+	            // 파일의 내용을 읽어 데이터 URL로 변환
+	            reader.readAsDataURL(files[i]);
+	            // 읽기가 완료된 후 실행되는 콜백 함수
+	            reader.onload = function () {
+					if(isImage(files[i])){
+						//input 만들고
+						const newFile = document.createElement('input');
+			            newFile.setAttribute("type", "file");
+			            newFile.setAttribute("name", "file");
+			            newFile.setAttribute("class", "inputFile");
+					
+			            // 파일을 input에 추가
+			            const fileList = new DataTransfer();
+			            fileList.items.add(files[i]);
+			            newFile.files = fileList.files;
+			            fileBox.appendChild(newFile);
+			            
+		                // 미리보기 이미지를 생성하여 추가
+		                let div = document.createElement('div');
+		                div.classList.add("previewImgBox");
+		                let img = document.createElement('img');
+		                img.src = reader.result;
+		                img.alt = 'Preview';
+		                let span = document.createElement('span');
+		                span.classList.add('imgCancleBtn')
+		                span.setAttribute('uk-icon', 'icon: close');
+		                span.addEventListener('click', function(){
+							let obj = this;
+							removeFile(obj);
+						})
+		                div.appendChild(img);
+		                div.appendChild(span);
+		                previewElement.appendChild(div);					
+					} else {
+						alert("사진만 올릴 수 있습니다.");
+					}
+	            };
+			}
+        };
+	};
+	
+	/**
+	 * span을 누른경우 미리보기 사진삭제및 file 삭제하기
+	 */
+	function removeFile(obj){
+		const parentBox = obj.closest('.previewImgBox');
+		const index = Array.from(parentBox.parentNode.children).indexOf(parentBox);
+		const fileBox = document.querySelector("#fileBox");
+		fileBox.removeChild(fileBox.children[index]);
+		parentBox.remove();
+	}
     
-    
-    // 서브밋 될때
+    // 폼체크
     $("#uploadForm").submit(function(){
 		let value = $("#subject").val();
 		if(value.trim().length == 0){
@@ -162,5 +242,12 @@ $(function() {
 		}
 		alert('상품을 등록했습니다.')
 		return true;
+	});
+	
+	$("#homeBtn").click(function(){
+		let result = confirm("물건팔기를 취소하시겠습니까?")
+		if(result){
+			location.href='/fleamarket';
+		}
 	})
 });

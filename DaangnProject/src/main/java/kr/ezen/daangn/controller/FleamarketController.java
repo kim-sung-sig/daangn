@@ -1,14 +1,22 @@
 package kr.ezen.daangn.controller;
 
+import java.io.File;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import jakarta.servlet.http.HttpSession;
 import kr.ezen.daangn.service.DaangnBoardFileService;
@@ -16,6 +24,7 @@ import kr.ezen.daangn.service.DaangnLikeService;
 import kr.ezen.daangn.service.DaangnMainBoardService;
 import kr.ezen.daangn.service.DaangnMemberService;
 import kr.ezen.daangn.vo.CommonVO;
+import kr.ezen.daangn.vo.DaangnFileVO;
 import kr.ezen.daangn.vo.DaangnLikeVO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
 import kr.ezen.daangn.vo.DaangnMemberVO;
@@ -35,7 +44,15 @@ public class FleamarketController {
 	@Autowired
 	private DaangnBoardFileService daangnBoardFileService;
 	
-	// 리스트보기
+	/**
+	 * 중고거래 리스트 보기
+	 * @param model
+	 * @param region
+	 * @param gu
+	 * @param dong
+	 * @param search
+	 * @return
+	 */
 	@GetMapping(value = {"/fleamarket","/fleamarket/", "/fleamarket/{region}", "/fleamarket/{region}/{gu}", "/fleamarket/{region}/{gu}/{dong}"})
 	public String list(Model model
 					   , @PathVariable(value = "region", required = false) String region
@@ -63,9 +80,15 @@ public class FleamarketController {
 	}
 	
 	
-	// 한개 보기
+	/**
+	 * 중고거래 글 하나 보기
+	 * @param model
+	 * @param session
+	 * @param idx
+	 * @return
+	 */
 	@GetMapping(value = "/fleamarketDetail/{idx}")
-	private String fleamarketDetail(Model model, HttpSession session, @PathVariable(value = "idx") int idx){
+	public String fleamarketDetail(Model model, HttpSession session, @PathVariable(value = "idx") int idx){
 		DaangnMainBoardVO board = daangnMainBoardService.selectByIdx(idx);
 		
 		log.info("fleamarketDetail/idx 실행 => idx : {} , board : {}", idx, board);
@@ -80,5 +103,75 @@ public class FleamarketController {
 		}
 		model.addAttribute("board", board);
 		return "fleamarketDetail";
+	}
+	/**
+	 * 중고거래 글 쓰기
+	 * @param session
+	 * @return
+	 */
+	@GetMapping(value = "/fleamarketUpload")
+	public String fleamarketUpload(HttpSession session) {
+		if(session.getAttribute("user") == null) {
+			return "redirect:/";
+		}
+		return "fleamarketUpload";
+	}
+	/**
+	 * 중고거래 글 쓰기 get방지
+	 * @return
+	 */
+	@GetMapping("/fleamarketUploadOk")
+	public String fleamarketUploadOkGet() {
+		return "redirect:/";
+	}
+	/**
+	 * 중고거래 글 저장하기
+	 * @param session
+	 * @param request
+	 * @param boardVO
+	 * @return
+	 */
+	@PostMapping("/fleamarketUploadOk")
+	@Transactional
+	public String flfleamarketUploadOkPost(HttpSession session, MultipartHttpServletRequest request, @ModelAttribute(value = "boardVO") DaangnMainBoardVO boardVO) {
+		log.info("flfleamarketUploadOkPost 실행 : {}", boardVO);
+		DaangnMemberVO memberVO = (DaangnMemberVO) session.getAttribute("user");
+		boardVO.setRef(memberVO.getIdx());
+		daangnMainBoardService.saveMainBoard(boardVO); // 저장된 idx_seq를 리턴한다!
+		int boardIdx = boardVO.getIdx();
+		log.info("boardIdx = {}", boardIdx);
+		// file save
+		String uploadPath = request.getServletContext().getRealPath("./files/");
+		// 파일 객체 생성
+		File file2 = new File(uploadPath);
+		// 폴더가 없다면 폴더를 생성해준다.
+		if (!file2.exists()) {
+			file2.mkdirs();
+		}
+		log.info("서버 실제 경로 : " + uploadPath);
+		// --------------------------------------------------------------------------------------
+		List<MultipartFile> list = request.getFiles("file"); // form에 있는 name과 일치
+		try {
+			if (list != null && list.size() > 0) {
+				for(MultipartFile file :list) {
+					if(file != null && file.getSize() >0) {
+						String saveFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+						String originFileName = file.getOriginalFilename();
+						File savaFile = new File(uploadPath, saveFileName);
+						FileCopyUtils.copy(file.getBytes(), savaFile);
+						
+						DaangnFileVO fileVO = new DaangnFileVO();
+						fileVO.setRef(boardIdx);
+						fileVO.setSaveFileName(saveFileName);
+						fileVO.setOriginFileName(originFileName);
+						log.info("fileVO : {}", fileVO);
+						daangnBoardFileService.insert(fileVO);
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "redirect:/fleamarket";
 	}
 }

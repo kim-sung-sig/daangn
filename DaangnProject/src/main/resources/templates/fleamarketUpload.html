@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Document</title>
+<title>내 물품 팔기</title>
 <!--제이쿼리 추가-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <!-- UIkit CSS -->
@@ -14,31 +14,30 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <!-- 카카오맵 api -->
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fa04a00338cccad468f169754f5e7cc6&libraries=services"></script>
-<link rel="stylesheet" href="./css/upload.css">
-<script src="./js/upload.js"></script>
+<link rel="stylesheet" href="/css/fleamarketUpload.css">
+<script src="/js/fleamarketUpload.js"></script>
 </head>
 <body>
 	<div class="uk-container uk-container-xsmall">
 		<h2 class="form-heading" style="text-align: center;"><img src="https://i.namu.wiki/i/urKu84c6cV1U3tmZqPiopxkCnQOn96j3gA6Wf730iSTzz41XDOeqypSusjBVPXeHxGe8RJAOjMY11uywzcDqSA.svg" alt="logo" /></h2>
 		<h2>내 물품 팔기</h2>
-		<form action="/uploadOk" method="post" enctype="multipart/form-data" id="uploadForm">
+		<form action="/fleamarketUploadOk" method="post" enctype="multipart/form-data" id="uploadForm">
 			<input type="hidden" id="latitude" name="latitude"/>
 			<input type="hidden" id="longitude" name="longitude"/>
 			<input type="hidden" id="loc" name="loc"><!-- 서울특별시 강서구 화곡1동 -->
 			
-			<!-- 파일 업로드 -->
-			<div class="js-upload uk-placeholder uk-text-center">
+	        <div id="file-drop-area">
 	            <span uk-icon="icon: cloud-upload"></span>
-	            <span class="uk-text-middle">이곳에 파일을 드롭해주세요. 또는</span>
-	            <div uk-form-custom>
-	                <span class="uk-link">파일선택하기</span>
-	                <input type="file" id="fileInput" name="file" multiple>
+	            <span class="uk-text-middle">이곳에 파일을 드롭해주세요. 또는 </span>
+                <span id="fileBtn" style="cursor: pointer; color: #338BF1;">파일선택하기</span>
+	            <div class="uk-form-custom">
+	                <input type="file" id="fileInput" name="" multiple>
 	            </div>
+                <span>(최대 5개)</span>
 	        </div>
-        	<div id="preview">
-        	</div>
-			
-			
+        	<div id="preview"></div>
+        	<div id="fileBox" style="display: none;"></div>
+
 			<div class="uk-margin">
 				<h4>제목</h4>
 				<div class="uk-inline">

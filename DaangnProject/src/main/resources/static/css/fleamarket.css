@@ -17,4 +17,9 @@ select:focus {outline: none; }
 
 
 
-footer{width: 100%; background: #333; height: 64px;}
+footer {position: fixed; bottom: 20px; right: 70px; z-index: 999;background:#fff}
+footer div {margin-top: 20px;}
+footer .uk-button {width: 130px;height:50px; background: #FF8A3D; border-radius: 10px; padding: 0px;}
+footer a {width: 130px;height:50px; background: #FF8A3D; border-radius: 10px; padding: 0px; display: flex;
+    align-items: center;
+    justify-content: center;}

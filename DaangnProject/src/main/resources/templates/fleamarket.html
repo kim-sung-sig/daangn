@@ -28,11 +28,9 @@
 					</h1>
 					<nav>
 						<ul>
-							<li><a href="/fleamarket/">중고거래</a></li>
-							<li><a href="/upload">내 물건 팔기</a></li>
-							<li><a href="/list">생활꿀팁</a></li>
-							<li><a href="/list">중고거래</a></li>
-							<li><a href="/list">중고거래</a></li>
+							<li><a href="/fleamarket">중고거래</a></li>
+							<li><a href="/smartLivingTips">생활꿀팁</a></li>
+							<li><a href="#">내 물건 팔기</a></li>
 						</ul>
 					</nav>
 				</div>
@@ -86,7 +84,7 @@
 							<div class="uk-card uk-card-default" style="width: 300px" th:onclick="detail([[${vo.idx}]])">
 								<div class="uk-card-media-top">
 									<th:block th:each="img, sv : ${vo.boardFileList}">
-										<img th:if="${sv.first}" th:src="'/files/' + ${img.saveFileName}" alt="" />
+										<img th:if="${sv.first}" th:src="'./files/' + ${img.saveFileName}" alt="" />
 									</th:block>
 									<!-- <img src="https://source.unsplash.com/1500x706" alt="">  -->
 								</div>
@@ -106,6 +104,22 @@
 		</main>
 	</div>
 	
-	<footer></footer>
+	<footer>
+		<div th:if="${session.user != null}">
+			<button class="uk-button uk-button-primary">
+				<span uk-icon="star"></span>
+				좋아요 7
+			</button>
+		</div>
+		<div th:if="${session.user != null}">
+			<button class="uk-button uk-button-primary">
+				<span uk-icon="comment"></span> 채팅 24
+			</button>
+		</div>
+		<div>
+			<a th:if="${session.user == null}" onclick="alert('로그인 후 이용가능합니다.')" href="/fleamarketUpload" class="uk-button uk-button-primary" style="display: flex; align-items: center; justify-content: center;">내 물건 팔기</a>				
+			<a th:if="${session.user != null}" href="/fleamarketUpload" class="uk-button uk-button-primary" style="display: flex; align-items: center; justify-content: center;">내 물건 팔기</a>				
+		</div>
+	</footer>
 </body>
 </html>

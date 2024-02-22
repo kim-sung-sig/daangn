@@ -23,7 +23,7 @@ public class DaangnMemberVO implements UserDetails{
 	private String name;					// 실제 이름 
 	private String nickName;				// 닉네임
 	
-	private String email;
+	private String email;					// 아이디 비번찾기때 쓸것
 	
 	// address
 	private String stAddress;				// 도로명주소	(이름 추천)
@@ -32,7 +32,7 @@ public class DaangnMemberVO implements UserDetails{
 	
 	
 	private DaangnFileVO userProfile;		// 프로필 사진!
-	private float userVal;						// 유저평
+	private float userVal;					// 유저평
 	
 	
 	
