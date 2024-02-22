@@ -38,8 +38,6 @@ public class FleamarketController {
 	@Autowired
 	private DaangnMainBoardService daangnMainBoardService;
 	@Autowired
-	private DaangnMemberService daangnMemberService;
-	@Autowired
 	private DaangnLikeService daangnLikeService;
 	@Autowired
 	private DaangnBoardFileService daangnBoardFileService;
@@ -141,13 +139,14 @@ public class FleamarketController {
 		int boardIdx = boardVO.getIdx();
 		log.info("boardIdx = {}", boardIdx);
 		// file save
-		String uploadPath = request.getServletContext().getRealPath("./files/");
+		String uploadPath = request.getServletContext().getRealPath("/upload/");
 		// 파일 객체 생성
 		File file2 = new File(uploadPath);
 		// 폴더가 없다면 폴더를 생성해준다.
 		if (!file2.exists()) {
 			file2.mkdirs();
 		}
+		
 		log.info("서버 실제 경로 : " + uploadPath);
 		// --------------------------------------------------------------------------------------
 		List<MultipartFile> list = request.getFiles("file"); // form에 있는 name과 일치

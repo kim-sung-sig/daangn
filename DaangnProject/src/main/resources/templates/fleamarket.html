@@ -84,7 +84,7 @@
 							<div class="uk-card uk-card-default" style="width: 300px" th:onclick="detail([[${vo.idx}]])">
 								<div class="uk-card-media-top">
 									<th:block th:each="img, sv : ${vo.boardFileList}">
-										<img th:if="${sv.first}" th:src="'./files/' + ${img.saveFileName}" alt="" />
+										<img th:if="${sv.first}" th:src="'./upload/' + ${img.saveFileName}" alt="" />
 									</th:block>
 									<!-- <img src="https://source.unsplash.com/1500x706" alt="">  -->
 								</div>

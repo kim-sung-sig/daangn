@@ -29,7 +29,7 @@ public class SecurityConfig {
 					// mainPage
 					.requestMatchers("/","/dbinit").permitAll()
 					// 지정 주소에 대한 권한 설정 **은 하위폴더 포함 모두
-					.requestMatchers("/css/**", "/js/**", "/img/**", "/files/**").permitAll()
+					.requestMatchers("/css/**", "/js/**", "/img/**", "/upload/**").permitAll()
 					// 회원가입 폼과 회원가입 완료는 누구나 접근 가능 
 					.requestMatchers("/member/login/useridcheck","/member/login","/member/logout","/member/join","/member/joinok","/member/send").permitAll()
 					// 중고거래 리스트 사이트!
