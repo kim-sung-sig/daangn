@@ -90,6 +90,11 @@ $(function() {
     });
     $("#fileInput").change(function(){
 		const files = Array.from($(this)[0].files);
+		if (files.length > 5) {
+		    files.splice(5); // 배열의 첫 5개 요소만 남김
+		}
+		console.log(files);
+		console.log(files.length);
 		insertFiles(files);
 	})
 	// 2. 드래그 앤 드롭 영역 설정

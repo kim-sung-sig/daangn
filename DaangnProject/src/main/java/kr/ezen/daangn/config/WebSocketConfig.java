@@ -17,6 +17,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
 		// 메시지를 받을 때
 		registry.setApplicationDestinationPrefixes("/pub");
 	}
+	
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		// stomp 엔드포인트를 등록

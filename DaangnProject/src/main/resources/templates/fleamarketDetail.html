@@ -136,7 +136,8 @@
 					<div>
 						<form th:action="@{/chat/createChatRoom}" method="post" id="chatBtn">
 							<input type="hidden" name="boardIdx" th:value="${board.idx}">						
-							<button class="uk-button uk-button-primary">채팅하기</button>				
+							<input th:if="${session.user == null}" type="submit" onclick="alert('로그인 후 이용가능합니다.'); location.href='/member/login'" class="uk-button uk-button-primary" value="채팅하기"/>				
+							<input th:if="${session.user != null}" type="submit" class="uk-button uk-button-primary" value="채팅하기"/>				
 						</form>
 					</div>
 				</div>

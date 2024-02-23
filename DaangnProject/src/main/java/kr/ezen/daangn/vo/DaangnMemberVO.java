@@ -23,7 +23,11 @@ public class DaangnMemberVO implements UserDetails{
 	private String name;					// 실제 이름 
 	private String nickName;				// 닉네임
 	
+	// 폰
+	// sns수신?
 	private String email;					// 아이디 비번찾기때 쓸것
+	// 메일 수신?
+	
 	
 	// address
 	private String stAddress;				// 도로명주소	(이름 추천)

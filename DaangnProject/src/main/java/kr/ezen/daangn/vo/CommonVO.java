@@ -20,11 +20,11 @@ public class CommonVO {
 	private String search;
 	
 	private int p = 1;
-	private int s = 10;
+	private int s = 18;
 	private int b = 10;
 	
 	private int currentPage=1;
-	private int sizeOfPage=20;
+	private int sizeOfPage=18;
 	private int sizeOfBlock=5;
 	
 	public void setP(int p) {

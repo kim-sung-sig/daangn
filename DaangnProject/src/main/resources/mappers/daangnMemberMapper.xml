@@ -19,6 +19,33 @@
 				, #{dtAddress}
 			)
 	</insert>
+
+	<!-- userDetails -->
+	<select id="selectByUsername" parameterType="string" resultType="DaangnMemberVO">
+		select * from daangn_member where username = #{username}
+	</select>
+	
+	<!-- idx로 idx와 nickName만 얻기 -->
+	<select id="selectByIdx" parameterType="int" resultType="DaangnMemberVO">
+		select idx, nickName from daangn_member where idx = #{idx}
+	</select>
+	
+	<!-- 중복확인을 위한 코드 -->
+	<select id="selectCountByUsername" parameterType="string" resultType="int">
+		select count(*) from daangn_member where username = #{username}
+	</select>
+	
+	
+	<!-- 마이페이지 및 관리자페이지용 -->
+	<!-- idx로 모두 얻기 -->
+	<select id="selectAllByIdx" parameterType="int" resultType="DaangnMemberVO">
+		select * from daangn_member where idx = #{idx}
+	</select>
+	
+	<!-- 모두 얻기 (admin용) 이거 페이징 처리해야댐 -->
+	<select id="selectAll" resultType="DaangnMemberVO">
+		select * from daangn_member order by username
+	</select>
 	
 	<!-- 회원 정보 수정 -->
 	<update id="update" parameterType="DaangnMemberVO">
@@ -43,7 +70,7 @@
 			username = #{username}
 	</update>
 	
-	<!-- 비밀번호 수정 -->
+	<!-- 비밀번호 수정 암호화해서 넘겨야한다 -->
 	<update id="updatePassword" parameterType="DaangnMemberVO">
 		update 
 			daangn_member 
@@ -63,27 +90,5 @@
 		delete from daangn_member where username = #{username}
 	</delete>
 	
-	<!-- userDetails -->
-	<select id="selectByUsername" parameterType="string" resultType="DaangnMemberVO">
-		select * from daangn_member where username = #{username}
-	</select>
 	
-	<!-- idx로 모두 얻기 -->
-	<select id="selectAllByIdx" parameterType="int" resultType="DaangnMemberVO">
-		select * from daangn_member where idx = #{idx}
-	</select>
-	<!-- idx로 idx와 nickName만 얻기 -->
-	<select id="selectByIdx" parameterType="int" resultType="DaangnMemberVO">
-		select idx, nickName from daangn_member where idx = #{idx}
-	</select>
-	
-	<!-- 모두 얻기 (admin용)-->
-	<select id="selectAll" resultType="DaangnMemberVO">
-		select * from daangn_member order by username
-	</select>
-	
-	<!-- 중복확인을 위한 코드 -->
-	<select id="selectCountByUsername" parameterType="string" resultType="int">
-		select count(*) from daangn_member where username = #{username}
-	</select>
 </mapper>
