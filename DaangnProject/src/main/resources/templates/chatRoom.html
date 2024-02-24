@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
+	<title>당근채팅하기</title>
 	
 	<!--제이쿼리 추가-->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -20,17 +20,89 @@
 
 	<link rel="stylesheet" href="/css/header.css">
 	
-	<link rel="stylesheet" href="/css/fleamarket.css">
-	<script src="/js/fleamarket.js"></script>
+	<link rel="stylesheet" href="/css/chatRoom.css">
+	<script src="/js/chatRoom.js"></script>
 </head>
 <body>
-	<input type="hidden" id="chatRoomIdx" th:value="${chatRoomIdx}">
-	<input type="hidden" id="sender" th:value="${sender}">
-	<ul id="chatMessages">
+	<div id="wrap">
+		<header id="header">
+			<div id="header-inner">
+				<div id="navi">
+					<h1 id="logo">
+						<a href="/">
+							<img src="https://i.namu.wiki/i/urKu84c6cV1U3tmZqPiopxkCnQOn96j3gA6Wf730iSTzz41XDOeqypSusjBVPXeHxGe8RJAOjMY11uywzcDqSA.svg" alt="logo" />
+						</a>
+					</h1>
+					<nav>
+						<ul>
+							<li><a href="/fleamarket">중고거래</a></li>
+							<li><a href="/smartLivingTips">생활꿀팁</a></li>
+							<li><a href="#">내 물건 팔기</a></li>
+						</ul>
+					</nav>
+				</div>
+				<div id="search">
+					<form action="" method="get" id="searchForm">
+						<input class="uk-input uk-form-width-long chat" type="text" placeholder="동네 물품을 검색해주세요!" aria-label="Large" name="search" id="searchText">
+					</form>
+					<span>
+						<th:block th:if="${session.user != null}">
+							<a class="uk-button uk-button-default" href="/member/logout">로그아웃</a>					
+							<a class="uk-button uk-button-default" href="/member/home">마이페이지</a>					
+						</th:block>
+						<th:block th:if="${session.user == null}">
+							<a class="uk-button uk-button-default" href="/member/login">로그인</a>						
+						</th:block>
+					</span>
+				</div>
+			</div>
+		</header>
+		<main>
+			<input type="hidden" id="chatRoomIdx" th:value="${chatRoomIdx}">
+			<input type="hidden" id="sender" th:value="${sender}">
+			<div id="info">
+				여기서 상대가 누군지 어떤상품인지에 대한 간략설명해줄!공간이고
+			</div>
+			<div id="chatMessages">
+				여기가 채팅이 뿌려질 곳이고
+			</div>
+			<div id="inputChatMessages"><!-- 여기가 채팅 form -->
+				<textarea id="message" class="uk-textarea"></textarea>
+			    <button id="send-message-btn" class="uk-button">전송</button>			
+			</div>
+		</main>
+		
+		<footer>
+			<div id="footer-inner">
+				<div id="likeHeart" style="width: 65px;height:65px;">
+					<th:block th:if="${session.user != null}">
+						<th:block th:if=${likeCheck==1}>
+							<a href="" uk-icon="heart" class="active"></a>												
+						</th:block>
+						<th:block th:if=${likeCheck==0}>
+							<a href="" uk-icon="heart" class=""></a>												
+						</th:block>
+					</th:block>
+					<th:block th:if="${session.user == null}">
+						<a href="" uk-icon="heart" class=""></a>						
+					</th:block>
+				</div>
+				<div id="footerBox">
+					<div style="font-weight: 500">	
+					</div>
+					<div>
+						<form th:action="@{/chat/createChatRoom}" method="post" id="chatBtn">
+							<input type="hidden" name="boardIdx" th:value="0">						
+							<input th:if="${session.user == null}" type="submit" onclick="alert('로그인 후 이용가능합니다.'); location.href='/member/login'" class="uk-button uk-button-primary" value="채팅하기"/>				
+							<input th:if="${session.user != null}" type="submit" class="uk-button uk-button-primary" value="채팅하기"/>				
+						</form>
+					</div>
+				</div>
+			</div>
+		</footer>
+	</div>
 	
-	</ul>
-    <input type="text" id="message" />
-    <button id="send-message-btn">전송</button>
+	
 	<script>
 		$(function() {
 		    // WebSocket 및 Stomp 초기화
@@ -93,6 +165,28 @@
 		    // 메시지 전송 버튼 클릭 이벤트 핸들러
 		    $('#send-message-btn').click(function() {
 		        sendMessage();
+		    });
+		    
+		    
+		    
+		    document.getElementById('message').addEventListener('wheel', function(e) {
+		        const element = e.target;
+		        const scrollTop = element.scrollTop;
+		        const scrollHeight = element.scrollHeight;
+		        const height = element.clientHeight;
+		        const delta = e.deltaY;
+		        const up = delta > 0 ? -1 : 1;
+
+		        // 스크롤바가 없는 상태에서 마우스 휠 동작 시 스크롤 이동
+		        if ((delta < 0 && scrollTop <= 0) || (delta > 0 && scrollTop + height >= scrollHeight)) {
+		            return;
+		        }
+
+		        e.preventDefault();
+		        element.scrollTo({
+		            top: scrollTop + delta * 0.3, // 스크롤 속도 조정 (0.3은 조절 가능)
+		            behavior: 'smooth'
+		        });
 		    });
 		});
 

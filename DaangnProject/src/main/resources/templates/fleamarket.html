@@ -107,18 +107,12 @@
 	<footer>
 		<div th:if="${session.user != null}">
 			<button class="uk-button uk-button-primary">
-				<span uk-icon="star"></span>
-				좋아요 7
-			</button>
-		</div>
-		<div th:if="${session.user != null}">
-			<button class="uk-button uk-button-primary">
 				<span uk-icon="comment"></span> 채팅 24
 			</button>
 		</div>
 		<div>
-			<a th:if="${session.user == null}" onclick="alert('로그인 후 이용가능합니다.')" href="/fleamarketUpload" class="uk-button uk-button-primary" style="display: flex; align-items: center; justify-content: center;">내 물건 팔기</a>				
-			<a th:if="${session.user != null}" href="/fleamarketUpload" class="uk-button uk-button-primary" style="display: flex; align-items: center; justify-content: center;">내 물건 팔기</a>				
+			<a th:if="${session.user == null}" onclick="alert('로그인 후 이용가능합니다.')" href="/fleamarketUpload" class="uk-button uk-button-primary" style="display: flex; align-items: center; justify-content: center; vertical-align: middle;" uk-icon="plus">내 물건 팔기</a>				
+			<a th:if="${session.user != null}" href="/fleamarketUpload" class="uk-button uk-button-primary" style="display: flex; align-items: center; justify-content: center;" uk-icon="plus">내 물건 팔기</a>				
 		</div>
 	</footer>
 </body>
