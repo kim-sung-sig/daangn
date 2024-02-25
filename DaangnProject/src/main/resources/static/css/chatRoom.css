@@ -1,15 +1,109 @@
 @charset 'UTF-8';
 
-body{position: relative; height: 100vh;}
+body, html {font-family: "Noto Sans KR"; font-weight: 300; }
+body{position: relative; height: 100vh; }
 main{width: 400px;margin: auto; position:absolute;top:50%;left:50%;transform:translate(-50%,-50%); height: 80vh;}
-
+#chatMessages > li {width: 70%;background: #ccc; font-size: 14px; line-height: 1.5;border-radius: 50px;margin-bottom: 30px;}
 #info{height: 100px; background: #cdcdcd;}
-#chatMessages{height: calc(100% - 200px);}
+#chatMessages{height: calc(100% - 200px); overflow-y: scroll; overflow-x:hidden; box-shadow: 10px #333;}
+
+  #chatMessages::-webkit-scrollbar {
+    width: 10px;
+  }
+  #chatMessages::-webkit-scrollbar-thumb {
+    background-color: #FF8A3D;
+    border-radius: 20px;
+  }
+  #chatMessages::-webkit-scrollbar-track {
+    background-color: #ccc;
+    border-radius: 20px;
+    box-shadow: inset 0px 0px 5px white;
+  }
 #inputChatMessages{height: 100px; background: red;}
 #message{width: 100%;resize: none;overflow-y:hidden;}
-#send-message-btn{width: 100px; height: 30px; border: none;text-align: right;}
+#send-message-btn{border: none; display: flex; justify-content: right; text-align: right; }
 
 
+/* 채팅디자인 */
+.chat {
+    display: flex;
+    align-items: flex-start;
+    padding: 10px;
+    width: 100%;
+}
+
+.chat .icon {
+    position: relative;
+    overflow: hidden;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #eee;
+}
+
+.chat .icon span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 2.0rem;
+    color: #aaa;
+    transform: translate(-50%,-50%);
+    font-family: "Noto Sans KR" !important;
+    font-weight: 500;
+}
+
+.chat .textbox {
+    position: relative;
+    display: inline-block;
+    width: 200px;
+    padding: 10px;
+    margin-top: 7px;
+    font-size: 13px;
+    border-radius: 10px;
+    white-space: normal;
+}
+.chat .textbox > p{
+	width: 100%;
+    white-space: normal;
+}
+
+p{margin: 0;}
+.chat .textbox::before {
+    position: absolute;
+    display: block;
+    top: 0;
+    font-size: 1.5rem;
+}
+
+.ch1 .textbox {
+    margin-left: 20px;
+    background-color: #ddd;
+}
+
+.ch1 .textbox::before {
+    left: -15px;
+    content: "◀";
+    color: #ddd;
+}
+
+.ch2 {
+    flex-direction: row-reverse;
+}
+
+.ch2 .textbox {
+    margin-right: 20px;
+    background-color: #F9EB54;
+}
+
+.ch2 .textbox::before {
+    right: -15px;
+    content: "▶";
+    color: #F9EB54;
+}
+.chat-time{
+	padding: 0 10px;
+	font-size : 12px;
+}
 
 
 

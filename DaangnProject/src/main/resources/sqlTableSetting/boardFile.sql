@@ -1,3 +1,6 @@
+DROP SEQUENCE daangn_board_file_idx_seq;
+DROP TABLE daangn_board_file;
+
 CREATE SEQUENCE daangn_board_file_idx_seq;
 
 CREATE TABLE daangn_board_file(

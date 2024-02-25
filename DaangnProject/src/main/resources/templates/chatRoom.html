@@ -64,7 +64,19 @@
 				여기서 상대가 누군지 어떤상품인지에 대한 간략설명해줄!공간이고
 			</div>
 			<div id="chatMessages">
-				여기가 채팅이 뿌려질 곳이고
+				<div>
+					<div class="chat ch1">
+					    <div class="icon"><span>당</span></div>
+					    <div class="textbox">안녕하세요. 반갑습니다.</div>
+						<span class="chat-time">AM 9:43</span>
+					</div>
+				</div>
+				<div class="chat ch2">
+				    <div class="icon"><i class="fa-solid fa-user"></i></div>
+				    <div class="textbox">
+				    	<p>안녕하세요. 반갑습니다.안녕하세요. 반갑습니다. 안녕하세요ㅕ. 반갑습니다. 안녕하세요. 반갑습니다.</p></div>
+					<span class="chat-time">AM 9:43</span>
+				</div>
 			</div>
 			<div id="inputChatMessages"><!-- 여기가 채팅 form -->
 				<textarea id="message" class="uk-textarea"></textarea>
@@ -135,10 +147,10 @@
 	
 		    function recvMessage(recv) {
 		    	console.log(recv);
-		        var message = {"nickName": recv.nickName, "content": recv.content, "regDate": recv.regDate};
+		        var message = {"sender": recv.sender, "nickName": recv.nickName, "content": recv.content, "regDate": recv.regDate};
 		        messages.unshift(message);
 		        // 메시지를 UI에 업데이트
-		        updateMessagesUI();
+		        updateMessagesUI2(message);
 		    }
 	
 		    // pub/sub 이벤트
@@ -160,6 +172,22 @@
 		            var $messageItem = $('<li>').text(message.nickName + ': ' + message.content + ": "+ message.regDate);
 		            $messageList.append($messageItem);
 		        });
+		    }
+		    function updateMessagesUI2(message) {
+		        const messageList = $('#chatMessages');
+		        let ck = (sender == message.sender ? '2' : '1');
+		        console.log(ck);
+	            // const messageItem = $('<li>').text(message.nickName + ': ' + message.content + ": "+ message.regDate);
+	            const messageItem = $('<div>').html(
+	            		`<div class="chat ch${ck}">
+						    <div class="icon"><span>${message.nickName}</span></div>
+						    <div class="textbox"><p>${message.content}</p></div>
+							<span class="chat-time">${message.regDate}</span>
+						</div>`);
+	            messageList.append(messageItem);
+	            setTimeout(function(){
+	                messageList.scrollTop(messageList.prop('scrollHeight'));
+	            }, 50);
 		    }
 	
 		    // 메시지 전송 버튼 클릭 이벤트 핸들러

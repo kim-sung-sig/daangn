@@ -4,7 +4,7 @@ h2 > img {max-width: 50%;}
 .uk-container-xsmall {width: 500px !important; height:auto; margin: 50px auto; padding: 50px; background-color: #fff; box-shadow: 3px 5px 10px #ccc;}
 .uk-inline  { width: 100vw; display: flex; gap: 10px;}
 
-.uk-input, .uk-textarea{border-radius: 10px}
+.uk-input, .uk-textarea, .uk-select{border-radius: 10px}
 
 #fileBtn {cursor: pointer; color: #338BF1;}
 

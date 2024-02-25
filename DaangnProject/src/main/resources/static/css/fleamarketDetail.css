@@ -13,8 +13,12 @@ main{width: 100%; padding: 110px 0;}
 .uk-card-default .uk-card-footer{border: none;}
 
 .uk-card-body {padding: 20px 40px;}
+.uk-card-body .category {margin: 0; font-size: 14px}
 .uk-card-body .regDate {margin: 0; font-size: 14px}
 .uk-card-body > .text-card {line-height: 2}
+/* 판매상태 표시*/
+.sold{border-radius: 5px; background: #DEE1E5; padding: 3px 6px; font-size: 13px; font-weight: 600;}
+.reserved{border-radius: 5px; background: #4a9975; padding: 3px 6px; font-size: 13px; font-weight: 500; color: #fff;}
 
 .uk-card-footer {font-size:14px; line-height: 0.5}
 .uk-card-default {height: auto;}

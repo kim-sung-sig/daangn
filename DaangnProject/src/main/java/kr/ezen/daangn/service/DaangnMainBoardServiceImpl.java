@@ -90,7 +90,7 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 		try {
 			list = daangnMainBoardDAO.selectList(commonVO);
 			for(DaangnMainBoardVO boardVO : list) {
-				boardVO.setMember(daangnMemberDAO.selectByIdx(boardVO.getRef()));						// 유저정보
+				boardVO.setMember(daangnMemberDAO.selectByIdx(boardVO.getUserRef()));					// 유저정보
 				boardVO.setCountLike(daangnLikeDAO.countLike(boardVO.getIdx()));						// 좋아요수
 				boardVO.setBoardFileList(daangnBoardFileDAO.selectFileByBoardIdx(boardVO.getIdx()));	// 파일
 				boardVO.setChatRoomCount(daangnChatRoomDAO.selectCountByBoardIdx(boardVO.getIdx()));
@@ -111,7 +111,7 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 		DaangnMainBoardVO boardVO = null;
 		try {
 			boardVO = daangnMainBoardDAO.selectByIdx(idx);
-			boardVO.setMember(daangnMemberDAO.selectByIdx(boardVO.getRef()));						// 유저정보
+			boardVO.setMember(daangnMemberDAO.selectByIdx(boardVO.getUserRef()));					// 유저정보
 			boardVO.setCountLike(daangnLikeDAO.countLike(boardVO.getIdx()));						// 좋아요수
 			boardVO.setBoardFileList(daangnBoardFileDAO.selectFileByBoardIdx(boardVO.getIdx()));	// 파일
 			boardVO.setChatRoomCount(daangnChatRoomDAO.selectCountByBoardIdx(boardVO.getIdx()));	// 채팅 수
@@ -149,7 +149,7 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 		try {
 			list = daangnMainBoardDAO.selectByRef(userIdx);
 			for(DaangnMainBoardVO boardVO : list) {
-				boardVO.setMember(daangnMemberDAO.selectByIdx(boardVO.getRef()));						// 유저정보
+				boardVO.setMember(daangnMemberDAO.selectByIdx(boardVO.getUserRef()));						// 유저정보
 				boardVO.setCountLike(daangnLikeDAO.countLike(boardVO.getIdx()));						// 좋아요수
 				boardVO.setBoardFileList(daangnBoardFileDAO.selectFileByBoardIdx(boardVO.getIdx()));	// 파일
 			}

@@ -78,7 +78,10 @@
 					            <div class="uk-width-expand" id="board-head-line">
 					            	<div>
 						                <h4 class="uk-card-title uk-margin-remove-bottom">[[${board.member.nickName}]]</h4>
-						                <p>[[${board.loc}]]</p>
+						                <p>
+						                	[[${board.loc}]]
+						                	
+						                </p>
 					            	</div>
 									<div>
 										온도?
@@ -90,8 +93,12 @@
 					    <div class="hr"></div>
 					    
 					    <div class="uk-card-body">
-					    	<h3 class="uk-card-title uk-margin-remove-bottom">[[${board.subject}]]</h3>
-					        <p class="regDate" th:text="${#dates.format(board.regDate, 'yyyy-MM-dd HH:mm:ss')}"></p>
+					    	<h3 class="uk-card-title uk-margin-remove-bottom">
+			                	<span th:if="${board.statusRef == 2}" class="reserved">[[${board.statusName}]]</span>
+			                	<span th:if="${board.statusRef == 3}" class="sold">[[${board.statusName}]]</span>
+					    		[[${board.subject}]]
+					    	</h3>
+					    	<span class="category">[[${board.categoryName}]]</span>ㆍ<span class="regDate">[[${#dates.format(board.regDate, 'yyyy-MM-dd HH:mm:ss')}]]</span>
 					        <p class="text-card">[[${board.content}]]</p>
 					        <div id="mapBox">
 					        	<div id="mapInfo" style="display: none;">

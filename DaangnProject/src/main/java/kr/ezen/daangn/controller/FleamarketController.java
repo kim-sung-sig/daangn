@@ -134,7 +134,7 @@ public class FleamarketController {
 	public String flfleamarketUploadOkPost(HttpSession session, MultipartHttpServletRequest request, @ModelAttribute(value = "boardVO") DaangnMainBoardVO boardVO) {
 		log.info("flfleamarketUploadOkPost 실행 : {}", boardVO);
 		DaangnMemberVO memberVO = (DaangnMemberVO) session.getAttribute("user");
-		boardVO.setRef(memberVO.getIdx());
+		boardVO.setUserRef(memberVO.getIdx());
 		daangnMainBoardService.saveMainBoard(boardVO); // 저장된 idx_seq를 리턴한다!
 		int boardIdx = boardVO.getIdx();
 		log.info("boardIdx = {}", boardIdx);

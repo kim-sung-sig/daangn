@@ -1,3 +1,6 @@
+DROP SEQUENCE chatRoom_idx_seq;
+DROP TABLE chatRoom;
+
 CREATE SEQUENCE chatRoom_idx_seq;
 
 CREATE TABLE chatRoom (
@@ -5,3 +8,5 @@ CREATE TABLE chatRoom (
 	userIdx NUMBER NOT NULL,
 	boardIdx NUMBER NOT NULL
 )
+
+SELECT * FROM CHATROOM c ;
