@@ -36,11 +36,8 @@ public class SecurityConfig {
 					.requestMatchers("/fleamarket/**","/fleamarketDetail/**").permitAll()
 					// 생활꿀팁 리스트 사이트!
 					.requestMatchers("/smartLivingTips").permitAll()
-					//.requestMatchers("/chat/**").hasAnyRole("USER", "ADMIN")
-					//.requestMatchers("/upload","/uploadOk").hasAnyRole("USER","ADMIN")
-					
 					// 지정 주소에 대한 권한 설정 : hasRole(권한)은 지정 권한이 있는 사용자만 접근이 가능하다.
-					.requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
+					.requestMatchers("/adm", "/adm/**").hasRole("ADMIN")
 					// 그 이외의 요청은 인증된 사용자만 접근이 가능하다.
 					.anyRequest().authenticated();
 		});

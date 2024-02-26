@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import kr.ezen.daangn.vo.CommonVO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
 import kr.ezen.daangn.vo.DaangnMemberVO;
+import kr.ezen.daangn.vo.PagingVO;
 
 public interface DaangnMemberService extends UserDetailsService{
 	// 회원가입
@@ -30,7 +32,7 @@ public interface DaangnMemberService extends UserDetailsService{
 	DaangnMemberVO selectByIdx(int idx);
 	
 	// selectAll
-	List<DaangnMemberVO> selectAll();
+	PagingVO<DaangnMemberVO> getUsers(CommonVO cv);
 	
 	// 중복확인
 	int selectCountByUsername(String username);

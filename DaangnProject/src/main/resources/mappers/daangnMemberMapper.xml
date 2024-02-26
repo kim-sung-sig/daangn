@@ -43,10 +43,53 @@
 	</select>
 	
 	<!-- 모두 얻기 (admin용) 이거 페이징 처리해야댐 -->
-	<select id="selectAll" resultType="DaangnMemberVO">
-		select * from daangn_member order by username
+	<select id="selectUser" parameterType="hashmap" resultType="DaangnMemberVO">
+		select
+			R.*
+		from
+			(
+				select
+					rownum rnum, Q.*
+				from
+					(
+						select
+							*
+						from
+							daangn_member
+						<where>
+							<if test="search != null">
+								username like '%' || #{search} || '%'
+								or name like '%' || #{search} || '%'
+								or nickName like '%' || #{search} || '%'
+							</if>
+						</where>
+						order by
+							idx desc
+					) Q
+				where
+					<![CDATA[
+						rownum <= #{endNo}
+					]]> 
+			) R
+		where
+			<![CDATA[
+				rnum >= #{startNo}
+			]]>
 	</select>
-	
+	<!-- totalCount 얻기용 -->
+	<select id="selectCountUser" parameterType="hashmap" resultType="int">
+		select
+			count(*)
+		from
+			jung_member
+		<where>
+			<if test="search != null">
+				username like '%' || #{search} || '%'
+				or name like '%' || #{search} || '%'
+				or nickName like '%' || #{search} || '%'
+			</if>
+		</where>
+	</select>
 	<!-- 회원 정보 수정 -->
 	<update id="update" parameterType="DaangnMemberVO">
 		update 

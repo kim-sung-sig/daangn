@@ -21,7 +21,7 @@ public class CommonVO {
 	
 	private int p = 1;
 	private int s = 18;
-	private int b = 10;
+	private int b = 5;
 	
 	private int currentPage=1;
 	private int sizeOfPage=18;
@@ -31,8 +31,23 @@ public class CommonVO {
 		this.p = p;
 		setCurrentPage(p);
 	}
+	public void setS(int s) {
+		this.s = s;
+		setSizeOfPage(s);
+	}
+	public void setB(int b) {
+		this.b = b;
+		setSizeOfBlock(b);
+	}
 	public void setCurrentPage(int currentPage) {
 		this.currentPage = currentPage;
+	}
+	
+	public void setSizeOfPage(int sizeOfPage) {
+		this.sizeOfPage = sizeOfPage;
+	}
+	public void setSizeOfBlock(int sizeOfBlock) {
+		this.sizeOfBlock = sizeOfBlock;
 	}
 	public void setRegion(String region) {
 		this.region = region;

@@ -1,6 +1,7 @@
 package kr.ezen.daangn.service;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.ezen.daangn.dao.DaangnMainBoardDAO;
 import kr.ezen.daangn.dao.DaangnMemberDAO;
+import kr.ezen.daangn.vo.CommonVO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
 import kr.ezen.daangn.vo.DaangnMemberVO;
+import kr.ezen.daangn.vo.PagingVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Service(value = "daangnMemberService")
@@ -164,14 +167,24 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 	}
 
 	@Override
-	public List<DaangnMemberVO> selectAll() {
-		List<DaangnMemberVO> list = null;
+	public PagingVO<DaangnMemberVO> getUsers(CommonVO cv) {
+		PagingVO<DaangnMemberVO> pv = null;
 		try {
-			list = daangnMemberDAO.selectAll();
+			HashMap<String, Object> map = new HashMap<>();
+			cv.setS(20);
+			cv.setB(5);
+			map.put("search", cv.getSearch());
+			int totalCount = daangnMemberDAO.selectCountUser(map); // 서치가 되면 서치가 되게 수정해함!
+			pv = new PagingVO<>(totalCount, cv.getCurrentPage(), cv.getSizeOfPage(), cv.getSizeOfBlock()); // 페이지 계산 완료
+			
+			map.put("startNo", pv.getStartNo());
+			map.put("endNo", pv.getEndNo());
+			List<DaangnMemberVO> userList = daangnMemberDAO.selectUser(map);
+			pv.setList(userList);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return list;
+		return pv;
 	}
 
 	@Override

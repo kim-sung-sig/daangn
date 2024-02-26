@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <title>관리자 메인페이지</title>
+    <!-- font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <!-- UIkit CSS -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css"/>
+
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
+	<link rel="stylesheet" href="/css/admin/header.css">
+    <style type="text/css">
+		.subtitle {
+			font-size: 24px;
+		}
+		.xBox{
+			margin-bottom: 70px;
+		}
+		.btn-right{text-align: right;}
+    </style>
+</head>
+<body>
+<div id="wrap">
+    <div id="content">
+    	<header>
+			<div id="logo"><a href="/adm">ADMINISTRATOR</a></div>
+			<div id="info">
+				[[${name}]]님 반갑습니다.
+				<a id="homeBtn" href="/">홈으로</a>
+			</div>
+	    </header>
+	    <div style="padding-top: 50px;">
+	        <div id="leaf-area">
+	            <ul>
+	                <li>
+	                    <label>회원 관리</label>
+	                    <ul>
+	                        <li><a href="/adm/userManagement">회원 관리</a></li>
+	                        <li><a href="/adm/mailToUser">회원 메일 발송</a></li>
+	                        <li><a href="#">회원 권한 수정</a></li>
+	                    </ul>
+	                </li>
+	                <li>
+	                    <label>게시물 관리</label>
+	                    <ul>
+	                        <li><a href="#">인기 게시물</a></li>
+	                        <li><a href="#">게시판 관리</a></li>
+	                        <li><a href="#">파일 관리</a></li>
+	                    </ul>
+	                </li>
+	                <li>
+	                    <label>1:1 문의</label>
+	                    <ul>
+	                        <li><a href="#">1:1 문의 사항</a></li>
+	                    </ul>
+	                </li>
+	                <li>
+	                    <label>공지사항관리</label>
+	                    <ul>
+	                        <li><a href="#">공지사항보기</a></li>
+	                        <li><a href="#">공지사항쓰기</a></li>
+	                    </ul>
+	                </li>
+	            </ul>
+	        </div>
+	    
+	        <div id="right-area">
+	        	<div class="xBox">
+					<label class="subtitle">최근 가입한 회원</label>
+	        		<table class="uk-table uk-table-striped">
+					    <thead>
+					        
+					    </thead>
+					    <tbody>
+					    	
+					    </tbody>
+					</table>
+					<div class="btn-right">
+						<a href="/adm/userManagement" class="uk-button uk-button-small uk-button-primary">회원관리하기</a>
+					</div>
+	        	</div>
+	        	
+	        	<div class="xBox">
+					<label class="subtitle">최근 게시글물(10개)</label>
+	        		<table class="uk-table uk-table-striped">
+					    <thead>
+					        
+					    </thead>
+					    <tbody>
+					    	
+					    </tbody>
+					</table>
+					<div class="btn-right">
+						<a href="" class="uk-button uk-button-small uk-button-primary">게시글 관리하기</a>
+					</div>
+	        	</div>
+	        </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
