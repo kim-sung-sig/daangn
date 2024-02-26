@@ -180,6 +180,10 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 			map.put("startNo", pv.getStartNo());
 			map.put("endNo", pv.getEndNo());
 			List<DaangnMemberVO> userList = daangnMemberDAO.selectUser(map);
+			for(DaangnMemberVO user : userList) {
+				
+			}
+			
 			pv.setList(userList);
 		} catch (SQLException e) {
 			e.printStackTrace();

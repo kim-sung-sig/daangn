@@ -2,9 +2,10 @@ package kr.ezen.daangn.vo;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 // 글번호 현제페이지번호 페이지당 글수 페이지목록수를 받기 위한 공통변수들을 가지는 클래스
-@Getter
+@Getter @ToString
 @NoArgsConstructor
 public class CommonVO {
 	public CommonVO(String region, String gu, String dong, String search) {
@@ -14,11 +15,17 @@ public class CommonVO {
 		this.dong = dong;
 		this.search = search;
 	}
+	// 지역 검색
 	private String region;
 	private String gu;
 	private String dong;
+	// 단어 검색
 	private String search;
+	// 카테고리검색
+	private Integer categoryNum;
 	
+	
+	// 페이징
 	private int p = 1;
 	private int s = 18;
 	private int b = 5;
@@ -60,5 +67,8 @@ public class CommonVO {
 	}
 	public void setSearch(String search) {
 		this.search = search;
+	}
+	public void setCategoryNum(Integer categoryNum) {
+		this.categoryNum = categoryNum;
 	}
 }

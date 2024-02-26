@@ -31,7 +31,7 @@ public interface DaangnMemberService extends UserDetailsService{
 	// idx로 idx, nickName만 얻기
 	DaangnMemberVO selectByIdx(int idx);
 	
-	// selectAll
+	// 페이징 getUsers
 	PagingVO<DaangnMemberVO> getUsers(CommonVO cv);
 	
 	// 중복확인

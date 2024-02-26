@@ -28,15 +28,15 @@ public class DaangnMemberVO implements UserDetails{
 	private String email;					// 아이디 비번찾기때 쓸것
 	// 메일 수신?
 	
+	// 성별
 	
 	// address
 	private String stAddress;				// 도로명주소	(이름 추천)
 	private String dtAddress;				// 상세주소		(이름 추천)
 	//====================================================================
-	
-	
 	private DaangnFileVO userProfile;		// 프로필 사진!
 	private float userVal;					// 유저평
+	
 	
 	
 	
