@@ -13,7 +13,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
 	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="/css/header.css">
-	<link rel="stylesheet" href="/css/fleamarket.css">
+	<link rel="stylesheet" href="/css/fleamarket/fleamarket.css">
 	<script src="/js/fleamarket.js"></script>
 </head>
 <body>
@@ -80,7 +80,7 @@
 					<div id="slide" style="width: 100%;height:100%;gap:50px; display: grid; grid-template-columns:repeat(3, 1fr); justify-content: space-between;">
 						
 						
-						<th:block th:each="vo : ${list}">
+						<th:block th:each="vo : ${pv.list}">
 							<div class="uk-card uk-card-default" style="width: 300px" th:onclick="detail([[${vo.idx}]])">
 								<div class="uk-card-media-top">
 									<th:block th:each="img, sv : ${vo.boardFileList}">

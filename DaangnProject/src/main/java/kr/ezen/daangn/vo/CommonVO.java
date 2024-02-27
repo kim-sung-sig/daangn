@@ -23,6 +23,8 @@ public class CommonVO {
 	private String search;
 	// 카테고리검색
 	private Integer categoryNum;
+	// 상태체크 (판매, 예약, 판매완료)
+	private Integer statusNum;
 	
 	
 	// 페이징
@@ -70,5 +72,8 @@ public class CommonVO {
 	}
 	public void setCategoryNum(Integer categoryNum) {
 		this.categoryNum = categoryNum;
+	}
+	public void setStatusNum(Integer statusNum) {
+		this.statusNum = statusNum;
 	}
 }

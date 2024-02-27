@@ -48,7 +48,7 @@
 						<th:block th:if="${session.user != null}">
 							<a class="uk-button uk-button-default" href="/member/logout">로그아웃</a>					
 							<th:block th:if="${session.user.role == 'ROLE_ADMIN'}">
-								<a class="uk-button uk-button-default" href="/admin/home">관리자 페이지</a>													
+								<a class="uk-button uk-button-default" href="/adm">관리자 페이지</a>													
 							</th:block>
 							<th:block th:if="${session.user.role != 'ROLE_ADMIN'}">													
 								<a class="uk-button uk-button-default" href="/member/home">마이페이지</a>					

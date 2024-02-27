@@ -24,6 +24,7 @@ import kr.ezen.daangn.dao.DaangnMemberDAO;
 import kr.ezen.daangn.vo.CommonVO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
 import kr.ezen.daangn.vo.DaangnMemberVO;
+import kr.ezen.daangn.vo.PagingVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Service(value = "daangnMainBoardService")
@@ -85,20 +86,35 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 	 * @return List<DaangnMainBoardVO>
 	 */
 	@Override
-	public List<DaangnMainBoardVO> selectList(CommonVO commonVO) {
-		List<DaangnMainBoardVO> list = null;
+	public PagingVO<DaangnMainBoardVO> selectList(CommonVO cv) {
+		PagingVO<DaangnMainBoardVO> pv = null;
 		try {
-			list = daangnMainBoardDAO.selectList(commonVO);
+			HashMap<String, Object> map = new HashMap<>();
+			map.put("region", cv.getRegion());
+			map.put("gu", cv.getGu());
+			map.put("dong", cv.getDong());
+			map.put("search", cv.getSearch());
+			map.put("categoryNum", cv.getCategoryNum());
+			map.put("statusNum", cv.getStatusNum());
+			log.info("selectList 실행 : map : {}", map);
+			int totalCount = daangnMainBoardDAO.selectCount(map);
+			pv = new PagingVO<>(totalCount, cv.getCurrentPage(), cv.getSizeOfPage(), cv.getSizeOfBlock());
+			
+			map.put("startNo", pv.getStartNo());
+			map.put("endNo", pv.getEndNo());
+			List<DaangnMainBoardVO> list = daangnMainBoardDAO.selectList(map);
 			for(DaangnMainBoardVO boardVO : list) {
 				boardVO.setMember(daangnMemberDAO.selectByIdx(boardVO.getUserRef()));					// 유저정보
 				boardVO.setCountLike(daangnLikeDAO.countLike(boardVO.getIdx()));						// 좋아요수
 				boardVO.setBoardFileList(daangnBoardFileDAO.selectFileByBoardIdx(boardVO.getIdx()));	// 파일
-				boardVO.setChatRoomCount(daangnChatRoomDAO.selectCountByBoardIdx(boardVO.getIdx()));
+				boardVO.setChatRoomCount(daangnChatRoomDAO.selectCountByBoardIdx(boardVO.getIdx()));	// 채팅방 갯수
 			}
+			pv.setList(list);
+			log.info("pv : {}", pv);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return list;
+		return pv;
 	}
 
 	/**

@@ -28,6 +28,7 @@ import kr.ezen.daangn.vo.DaangnFileVO;
 import kr.ezen.daangn.vo.DaangnLikeVO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
 import kr.ezen.daangn.vo.DaangnMemberVO;
+import kr.ezen.daangn.vo.PagingVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -56,13 +57,16 @@ public class FleamarketController {
 					   , @PathVariable(value = "region", required = false) String region
 					   , @PathVariable(value = "gu", required = false) String gu
 					   , @PathVariable(value = "dong", required = false) String dong
-					   , @RequestParam(value = "search", required = false) String search) {
+					   , @RequestParam(value = "search", required = false) String search
+					   ) {
 		log.debug("list 실행 region: {}, gu: {}, dong: {}, search: {}, p: {}", region, gu, dong, search);
 
 		CommonVO commonVO = new CommonVO(region, gu, dong, search);
-		List<DaangnMainBoardVO> list = daangnMainBoardService.selectList(commonVO);
+		commonVO.setS(18);
+		commonVO.setB(5);
+		PagingVO<DaangnMainBoardVO> pv = daangnMainBoardService.selectList(commonVO);
 		
-		model.addAttribute("list", list);
+		model.addAttribute("pv", pv);
 		
 		// 추가로 지역정보리스트 리턴!
 		model.addAttribute("regionList", daangnMainBoardService.regionList(null,null,null));
@@ -74,9 +78,8 @@ public class FleamarketController {
 			model.addAttribute("gu", gu);
 			model.addAttribute("dongList", daangnMainBoardService.regionList(region, gu, null));			
 		}
-		return "fleamarket";
+		return "fleamarket/fleamarket";
 	}
-	
 	
 	/**
 	 * 중고거래 글 하나 보기
@@ -100,8 +103,9 @@ public class FleamarketController {
 			model.addAttribute("likeCheck", daangnLikeService.select(likeVO));
 		}
 		model.addAttribute("board", board);
-		return "fleamarketDetail";
+		return "fleamarket/fleamarketDetail";
 	}
+	
 	/**
 	 * 중고거래 글 쓰기
 	 * @param session
@@ -112,8 +116,9 @@ public class FleamarketController {
 		if(session.getAttribute("user") == null) {
 			return "redirect:/";
 		}
-		return "fleamarketUpload";
+		return "fleamarket/fleamarketUpload";
 	}
+	
 	/**
 	 * 중고거래 글 쓰기 get방지
 	 * @return
@@ -122,6 +127,7 @@ public class FleamarketController {
 	public String fleamarketUploadOkGet() {
 		return "redirect:/";
 	}
+	
 	/**
 	 * 중고거래 글 저장하기
 	 * @param session

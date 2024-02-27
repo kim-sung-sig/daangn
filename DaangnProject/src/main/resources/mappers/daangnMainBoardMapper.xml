@@ -3,9 +3,68 @@
 <mapper namespace="kr.ezen.daangn.dao.DaangnMainBoardDAO">
 	
 	<!-- 조회하기 페이징처리및 서치도 가능하게 -->
-	<select id="selectList" parameterType="CommonVO" resultType="DaangnMainBoardVO">
+	<select id="selectList" parameterType="hashmap" resultType="DaangnMainBoardVO">
 		select
-			*
+			R.*
+		from
+			(
+				select
+					rownum rnum, Q.*
+				from
+					(
+						select
+							b.*,
+						    c.categoryName,
+						    s.statusName
+						from
+							daangn_board b
+						JOIN
+						    daangn_category c ON b.categoryRef = c.categoryIdx
+						JOIN
+						    daangn_status s ON b.statusRef = s.statusIdx
+						<where>
+					        <trim prefix="AND" suffixOverrides="AND">
+					            <if test="region != null">
+					                LOC LIKE '%' || #{region} || '%' AND
+					            </if>
+					            <if test="gu != null">
+					                LOC LIKE '%' || #{gu} || '%' AND
+					            </if>
+					            <if test="dong != null">
+					                LOC LIKE '%' || #{dong} || '%' AND
+					            </if>
+					            <if test="search != null">
+					                (
+					                    SUBJECT LIKE '%' || #{search} || '%'
+					                    OR CONTENT LIKE '%' || #{search} || '%'
+					                )
+					                AND
+					            </if>
+					            <if test="categoryNum != null">
+					                categoryRef = #{categoryNum}
+					            </if>
+					            <if test="statusNum != null">
+					                statusRef = #{statusNum}
+					            </if>
+					        </trim>
+				   		</where>
+						order by
+							idx desc
+					) Q
+				where
+					<![CDATA[
+						rownum <= #{endNo}
+					]]>
+			) R
+		where
+			<![CDATA[
+				rnum >= #{startNo}
+			]]>
+	</select>
+	
+	<select id="selectCount" parameterType="hashmap" resultType="int">
+		select
+			count(*)
 		from
 			daangn_board
 		<where>
@@ -26,10 +85,16 @@
 	                )
 	                AND
 	            </if>
+	            <if test="categoryNum != null">
+	                categoryRef = #{categoryNum}
+	                AND
+	            </if>
+	            <if test="statusNum != null">
+	                statusRef = #{statusNum}
+	                AND
+	            </if>
 	        </trim>
    		</where>
-			order by
-				idx desc
 	</select>
 	
 	<!-- 한개 얻기 -->
