@@ -1,11 +1,9 @@
 package kr.ezen.daangn.controller;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +19,10 @@ import kr.ezen.daangn.service.DaangnMainBoardService;
 import kr.ezen.daangn.service.DaangnMemberService;
 import kr.ezen.daangn.vo.ChatMessageVO;
 import kr.ezen.daangn.vo.ChatRoomVO;
+import kr.ezen.daangn.vo.CommonVO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
 import kr.ezen.daangn.vo.DaangnMemberVO;
+import kr.ezen.daangn.vo.PagingVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -37,8 +37,6 @@ public class ChatRoomController {
 	@Autowired
 	private DaangnMemberService daangnMemberService;
 	
-	@Autowired
-    private SimpMessagingTemplate messagingTemplate;
 	
 	// 나의 채팅에서 볼 것
 	@GetMapping("/rooms")
@@ -69,23 +67,30 @@ public class ChatRoomController {
 		if(memberVO.getIdx() != chatRoomVO.getUserIdx() && memberVO.getIdx() != chatRoomVO.getBoardUserIdx()) { // 채팅의 주인이 아닌경우
 			return "redirect:/";
 		}
-		// 상대 유저와의 체팅내용을 넘겨준다
-		List<ChatMessageVO> chatMessageList = chatService.selectMessageByChatRoomIdx(chatRoomIdx);
-		// 유저의 채팅내용을 찾아 model에 넘겨준다
-		model.addAttribute("chatMessageList", chatMessageList);
+		
+		model.addAttribute("board", boardVO);
 		model.addAttribute("chatRoomIdx", chatRoomIdx);
 		model.addAttribute("sender", memberVO.getIdx());
 		return "chatRoom";
 	}
 	
+	@PostMapping(value = "/findChatMessage")
+	@ResponseBody
+	public List<ChatMessageVO> findChatMessage(@RequestBody HashMap<String, Integer> map){
+		log.info("findChatMessage({}) 호출", map);
+		PagingVO<ChatMessageVO> pv = null;
+		int chatRoomIdx = map.get("chatRoomIdx");
+		CommonVO cv = new CommonVO();
+		cv.setP(map.get("currentPage"));
+		cv.setS(50);
+		pv = chatService.selectMessageByChatRoomIdx(chatRoomIdx, cv);
+		return pv.getList();
+	}
+	
+	// 채팅방 조회 및 생성
 	@GetMapping("/createChatRoom")
 	public String creathChatRoomGet(HttpSession session) {
-		if(session.getAttribute("user") == null) { // 로그인을 하지 않은 경우
-			return "redirect:/";
-		} else {
-			session.removeAttribute("user");
-			return "redirect:/";
-		}
+		return "redirect:/";
 	}
 	@PostMapping("/createChatRoom")
 	@ResponseBody

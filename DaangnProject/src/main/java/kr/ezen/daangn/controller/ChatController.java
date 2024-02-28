@@ -13,8 +13,8 @@ import kr.ezen.daangn.vo.ChatMessageVO;
 import kr.ezen.daangn.vo.DaangnMemberVO;
 import lombok.extern.slf4j.Slf4j;
 
-@Controller
 @Slf4j
+@Controller
 public class ChatController {
 	
 	@Autowired
@@ -35,6 +35,6 @@ public class ChatController {
 		// 메시지 보내기
         messagingTemplate.convertAndSend("/sub/chat/room/" + message.getChatRoom(), message);
         // 메시지 저장
-        // chatService.insertMessage(message);
+        chatService.insertMessage(message);
     }
 }

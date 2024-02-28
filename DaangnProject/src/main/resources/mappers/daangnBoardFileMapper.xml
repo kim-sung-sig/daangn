@@ -3,18 +3,18 @@
 <mapper namespace="kr.ezen.daangn.dao.DaangnBoardFileDAO">
 	
 	<!-- 파일 저장하기 -->
-	<insert id="insertFile" parameterType="DaangnFileVO">
-		insert into daangn_board_file values (daangn_board_file_idx_seq.nextval, #{ref}, #{originFileName}, #{saveFileName})
+	<insert id="insertFile" parameterType="DaangnBoardFileVO">
+		insert into daangn_board_file values (daangn_board_file_idx_seq.nextval, #{boardRef}, #{originFileName}, #{saveFileName})
 	</insert>
 	
 	<!-- 1. 파일 삭제하기 (게시글에 대한) -->
 	<delete id="deleteLike" parameterType="int">
-		delete from	daangn_board_file where ref = #{ref}	   
+		delete from	daangn_board_file where boardRef = #{boardRef}	   
 	</delete>
 	
 	<!-- 게시글에 대한 사진 얻기 -->
-	<select id="selectFileByBoardIdx" parameterType="int" resultType="DaangnFileVO">
-		select * from daangn_board_file where ref = #{ref}
+	<select id="selectFileByBoardIdx" parameterType="int" resultType="DaangnBoardFileVO">
+		select * from daangn_board_file where boardRef = #{boardRef}
 	</select>
 	
 </mapper>

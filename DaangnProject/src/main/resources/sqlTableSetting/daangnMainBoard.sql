@@ -15,7 +15,10 @@ CREATE TABLE daangn_board(
 	location varchar2(200) NOT NULL,
 	loc varchar2(200) NOT NULL,
 	readCount NUMBER DEFAULT 0,
-	regDate TIMESTAMP DEFAULT SYSDATE
+	regDate TIMESTAMP DEFAULT SYSDATE,
+	FOREIGN KEY (userRef) REFERENCES daangn_member(idx),
+	FOREIGN KEY (categoryRef) REFERENCES daangn_category(categoryIdx),
+	FOREIGN KEY (statusRef) REFERENCES daangn_status(statusIdx)
 );
 
 SELECT * FROM daangn_board;

@@ -2,8 +2,36 @@
 <!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "./mybatis-3-mapper.dtd" >
 <mapper namespace="kr.ezen.daangn.dao.DaangnChatMessageDAO">
 
-	<select id="selectChatByChatRoomIdx" parameterType="int" resultType="ChatMessageVO">
-		select * from chatMessage where chatRoom = #{chatRoomIdx} order by idx 
+	<select id="selectChatByChatRoomIdx" parameterType="hashmap" resultType="ChatMessageVO">
+		select
+			R.*
+		from
+			(
+			select
+				rownum rnum, Q.*
+			from	
+				(
+					select
+						*
+					from
+						chatMessage
+					where
+						chatRoom = #{chatRoomIdx}
+					order by idx desc
+				) Q
+			where
+				<![CDATA[
+					rownum <= #{endNo}
+				]]>
+			) R
+		where
+			<![CDATA[
+				rnum >= #{startNo}
+			]]>
+	</select>
+	
+	<select id="selectChatCountByChatRoomIdx" parameterType="int" resultType="int">
+		select count(*) from chatMessage where chatRoom = #{chatRoomIdx}
 	</select>
 	
 	<insert id="insertChat" parameterType="ChatMessageVO">

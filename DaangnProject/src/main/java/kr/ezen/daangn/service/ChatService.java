@@ -1,6 +1,7 @@
 package kr.ezen.daangn.service;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +9,11 @@ import org.springframework.stereotype.Service;
 
 import kr.ezen.daangn.dao.DaangnChatMessageDAO;
 import kr.ezen.daangn.dao.DaangnChatRoomDAO;
+import kr.ezen.daangn.dao.DaangnMemberDAO;
 import kr.ezen.daangn.vo.ChatMessageVO;
 import kr.ezen.daangn.vo.ChatRoomVO;
+import kr.ezen.daangn.vo.CommonVO;
+import kr.ezen.daangn.vo.PagingVO;
 
 @Service(value = "chatService")
 public class ChatService {
@@ -19,6 +23,9 @@ public class ChatService {
     
     @Autowired
     private DaangnChatMessageDAO daangnChatMessageDAO;
+    
+    @Autowired
+    private DaangnMemberDAO daangnMemberDAO;
     
     /**
      * 조회
@@ -79,14 +86,24 @@ public class ChatService {
      * @param chatRoomIdx
      * @return
      */
-    public List<ChatMessageVO> selectMessageByChatRoomIdx(int chatRoomIdx){
-    	List<ChatMessageVO> list = null;
+    public PagingVO<ChatMessageVO> selectMessageByChatRoomIdx(int chatRoomIdx, CommonVO cv){
+    	PagingVO<ChatMessageVO> pv = null;
     	try {
-			list = daangnChatMessageDAO.selectChatByChatRoomIdx(chatRoomIdx);
+    		HashMap<String, Integer> map = new HashMap<>();
+    		int totalCount = daangnChatMessageDAO.selectChatCountByChatRoomIdx(chatRoomIdx);
+    		map.put("chatRoomIdx", chatRoomIdx);
+    		pv = new PagingVO<>(totalCount, cv.getCurrentPage(), cv.getSizeOfPage(), cv.getSizeOfBlock());
+    		map.put("startNo", pv.getStartNo());
+    		map.put("endNo", pv.getEndNo());
+			List<ChatMessageVO> messageList = daangnChatMessageDAO.selectChatByChatRoomIdx(map);
+			for(ChatMessageVO cm : messageList) {
+				cm.setNickName(daangnMemberDAO.selectByIdx(cm.getSender()).getNickName());
+			}
+			pv.setList(messageList);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-    	return list;
+    	return pv;
     }
     
     /**
@@ -95,7 +112,11 @@ public class ChatService {
      * @param chatMessageVO
      */
     public void insertMessage(ChatMessageVO chatMessageVO) {
-    	insertMessage(chatMessageVO);
+    	try {
+			daangnChatMessageDAO.insertChat(chatMessageVO);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
     }
 	
     // 5. 채팅방 삭제하기?? 이건 고민해봐야될듯

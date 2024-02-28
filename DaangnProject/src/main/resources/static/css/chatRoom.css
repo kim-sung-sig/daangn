@@ -4,7 +4,7 @@ body, html {font-family: "Noto Sans KR"; font-weight: 300; }
 body{position: relative; height: 100vh; }
 main{width: 400px;margin: auto; position:absolute;top:50%;left:50%;transform:translate(-50%,-50%); height: 80vh;}
 #chatMessages > li {width: 70%;background: #ccc; font-size: 14px; line-height: 1.5;border-radius: 50px;margin-bottom: 30px;}
-#info{height: 100px; background: #cdcdcd;}
+#info{height: 100px; background: #cdcdcd; display: flex;}
 #chatMessages{height: calc(100% - 200px); overflow-y: scroll; overflow-x:hidden; box-shadow: 10px #333;}
 
   #chatMessages::-webkit-scrollbar {
@@ -100,12 +100,39 @@ p{margin: 0;}
     content: "▶";
     color: #F9EB54;
 }
-.chat-time{
+.ch1 .chat-time{
+	position:absolute;
+	left: 100%;
+	bottom: 0;
 	padding: 0 10px;
 	font-size : 12px;
+	white-space: nowrap;
+}
+.ch2 .chat-time{
+	position:absolute;
+	right: 100%;
+	bottom: 0;
+	padding: 0 10px;
+	font-size : 12px;
+	white-space: nowrap;
 }
 
-
+#boardImg{
+	padding: 5px;
+	overflow: hidden;
+	border-radius: 20px;
+	width: 100px;
+	height: 100px;
+}
+#boardDetail{
+	padding: 10px 5px;
+	width: 300px;
+	height: 100px;
+}
+#boardDetail p{
+	font-size: 18px;
+	font-weight: 500;
+}
 
 
 

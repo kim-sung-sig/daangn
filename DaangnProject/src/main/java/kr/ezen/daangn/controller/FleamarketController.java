@@ -22,9 +22,8 @@ import jakarta.servlet.http.HttpSession;
 import kr.ezen.daangn.service.DaangnBoardFileService;
 import kr.ezen.daangn.service.DaangnLikeService;
 import kr.ezen.daangn.service.DaangnMainBoardService;
-import kr.ezen.daangn.service.DaangnMemberService;
 import kr.ezen.daangn.vo.CommonVO;
-import kr.ezen.daangn.vo.DaangnFileVO;
+import kr.ezen.daangn.vo.DaangnBoardFileVO;
 import kr.ezen.daangn.vo.DaangnLikeVO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
 import kr.ezen.daangn.vo.DaangnMemberVO;
@@ -165,8 +164,8 @@ public class FleamarketController {
 						File savaFile = new File(uploadPath, saveFileName);
 						FileCopyUtils.copy(file.getBytes(), savaFile);
 						
-						DaangnFileVO fileVO = new DaangnFileVO();
-						fileVO.setRef(boardIdx);
+						DaangnBoardFileVO fileVO = new DaangnBoardFileVO();
+						fileVO.setBoardRef(boardIdx);
 						fileVO.setSaveFileName(saveFileName);
 						fileVO.setOriginFileName(originFileName);
 						log.info("fileVO : {}", fileVO);

@@ -15,6 +15,9 @@ import kr.ezen.daangn.vo.DaangnLikeVO;
 import kr.ezen.daangn.vo.DaangnMemberVO;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 좋아요, 댓글을 날려주는 controller?
+ */
 @Slf4j
 @Controller
 @RequestMapping(value = "/api")

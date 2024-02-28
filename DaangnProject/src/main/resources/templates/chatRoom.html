@@ -61,22 +61,16 @@
 			<input type="hidden" id="chatRoomIdx" th:value="${chatRoomIdx}">
 			<input type="hidden" id="sender" th:value="${sender}">
 			<div id="info">
-				여기서 상대가 누군지 어떤상품인지에 대한 간략설명해줄!공간이고
+				<div id="boardImg">
+					<img th:src="'/upload/'+${board.boardFileList[0].saveFileName}" alt="" />
+				</div>
+				<div id="boardDetail">
+					<p>[[${board.subject}]]</p>
+					<span>[[${#numbers.formatInteger(board.price, 0, 'COMMA')}]]원</span>			
+				</div>
 			</div>
 			<div id="chatMessages">
-				<div>
-					<div class="chat ch1">
-					    <div class="icon"><span>당</span></div>
-					    <div class="textbox">안녕하세요. 반갑습니다.</div>
-						<span class="chat-time">AM 9:43</span>
-					</div>
-				</div>
-				<div class="chat ch2">
-				    <div class="icon"><i class="fa-solid fa-user"></i></div>
-				    <div class="textbox">
-				    	<p>안녕하세요. 반갑습니다.안녕하세요. 반갑습니다. 안녕하세요ㅕ. 반갑습니다. 안녕하세요. 반갑습니다.</p></div>
-					<span class="chat-time">AM 9:43</span>
-				</div>
+				
 			</div>
 			<div id="inputChatMessages"><!-- 여기가 채팅 form -->
 				<textarea id="message" class="uk-textarea"></textarea>
@@ -116,74 +110,114 @@
 	
 	
 	<script>
+		
 		$(function() {
+			let currentPage = 1;
+			const chatRoomIdx = $("#chatRoomIdx").val();
+		    const sender = $("#sender").val();
+			
 		    // WebSocket 및 Stomp 초기화
 		    var sock = new SockJS("/ws");
 		    var ws = Stomp.over(sock);
 		    
-		    // var roomIdx = localStorage.getItem('wschat.chatRoomIdx');
-		    //var sender = localStorage.getItem('wschat.sender');
-		    const roomIdx = $("#chatRoomIdx").val();
-		    const sender = $("#sender").val();
-		    console.log(roomIdx);
-		    console.log(sender);
 		    var messages = [];
 			
-		    function findRoom() {
-		        $.ajax({
-		            method: 'GET',
-		            url: '/chat/room/' + roomIdx,
-		            success: function(response) {
-		                var room = response;
-		            }
-		        });
-		    }
-	
+		    /**
+		    * 메시지를 보낼때 실행되는 함수
+		    */
 		    function sendMessage() {
 		        var message = $('#message').val();
-		        ws.send("/pub/chat/message", {}, JSON.stringify({'chatRoom': roomIdx, 'sender': sender, 'content': message}));
+		        ws.send("/pub/chat/message", {}, JSON.stringify({'chatRoom': chatRoomIdx, 'sender': sender, 'content': message}));
 		        $('#message').val('');
 		    }
-	
+			
+		    /**
+		    * 메시지를 받을때 실행되는 함수
+		    */
 		    function recvMessage(recv) {
 		    	console.log(recv);
 		        var message = {"sender": recv.sender, "nickName": recv.nickName, "content": recv.content, "regDate": recv.regDate};
 		        messages.unshift(message);
-		        // 메시지를 UI에 업데이트
-		        updateMessagesUI2(message);
+		        updateMessagesUI(message);
 		    }
 	
 		    // pub/sub 이벤트
 		    ws.connect({}, function(frame) {
-		        ws.subscribe("/sub/chat/room/" + roomIdx, function(message) {
+		        ws.subscribe("/sub/chat/room/" + chatRoomIdx, function(message) {
 		            var recv = JSON.parse(message.body);
 		            recvMessage(recv);
 		        });
+		        axios.post('/chat/findChatMessage', {
+					"chatRoomIdx": chatRoomIdx,
+					"currentPage": 1,
+				})
+				.then(function (res) {
+					const messageList = $('#chatMessages');
+					const data = res.data
+					console.log(data);
+					data.forEach(message => {
+						let ck = (sender == message.sender ? '2' : '1');
+						const regDate = updateDate(message.regDate);
+						content = `<div class="chat ch${ck}">`;
+				        if(ck==1){
+				        	content += `<div class="icon"><span>${message.nickName[0]}</span></div>`;
+				        }
+				        content += `
+					        	<div class="textbox">
+						    	<p>${message.content}</p>
+								<span class="chat-time">${regDate}</span>
+						    </div>
+						</div>
+				        `;
+			            const messageItem = $('<div>').html(content);
+			            messageList.prepend(messageItem);
+			            setTimeout(function(){
+			                messageList.scrollTop(messageList.prop('scrollHeight'));
+			            }, 50);
+					})
+					
+				})
+				.catch(function (error) {
+					console.log(error);
+				});
 		        // ws.send("/pub/chat/message", {}, JSON.stringify({roomIdx: roomIdx, sender: sender}));
 		    }, function(error) {
 		        alert("error " + error);
 		    });
-	
-		    // UI 업데이트 함수
-		    function updateMessagesUI() {
-		        var $messageList = $('#chatMessages');
-		        $messageList.empty();
-		        messages.forEach(function(message) {
-		            var $messageItem = $('<li>').text(message.nickName + ': ' + message.content + ": "+ message.regDate);
-		            $messageList.append($messageItem);
-		        });
+		    
+		    /**
+		    * Wed Feb 28 15:26:48 KST 2024 생긴걸
+		    * PM 3:26으로 바꿔주는 메서드
+		    */
+		    function updateDate(dateString){
+		    	let date = new Date(dateString);
+		    	let hours = date.getHours();
+		    	let minutes = date.getMinutes();
+		    	// 오전/오후 설정
+		    	let ampm = hours >= 12 ? 'PM' : 'AM';
+		    	hours = hours % 12;
+		    	minutes = minutes < 10 ? '0' + minutes : minutes;
+		    	let finalTime = ampm + ' ' + hours + ':' + minutes;
+		    	return finalTime;
 		    }
-		    function updateMessagesUI2(message) {
+		    
+		    
+		    function updateMessagesUI(message) {
 		        const messageList = $('#chatMessages');
 		        let ck = (sender == message.sender ? '2' : '1');
-		        console.log(ck);
-	            // const messageItem = $('<li>').text(message.nickName + ': ' + message.content + ": "+ message.regDate);
-	            const messageItem = $('<div>').html(
-	            		`<div class="chat ch${ck}">
-						    <div class="icon"><span>${message.nickName}</span></div>
-						    <div class="textbox"><p>${message.content}</p></div>
-							<span class="chat-time">${message.regDate}</span>
-						</div>`);
+	            const regDate = updateDate(message.regDate);
+		        content = `<div class="chat ch${ck}">`;
+		        if(ck==1){
+		        	content += `<div class="icon"><span>${message.nickName[0]}</span></div>`;
+		        }
+		        content += `
+			        	<div class="textbox">
+				    	<p>${message.content}</p>
+						<span class="chat-time">${regDate}</span>
+				    </div>
+				</div>
+		        `;
+	            const messageItem = $('<div>').html(content);
 	            messageList.append(messageItem);
 	            setTimeout(function(){
 	                messageList.scrollTop(messageList.prop('scrollHeight'));
@@ -193,6 +227,12 @@
 		    // 메시지 전송 버튼 클릭 이벤트 핸들러
 		    $('#send-message-btn').click(function() {
 		        sendMessage();
+		    });
+		    $("#message").keyup(function(event) {
+		        // Enter 키의 keyCode 값은 13이며, Shift 키와 함께 눌렀을 때 keyCode 값이 10입니다.
+		        if (event.which === 13 && !event.shiftKey) {
+		        	sendMessage();
+		        }
 		    });
 		    
 		    
@@ -217,7 +257,6 @@
 		        });
 		    });
 		});
-
     </script>
 </body>
 </html>

@@ -28,7 +28,11 @@ public class SmartLivingTipsController {
 	@RequestMapping(value = {"","/"}, method = {RequestMethod.GET, RequestMethod.POST})
 	public String index(Model model, @ModelAttribute(value = "cv") CommonVO cv) {
 		log.info("cv: {}", cv);
-		// PagingVO<DaangnMainBoardVO> pv = daangnMainBoardService.selectList(cv);
-		return "smartLivingTipsIndex";
+		cv.setCategoryNum(13); // 생활 꿀팁은 13번이다
+		PagingVO<DaangnMainBoardVO> pv = daangnMainBoardService.selectList(cv);
+		
+		model.addAttribute("cv",cv);
+		model.addAttribute("pv",pv);
+		return "smartLivingTips/index";
 	}
 }

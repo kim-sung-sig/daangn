@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.ezen.daangn.dao.DaangnBoardFileDAO;
-import kr.ezen.daangn.vo.DaangnFileVO;
+import kr.ezen.daangn.vo.DaangnBoardFileVO;
 
 @Service(value = "daangnBoardFileService")
 @Transactional
@@ -18,8 +18,8 @@ public class DaangnBoardFileServiceImpl implements DaangnBoardFileService{
 	private DaangnBoardFileDAO daangnBoardFileDAO;
 	
 	@Override
-	public List<DaangnFileVO> selectFileByBoardIdx(int boardIdx) {
-		List<DaangnFileVO> fileList = null;
+	public List<DaangnBoardFileVO> selectFileByBoardIdx(int boardIdx) {
+		List<DaangnBoardFileVO> fileList = null;
 		try {
 			fileList = daangnBoardFileDAO.selectFileByBoardIdx(boardIdx);
 		} catch (SQLException e) {
@@ -29,7 +29,7 @@ public class DaangnBoardFileServiceImpl implements DaangnBoardFileService{
 	}
 
 	@Override
-	public void insert(DaangnFileVO fileVO) {
+	public void insert(DaangnBoardFileVO fileVO) {
 		try {
 			daangnBoardFileDAO.insertFile(fileVO);
 		} catch (SQLException e) {
