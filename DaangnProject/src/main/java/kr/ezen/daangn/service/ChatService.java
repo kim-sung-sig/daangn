@@ -20,7 +20,12 @@ public class ChatService {
     @Autowired
     private DaangnChatMessageDAO daangnChatMessageDAO;
     
-    // 0. 채팅방idx로 누가누가 사용가능한지 알려주기
+    /**
+     * 조회
+     * 채팅방 사용가능 유저가 누구인지 리턴
+     * @param chatRoomIdx
+     * @return
+     */
     public ChatRoomVO selectChatRoom(int chatRoomIdx){
     	ChatRoomVO ChatRoom = null;
     	try {
@@ -31,7 +36,13 @@ public class ChatService {
     	return ChatRoom;
     }
     
-    // 1. 체팅방 만들기
+    /**
+     * 조회
+     * 채팅방을 만들때 이미 이전 채팅방이 있는 경우 채팅방 번호 리턴
+     * 채팅방이 없는 경우 생성해서 chatRoomIdx 리턴
+     * @param chatRoomVO
+     * @return
+     */
     public int creatChatRoom(ChatRoomVO chatRoomVO) {
     	int result = 0;
     	try {
@@ -48,8 +59,11 @@ public class ChatService {
     	return result;
     }
     
-    // 2. 채팅방리스트 보기
-    // -1. 안읽은 글 날리기???
+    /**
+     * 조회 사용자의 idx로 사용자가 속한 ChatRoom을 리턴
+     * @param userIdx
+     * @return
+     */
     public List<ChatRoomVO> selectChatRoomByUserIdx(int userIdx){
     	List<ChatRoomVO> list = null;
     	try {
@@ -60,8 +74,11 @@ public class ChatService {
     	return list;
     }
     
-    // 3. 채팅방 보기 (체팅내역을 날려주기)
-    // -1. 읽음표시하기?
+    /**
+     * ChatRoomIdx에 해당하는 Message들을 리턴하는 메서드 >> 이것도 나중에 페이징 처리해야함
+     * @param chatRoomIdx
+     * @return
+     */
     public List<ChatMessageVO> selectMessageByChatRoomIdx(int chatRoomIdx){
     	List<ChatMessageVO> list = null;
     	try {
@@ -71,7 +88,12 @@ public class ChatService {
 		}
     	return list;
     }
-    // 4. 메시지 저장하기
+    
+    /**
+     * 저장
+     * 날라온 ChatMessage를 db에 저장
+     * @param chatMessageVO
+     */
     public void insertMessage(ChatMessageVO chatMessageVO) {
     	insertMessage(chatMessageVO);
     }

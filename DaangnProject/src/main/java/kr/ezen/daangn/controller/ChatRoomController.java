@@ -98,7 +98,6 @@ public class ChatRoomController {
 		log.info("chatRoom :{}", chatRoomVO);
 		// 1. 체팅방이 있는지 확인한다. (없으면 만들고 숫자를 넘기고 그 주소로가자, 있으면 숫자를 넘기고 그 주소로 가자)
 		int result = chatService.creatChatRoom(chatRoomVO);
-		//return "100";
 		return ""+result;
 	}
 }
