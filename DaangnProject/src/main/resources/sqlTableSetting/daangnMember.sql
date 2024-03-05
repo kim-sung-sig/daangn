@@ -9,7 +9,11 @@ CREATE TABLE daangn_member(
 	role varchar2(10) NOT NULL,
 	name varchar2(100) NOT NULL,
 	nickName varchar2(100) NOT NULL,
+	-- 닉네임 중복체크
 	email varchar2(100) NOT NULL,
+	-- 이메일 수신확인
+	-- 가입일
+	-- 마지막으로 로그인한 날
 	stAddress varchar2(100) NOT NULL,
 	dtAddress varchar2(100) NOT NULL
 );
