@@ -1,7 +1,6 @@
 package kr.ezen.daangn.service;
 
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import kr.ezen.daangn.dao.DaangnMainBoardDAO;
+import kr.ezen.daangn.dao.DaangnCommentDAO;
 import kr.ezen.daangn.dao.DaangnMemberDAO;
 import kr.ezen.daangn.vo.CommonVO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
@@ -25,10 +24,12 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 	
 	@Autowired
 	private DaangnMemberDAO daangnMemberDAO;
-	
 	@Autowired
-	private DaangnMainBoardDAO daangnMainBoardDAO;
-	
+	private DaangnCommentDAO daangnCommentDAO;
+		
+	//=========================================================
+	// 유저 서비스
+	//=========================================================
 	@Override
 	public DaangnMemberVO loadUserByUsername(String username) throws UsernameNotFoundException {
 		log.info(" : " + username + "으로 호출");
@@ -48,168 +49,103 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 	@Override
 	public void insert(DaangnMemberVO memberVO) {
 		if(memberVO != null) {
-			BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-			memberVO.setPassword(passwordEncoder.encode(memberVO.getPassword()));
-			memberVO.setRole("ROLE_USER");
 			try {
+				BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+				memberVO.setPassword(passwordEncoder.encode(memberVO.getPassword()));
+				memberVO.setRole("ROLE_USER");
 				daangnMemberDAO.insert(memberVO);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
 	}
-
+	
 	@Override
-	public void update(DaangnMemberVO memberVO) {
-		if(memberVO != null) {
-			try {
-				DaangnMemberVO dbMemberVO = daangnMemberDAO.selectAllByIdx(memberVO.getIdx());
-				BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-				if(passwordEncoder.matches(memberVO.getPassword(), dbMemberVO.getPassword())) {
-					daangnMemberDAO.update(memberVO);					
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	@Override
-	public void updateRole(DaangnMemberVO memberVO) {
-		if(memberVO != null) {
-			try {
-				DaangnMemberVO dbMemberVO = daangnMemberDAO.selectAllByIdx(memberVO.getIdx());
-				BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-				if(passwordEncoder.matches(memberVO.getPassword(), dbMemberVO.getPassword())) {
-					daangnMemberDAO.updateRole(memberVO);					
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	@Override
-	public void updatePassword(DaangnMemberVO memberVO) {
-		if(memberVO != null) {
-			try {
-				DaangnMemberVO dbMemberVO = daangnMemberDAO.selectAllByIdx(memberVO.getIdx());
-				BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-				if(passwordEncoder.matches(memberVO.getPassword(), dbMemberVO.getPassword())) {
-					daangnMemberDAO.updatePassword(memberVO);					
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	@Override
-	public void deleteByIdx(DaangnMemberVO memberVO) {
-		if(memberVO != null) {
-			try {
-				DaangnMemberVO dbMemberVO = daangnMemberDAO.selectAllByIdx(memberVO.getIdx());
-				BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-				if(passwordEncoder.matches(memberVO.getPassword(), dbMemberVO.getPassword())) {
-					daangnMemberDAO.deleteByIdx(memberVO.getIdx());					
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	@Override
-	public void deleteByUsername(DaangnMemberVO memberVO) {
-		if(memberVO != null) {
-			try {
-				DaangnMemberVO dbMemberVO = daangnMemberDAO.selectAllByIdx(memberVO.getIdx());
-				BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-				if(passwordEncoder.matches(memberVO.getPassword(), dbMemberVO.getPassword())) {
-					daangnMemberDAO.deleteByUsername(memberVO.getUsername());					
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	@Override
-	public DaangnMemberVO selectByUsername(String username) {
-		DaangnMemberVO memberVO = null;
+	public int update(DaangnMemberVO memberVO) {
+		int result = 0;
 		try {
-			memberVO = daangnMemberDAO.selectByUsername(username);
+			if(memberVO.getPassword() != null) { // 비번이 넘어왓다면 비번 암호화 하고
+				BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+				memberVO.setPassword(passwordEncoder.encode(memberVO.getPassword()));
+			}
+			daangnMemberDAO.update(memberVO);
+			result = 1;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return memberVO;
+		return result;
 	}
 
 	@Override
-	public DaangnMemberVO selectAllByIdx(int idx) {
-		DaangnMemberVO memberVO = null;
+	public int deleteByIdx(int idx) {
+		int result = 0;
 		try {
-			memberVO = daangnMemberDAO.selectAllByIdx(idx);
+			daangnMemberDAO.deleteByIdx(idx);
+			result = 1;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return memberVO;
+		return result;
 	}
+	
+	// 추후 수정 왜냐? 이거는 boardService로 갈껏같음
+	@Override
+	public List<DaangnMainBoardVO> selectMainBoardByMemberIdx(int idx) {
+		return null;
+	}
+	
+	
+	//=========================================================
+	// 유효성검사? 유틸
+	//=========================================================
 	@Override
 	public DaangnMemberVO selectByIdx(int idx) {
 		DaangnMemberVO memberVO = null;
 		try {
 			memberVO = daangnMemberDAO.selectByIdx(idx);
+			memberVO.setUserVal(daangnCommentDAO.selectScoreByUserIdx(idx));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return memberVO;
 	}
-
-	@Override
-	public PagingVO<DaangnMemberVO> getUsers(CommonVO cv) {
-		PagingVO<DaangnMemberVO> pv = null;
-		try {
-			HashMap<String, Object> map = new HashMap<>();
-			cv.setS(20);
-			cv.setB(5);
-			map.put("search", cv.getSearch());
-			int totalCount = daangnMemberDAO.selectCountUser(map); // 서치가 되면 서치가 되게 수정해함!
-			pv = new PagingVO<>(totalCount, cv.getCurrentPage(), cv.getSizeOfPage(), cv.getSizeOfBlock()); // 페이지 계산 완료
-			
-			map.put("startNo", pv.getStartNo());
-			map.put("endNo", pv.getEndNo());
-			List<DaangnMemberVO> userList = daangnMemberDAO.selectUser(map);
-			for(DaangnMemberVO user : userList) {
-				
-			}
-			
-			pv.setList(userList);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return pv;
-	}
-
 	@Override
 	public int selectCountByUsername(String username) {
-		int count = 0;
+		int result = 0;
 		try {
-			count = daangnMemberDAO.selectCountByUsername(username);
+			result = daangnMemberDAO.selectCountByUsername(username);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return count;
+		return result;
 	}
 
 	@Override
-	public List<DaangnMainBoardVO> selectMainBoardByMemberIdx(int idx) {
-		List<DaangnMainBoardVO> list = null;
+	public int selectCountByNickName(String nickName) {
+		int result = 0;
 		try {
-			list = daangnMainBoardDAO.selectByRef(idx);
+			result = daangnMemberDAO.selectCountByNickName(nickName);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return list;
+		return result;
 	}
+	@Override
+	public int checkPasswordMatch(DaangnMemberVO sessionUser, String password) {
+		int result = 0;
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		if(passwordEncoder.matches(password, sessionUser.getPassword())) {
+			result = 1;
+		}
+		return result;
+	}
+	
+	//=========================================================
+	// adminService 나중에 한번에 뭉쳐야겟음..
+	//=========================================================
+	@Override
+	public PagingVO<DaangnMemberVO> getUsers(CommonVO cv) {
+		return null;
+	}
+
 }

@@ -10,34 +10,42 @@ import kr.ezen.daangn.vo.DaangnMemberVO;
 import kr.ezen.daangn.vo.PagingVO;
 
 public interface DaangnMemberService extends UserDetailsService{
+	//=========================================================
+	// 유저 서비스
+	//=========================================================
 	// 회원가입
 	void insert(DaangnMemberVO memberVO);
+	
 	// 회원 수정
-	void update(DaangnMemberVO memberVO);
-	// 회원 권한 수정
-	void updateRole(DaangnMemberVO memberVO);
-	// 회원 비번 번경
-	void updatePassword(DaangnMemberVO memberVO);
+	int update(DaangnMemberVO memberVO);
 	
 	// 회원 삭제 idx로
-	void deleteByIdx(DaangnMemberVO memberVO);
-	// 회원 삭제 username으로
-	void deleteByUsername(DaangnMemberVO memberVO);
+	int deleteByIdx(int idx);
 	
-	// selectByUsername
-	DaangnMemberVO selectByUsername(String username);
-	// idx로 모두 얻기
-	DaangnMemberVO selectAllByIdx(int idx);
-	// idx로 idx, nickName만 얻기
+	// idx에 해당하는 유저가 쓴 글 보여주기!
+	List<DaangnMainBoardVO> selectMainBoardByMemberIdx(int idx);
+	//=========================================================
+	
+	
+	//=========================================================
+	// 유효성검사? 유틸
+	//=========================================================
+	// idx로 얻기
 	DaangnMemberVO selectByIdx(int idx);
-	
-	// 페이징 getUsers
-	PagingVO<DaangnMemberVO> getUsers(CommonVO cv);
-	
-	// 중복확인
+	// 아이디 중복확인
 	int selectCountByUsername(String username);
 	
+	// 닉네임 중복확인
+	int selectCountByNickName(String nickName);
 	
-	// 유저가 쓴 글 보여주기!
-	List<DaangnMainBoardVO> selectMainBoardByMemberIdx(int idx);
+	// 비밀번호가 일치하는지 확인
+	int checkPasswordMatch(DaangnMemberVO sessionUser, String password);
+	//=========================================================
+	
+	
+	//=========================================================
+	// adminService 나중에 한번에 뭉쳐야겟음..
+	//=========================================================
+	// 페이징 getUsers
+	PagingVO<DaangnMemberVO> getUsers(CommonVO cv);
 }

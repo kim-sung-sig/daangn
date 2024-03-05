@@ -80,7 +80,7 @@ public class SecurityConfig {
 	
 	// BCrypt를 사용해 암호화 하겠다.
 	// 암호화 객체 등록 
-	@Bean("passwordEncoder")
+	@Bean(value = "passwordEncoder")
 	BCryptPasswordEncoder getBCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
 	}

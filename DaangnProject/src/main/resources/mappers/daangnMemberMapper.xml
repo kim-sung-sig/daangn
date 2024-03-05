@@ -15,6 +15,9 @@
 				, #{name}
 				, #{nickName}
 				, #{email}
+				, #{emailOk}
+				, sysdate
+				, sysdate
 				, #{stAddress}
 				, #{dtAddress}
 			)
@@ -25,9 +28,9 @@
 		select * from daangn_member where username = #{username}
 	</select>
 	
-	<!-- idx로 idx와 nickName만 얻기 -->
+	<!-- idx로 유저 얻기 -->
 	<select id="selectByIdx" parameterType="int" resultType="DaangnMemberVO">
-		select idx, nickName from daangn_member where idx = #{idx}
+		select * from daangn_member where idx = #{idx}
 	</select>
 	
 	<!-- 중복확인을 위한 코드 -->
@@ -35,13 +38,12 @@
 		select count(*) from daangn_member where username = #{username}
 	</select>
 	
-	
-	<!-- 마이페이지 및 관리자페이지용 -->
-	<!-- idx로 모두 얻기 -->
-	<select id="selectAllByIdx" parameterType="int" resultType="DaangnMemberVO">
-		select * from daangn_member where idx = #{idx}
+	<select id="selectCountByNickName" parameterType="string" resultType="int">
+		select count(*) from daangn_member where nickName = #{nickName}
 	</select>
 	
+	
+	<!-- 마이페이지 및 관리자페이지용 -->	
 	<!-- 모두 얻기 (admin용) 이거 페이징 처리해야댐 -->
 	<select id="selectUser" parameterType="hashmap" resultType="DaangnMemberVO">
 		select
@@ -90,17 +92,19 @@
 			</if>
 		</where>
 	</select>
+	
 	<!-- 회원 정보 수정 -->
 	<update id="update" parameterType="DaangnMemberVO">
-		update 
-			daangn_member 
-		set 
-			nickName = #{nickName}
-			, email = #{email}
-			, stAddress = #{stAddress}
-			, dtAddress = #{dtAddress}
-		where 
-			idx = #{idx}
+	    update daangn_member
+	    <set>
+	        <if test="password != null">password = #{password},</if>
+	        <if test="nickName != null">nickName = #{nickName},</if>
+	        <if test="email != null">email = #{email},</if>
+	        <if test="emailOk != null">emailOk = #{emailOk},</if>
+	        <if test="stAddress != null">stAddress = #{stAddress},</if>
+	        <if test="dtAddress != null">dtAddress = #{dtAddress},</if>
+	    </set>
+	    where idx = #{idx}
 	</update>
 	
 	<!-- 권한수정 -->
@@ -118,7 +122,7 @@
 		update 
 			daangn_member 
 		set 
-			password = #{password}
+			
 		where 
 			username = #{username}
 	</update>
@@ -127,11 +131,5 @@
 	<delete id="deleteByIdx" parameterType="int">
 		delete from daangn_member where idx = #{idx}
 	</delete>
-	
-	<!-- 탈퇴하기 username-->
-	<delete id="deleteByUsername" parameterType="string">
-		delete from daangn_member where username = #{username}
-	</delete>
-	
 	
 </mapper>

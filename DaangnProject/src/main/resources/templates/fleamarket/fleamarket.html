@@ -76,30 +76,25 @@
 			</div>
 			
 			<div class="uk-container">
-				<section>
-					<div id="slide" style="width: 100%;height:100%;gap:50px; display: grid; grid-template-columns:repeat(3, 1fr); justify-content: space-between;">
-						
-						
-						<th:block th:each="vo : ${pv.list}">
-							<div class="uk-card uk-card-default" style="width: 300px" th:onclick="detail([[${vo.idx}]])">
-								<div class="uk-card-media-top">
-									<th:block th:each="img, sv : ${vo.boardFileList}">
-										<img th:if="${sv.first}" th:src="'./upload/' + ${img.saveFileName}" alt="" />
-									</th:block>
-									<!-- <img src="https://source.unsplash.com/1500x706" alt="">  -->
-								</div>
-								<div class="uk-card-body">
-									<h4 class="uk-card-title">[[${vo.subject}]]</h4>
-									<p class="price">[[${#numbers.formatInteger(vo.price, 0, 'COMMA')}]]원</p>
-									<span class="city">[[${vo.loc}]]</span>
-									<p class="like"><span>관심 [[${vo.countLike}]]</span>ㆍ<span>채팅 [[${vo.chatRoomCount}]]</span>ㆍ<span>조회수 [[${vo.readCount}]]</span></p>
-									<p class="regDate">게시일 [[${#dates.format(vo.regDate,'yyyy.MM.dd')}]]</p>
-								</div>
+				<div id="slide">
+					<th:block th:each="vo : ${pv.list}">
+						<article class="uk-card" th:onclick="detail([[${vo.idx}]])">
+							<div class="uk-card-media-top">
+								<th:block th:each="img, sv : ${vo.boardFileList}">
+									<img th:if="${sv.first}" th:src="'./upload/' + ${img.saveFileName}" alt="" />
+								</th:block>
+								<!-- <img src="https://source.unsplash.com/1500x706" alt="">  -->
 							</div>
-						</th:block>
-						
-					</div>
-				</section>
+							<div class="uk-card-body">
+								<h4 class="uk-card-title">[[${vo.subject}]]</h4>
+								<p class="price">[[${#numbers.formatInteger(vo.price, 0, 'COMMA')}]]원</p>
+								<span class="city">[[${vo.loc}]]</span>
+								<p class="like"><span>관심 [[${vo.countLike}]]</span>ㆍ<span>채팅 [[${vo.chatRoomCount}]]</span>ㆍ<span>조회수 [[${vo.readCount}]]</span></p>
+								<p class="regDate">게시일 [[${#dates.format(vo.regDate,'yyyy.MM.dd')}]]</p>
+							</div>
+						</article>
+					</th:block>
+				</div>
 			</div>
 		</main>
 	</div>

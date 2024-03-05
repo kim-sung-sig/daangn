@@ -2,6 +2,7 @@ package kr.ezen.daangn.vo;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -23,19 +24,20 @@ public class DaangnMemberVO implements UserDetails{
 	private String name;					// 실제 이름 
 	private String nickName;				// 닉네임
 	
-	// 폰
 	// sns수신?
 	private String email;					// 아이디 비번찾기때 쓸것
+	private Integer emailOk;				// 이메일 수신여부
+	private Date signUpDate;				// 가입일
+	private Date lastLoginDate;				// 로그인한 마지막날짜
 	// 메일 수신?
-	
-	// 성별
 	
 	// address
 	private String stAddress;				// 도로명주소	(이름 추천)
 	private String dtAddress;				// 상세주소		(이름 추천)
 	//====================================================================
-	// private DaangnFileVO userProfile;		// 프로필 사진!
-	private float userVal;					// 유저평
+	
+	// private DaangnFileVO userProfile;	// 프로필 사진!
+	private Float userVal;					// 유저평
 	
 	
 	

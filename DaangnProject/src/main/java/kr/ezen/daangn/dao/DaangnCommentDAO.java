@@ -9,11 +9,17 @@ import kr.ezen.daangn.vo.DaangnCommentVO;
 
 @Mapper
 public interface DaangnCommentDAO {
-	List<DaangnCommentVO> selectCommentByUserIdx(int userIdx) throws SQLException;
+	// 저장
 	void insertComment(DaangnCommentVO commentVO) throws SQLException;
-	void updateComment(DaangnCommentVO commentVO) throws SQLException;
+	// 평점계산
+	float selectScoreByUserIdx(int userIdx) throws SQLException;
+	// 댓글얻기
+	List<DaangnCommentVO> selectCommentByUserIdx(int userIdx) throws SQLException;
+	// 댓글지우기
 	void deleteCommentByIdx(int idx) throws SQLException;
+	
+	
+	void updateComment(DaangnCommentVO commentVO) throws SQLException;
 	void deleteCommentByUserIdx(int userIdx) throws SQLException;
 	
-	float selectEvalByUserIdx(int userIdx) throws SQLException;
 }

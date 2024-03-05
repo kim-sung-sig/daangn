@@ -62,7 +62,7 @@ public class ChatRoomController {
 		DaangnMemberVO memberVO = (DaangnMemberVO) session.getAttribute("user");
 		ChatRoomVO chatRoomVO = chatService.selectChatRoom(chatRoomIdx);
 		DaangnMainBoardVO boardVO = daangnMainBoardService.selectByIdx(chatRoomVO.getBoardIdx());
-		chatRoomVO.setBoardUserIdx(daangnMemberService.selectAllByIdx(boardVO.getUserRef()).getIdx());
+		chatRoomVO.setBoardUserIdx(daangnMemberService.selectByIdx(boardVO.getUserRef()).getIdx());
 		// 또한 chatRoom이 가지는 유저의 idx가 아닌경우
 		if(memberVO.getIdx() != chatRoomVO.getUserIdx() && memberVO.getIdx() != chatRoomVO.getBoardUserIdx()) { // 채팅의 주인이 아닌경우
 			return "redirect:/";

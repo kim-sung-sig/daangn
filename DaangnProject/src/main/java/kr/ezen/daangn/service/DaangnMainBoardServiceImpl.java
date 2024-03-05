@@ -35,7 +35,7 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 	@Autowired
 	private DaangnMainBoardDAO daangnMainBoardDAO;
 	@Autowired
-	private DaangnMemberDAO daangnMemberDAO;
+	private DaangnMemberService daangnMemberService;
 	@Autowired
 	private DaangnBoardFileDAO daangnBoardFileDAO;
 	@Autowired
@@ -104,7 +104,7 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 			map.put("endNo", pv.getEndNo());
 			List<DaangnMainBoardVO> list = daangnMainBoardDAO.selectList(map);
 			for(DaangnMainBoardVO boardVO : list) {
-				boardVO.setMember(daangnMemberDAO.selectByIdx(boardVO.getUserRef()));					// 유저정보
+				boardVO.setMember(daangnMemberService.selectByIdx(boardVO.getUserRef()));					// 유저정보
 				boardVO.setCountLike(daangnLikeDAO.countLike(boardVO.getIdx()));						// 좋아요수
 				boardVO.setBoardFileList(daangnBoardFileDAO.selectFileByBoardIdx(boardVO.getIdx()));	// 파일
 				boardVO.setChatRoomCount(daangnChatRoomDAO.selectCountByBoardIdx(boardVO.getIdx()));	// 채팅방 갯수
@@ -127,7 +127,7 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 		DaangnMainBoardVO boardVO = null;
 		try {
 			boardVO = daangnMainBoardDAO.selectByIdx(idx);
-			boardVO.setMember(daangnMemberDAO.selectByIdx(boardVO.getUserRef()));					// 유저정보
+			boardVO.setMember(daangnMemberService.selectByIdx(boardVO.getUserRef()));					// 유저정보
 			boardVO.setCountLike(daangnLikeDAO.countLike(boardVO.getIdx()));						// 좋아요수
 			boardVO.setBoardFileList(daangnBoardFileDAO.selectFileByBoardIdx(boardVO.getIdx()));	// 파일
 			boardVO.setChatRoomCount(daangnChatRoomDAO.selectCountByBoardIdx(boardVO.getIdx()));	// 채팅 수
@@ -165,7 +165,7 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 		try {
 			list = daangnMainBoardDAO.selectByRef(userIdx);
 			for(DaangnMainBoardVO boardVO : list) {
-				boardVO.setMember(daangnMemberDAO.selectByIdx(boardVO.getUserRef()));						// 유저정보
+				boardVO.setMember(daangnMemberService.selectByIdx(boardVO.getUserRef()));						// 유저정보
 				boardVO.setCountLike(daangnLikeDAO.countLike(boardVO.getIdx()));						// 좋아요수
 				boardVO.setBoardFileList(daangnBoardFileDAO.selectFileByBoardIdx(boardVO.getIdx()));	// 파일
 			}

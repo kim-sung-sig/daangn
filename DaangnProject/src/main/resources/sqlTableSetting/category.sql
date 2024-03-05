@@ -28,4 +28,6 @@ INSERT INTO daangn_category VALUES (daangn_category_idx_seq.nextval, '뷰티/미
 INSERT INTO daangn_category VALUES (daangn_category_idx_seq.nextval, '반려동물용품'); -- 여기서 이름을 일단 미리 만들어 주자
 INSERT INTO daangn_category VALUES (daangn_category_idx_seq.nextval, '도서/티켓/음반'); -- 여기서 이름을 일단 미리 만들어 주자
 INSERT INTO daangn_category VALUES (daangn_category_idx_seq.nextval, '생활꿀팁'); -- 여기서 이름을 일단 미리 만들어 주자
+INSERT INTO daangn_category VALUES (daangn_category_idx_seq.nextval, '기타'); -- 여기서 이름을 일단 미리 만들어 주자
 INSERT INTO daangn_category VALUES (daangn_category_idx_seq.nextval, 'QnA'); -- 여기서 이름을 일단 미리 만들어 주자
+INSERT INTO daangn_category VALUES (daangn_category_idx_seq.nextval, '공지사항'); -- 여기서 이름을 일단 미리 만들어 주자

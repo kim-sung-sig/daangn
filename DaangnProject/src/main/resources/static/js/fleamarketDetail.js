@@ -25,16 +25,19 @@ $(function(){
 	$("#likeHeart > a").click(function(e){
 		e.preventDefault();
 		if($("#likeHeart > a").hasClass("active")){
-			axios.post("/api/unlike",{
-				'boardIdx': $("#boardIdx").val()
+			axios.delete("/api/like",{
+				data: {
+			        boardIdx: $("#boardIdx").val()
+			    }
 			})
 			.then(function (res) {
 				data = res.data;
+				console.log(data);
 				if(data==1){
 					$("#likeHeart > a").removeClass("active");
 					$("#countLike").text('관심 ' + (Number($("#countLike").text().substring(3)) - 1));
 				} else {
-					alert("오류가 발생했습니다.")
+					alert("오류가 발생했습니다. 잠시후에 다시 시도해주세요.")
 				}
 			})
 			.catch(function (err) {
@@ -51,7 +54,7 @@ $(function(){
 					$("#likeHeart > a").addClass("active");
 					$("#countLike").text('관심 ' + (Number($("#countLike").text().substring(3)) + 1));
 				} else {
-					alert("로그인후 이용가능합니다.")
+					alert("오류가 발생했습니다. 잠시후에 다시 시도해주세요.")
 				}
 			})
 			.catch(function (err) {
@@ -91,8 +94,8 @@ $(function(){
 			data = res.data;
 			console.log(data);
 			if(data!=0){
+				// 채팅방이 있던가 채팅방을 만들었으면 이동
 				location.href="/chat/room/"+data;
-				// 채팅방이 있던가 채팅방을 만들었으면
 			} else {
 				alert("로그인후 이용가능합니다.")
 			}

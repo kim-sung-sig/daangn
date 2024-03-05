@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,11 +38,11 @@ public class ApiController {
 		likeVO.setUserIdx(memberVO.getIdx());
 		likeVO.setBoardIdx(map.get("boardIdx"));
 		int result = daangnLikeService.insertLike(likeVO);
-		log.info("unlike result = {}", result);
+		log.info("like result = {}", result);
 		return result+"";
 	}
 	
-	@PostMapping(value = "/unlike")
+	@DeleteMapping(value = "/like")
 	@ResponseBody
 	public String unlike(HttpSession session, @RequestBody Map<String, Integer> map) {
 		if(session.getAttribute("user") == null) {
