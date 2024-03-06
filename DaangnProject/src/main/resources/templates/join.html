@@ -70,7 +70,7 @@
 			            <input type="button" id="sendEmail" class="uk-button uk-button-default" value="메일 인증">
 					</div>
 				</div>
-				<div class="uk-margin" id="emailCheckBox">
+				<div class="uk-margin" id="emailCheckBox" style="display: none;">
 					<h4>인증번호 입력</h4>
 					<div class="uk-inlin" id="emailck">
 						<input type="text" id="check" class="uk-input" placeholder="인증번호를 입력해주세요">
@@ -80,7 +80,7 @@
 				<div class="uk-margin">
 					<h4>주소지</h4>
 					<div class="uk-inline">
-						<input type="text" name="postcode" id="postcode" class="uk-input " aria-describedby="passwordHelpInline" readonly="readonly" required="required">
+						<input type="text" name="postcode" id="postcode" class="uk-input " aria-describedby="passwordHelpInline" readonly="readonly" disabled="disabled" required="required">
 						<input id="daum" class="uk-button uk-button-default" type="button" value="우편번호 검색" onclick="daumPostcode()"/>						
 					</div>
 				</div>

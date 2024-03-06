@@ -98,6 +98,7 @@
 	    update daangn_member
 	    <set>
 	        <if test="password != null">password = #{password},</if>
+	        <if test="role != null">role = #{role},</if>
 	        <if test="nickName != null">nickName = #{nickName},</if>
 	        <if test="email != null">email = #{email},</if>
 	        <if test="emailOk != null">emailOk = #{emailOk},</if>
@@ -107,14 +108,9 @@
 	    where idx = #{idx}
 	</update>
 	
-	<!-- 권한수정 -->
-	<update id="updateRole" parameterType="DaangnMemberVO">
-		update 
-			daangn_member 
-		set 
-			role = #{role}
-		where 
-			username = #{username}
+	<!-- 마지막 접속일 수정 -->
+	<update id="updateLastLoginDate" parameterType="int">
+		update daangn_member set lastLoginDate = sysdate where idx = #{idx}
 	</update>
 	
 	<!-- 비밀번호 수정 암호화해서 넘겨야한다 -->

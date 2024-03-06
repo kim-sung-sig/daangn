@@ -17,6 +17,7 @@ public interface DaangnMemberDAO {
 	void insert(DaangnMemberVO memberVO) throws SQLException;
 	// 수정
 	void update(DaangnMemberVO memberVO) throws SQLException;
+	void updateLastLoginDate(int idx) throws SQLException;
 	// 삭제 idx
 	void deleteByIdx(int idx) throws SQLException;
 	

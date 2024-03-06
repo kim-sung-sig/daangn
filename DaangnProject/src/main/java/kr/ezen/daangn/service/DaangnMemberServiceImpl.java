@@ -75,6 +75,17 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 		}
 		return result;
 	}
+	@Override
+	public int updateLastLoginDate(int idx) {
+		int result = 0;
+		try {
+			daangnMemberDAO.updateLastLoginDate(idx);
+			result = 1;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 
 	@Override
 	public int deleteByIdx(int idx) {

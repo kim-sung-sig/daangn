@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "./mybatis-3-mapper.dtd" >
+<mapper namespace="kr.ezen.daangn.dao.VisitDAO">
+	<!-- 페이징을 위한 List 뿌리기 -->
+	<!-- 1. 방문자 저장 -->
+	<insert id="saveVisitor" parameterType="VisitVO">
+		insert into tb_visitor values (tb_visitor_idx_seq.nextval, #{visitIp}, #{visitAgent}, #{visitReferer}, sysdate)
+	</insert>
+	
+	<select id="getVisitorCountByDate" parameterType="string">
+		select
+			count(*)
+		from
+			tb_visitor
+		<where>
+			<if test="date != null">
+				TO_CHAR(visitTime, 'YYYY-MM-DD') = #{strDate}
+			</if>
+		</where> 
+	</select>
+	
+	<select id="getPagedVisitor" parameterType="hashmap" resultType="VisitVO">
+		select
+			R.*
+		from
+			(
+				select
+					rownum rnum, Q.*
+				from
+					(
+						select
+							*
+						from
+							jung_board
+						order by
+							idx desc
+					) Q
+				where
+					<![CDATA[
+						rownum <= #{endNo}
+					]]> 
+			) R
+		where
+			<![CDATA[
+				rnum >= #{startNo}
+			]]>
+	</select>
+	
+</mapper>

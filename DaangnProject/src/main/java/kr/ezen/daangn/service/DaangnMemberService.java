@@ -18,6 +18,8 @@ public interface DaangnMemberService extends UserDetailsService{
 	
 	// 회원 수정
 	int update(DaangnMemberVO memberVO);
+	// 마지막 로그인한 날짜 갱신!
+	int updateLastLoginDate(int idx);
 	
 	// 회원 삭제 idx로
 	int deleteByIdx(int idx);

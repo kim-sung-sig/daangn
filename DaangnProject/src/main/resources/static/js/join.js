@@ -105,6 +105,7 @@ $(function() {
 			if (res.data != "") {
 				alert("메일 발송 성공")
 				emailOk = res.data;
+				$("#emailCheckBox").css('display','block');
 			} else {
 				alert("메일 발송 실패")
 			}
@@ -123,6 +124,9 @@ $(function() {
 		if(check == emailOk){
 			alert("인증이 완료되었습니다.")
 			$("#checkMail").val("인증 완료")
+			$("#email").prop('disabled',true)
+			$("#emailAddress").prop('disabled', true)
+			$("#sendEmail").prop('disabled', true)
 			$("#check").prop('disabled', true)
 			$("#checkMail").prop('disabled', true)
 		} else {
