@@ -35,9 +35,6 @@
 					</nav>
 				</div>
 				<div id="search">
-					<form action="" method="get" id="searchForm">
-						<input class="uk-input uk-form-width-long chat" type="text" placeholder="동네 물품을 검색해주세요!" aria-label="Large" name="search" id="searchText">
-					</form>
 					<span>
 						<th:block th:if="${session.user != null}">
 							<a class="uk-button uk-button-default" href="/member/logout">로그아웃</a>					
@@ -54,29 +51,40 @@
 			<div class="uk-container">
 				<div class="main-top">
 					<h3>중고 물품 리스트</h3>
-					<div class="region">
-						<select class="uk-select" id="r1">
-							<option th:selected="${region eq null}" value="0">지역을 선택하세요.</option>
-							<option th:each="reg : ${regionList}" th:value="${reg}" th:selected="${region == reg}">[[${reg}]]</option>
-						</select>
-						<th:block th:if="${region != null}">
-							<select class="uk-select" id="r2">
-								<option th:selected="${gu eq null}" value="0">지역을 선택하세요.</option>
-								<option th:each="g : ${guList}" th:value="${g}" th:selected="${gu == g}">[[${g}]]</option>
+					<div class="navBox">
+						<div class="region">
+							<select class="uk-select" id="r1">
+								<option th:selected="${region eq null}" value="0">지역을 선택하세요.</option>
+								<option th:each="reg : ${regionList}" th:value="${reg}" th:selected="${region == reg}">[[${reg}]]</option>
 							</select>
-						</th:block>
-						<th:block th:if="${gu != null}">
-							<select class="uk-select" id="r3">
-								<option th:selected="${dong eq null}" value="0">지역을 선택하세요.</option>
-								<option th:each="do : ${dongList}" th:value="${do}" th:selected="${dong == do}">[[${do}]]</option>
-							</select>
-						</th:block>
+							<th:block th:if="${region != null}">
+								<select class="uk-select" id="r2">
+									<option th:selected="${gu eq null}" value="0">지역을 선택하세요.</option>
+									<option th:each="g : ${guList}" th:value="${g}" th:selected="${gu == g}">[[${g}]]</option>
+								</select>
+							</th:block>
+							<th:block th:if="${gu != null}">
+								<select class="uk-select" id="r3">
+									<option th:selected="${dong eq null}" value="0">지역을 선택하세요.</option>
+									<option th:each="do : ${dongList}" th:value="${do}" th:selected="${dong == do}">[[${do}]]</option>
+								</select>
+							</th:block>
+						</div>
+						<form action="" method="get" id="searchForm">
+							<input class="uk-input uk-form-width-long chat" type="text" placeholder="동네 물품을 검색해주세요!" aria-label="Large" name="search" id="searchText">
+						</form>
 					</div>
 				</div>
 			</div>
 			
 			<div class="uk-container">
 				<div id="slide">
+					<th:block th:if="${#lists.isEmpty(pv.list)}">
+						<script type="text/javascript">
+							alert("중고물품이 존재하지 않습니다.");
+							location.href="/fleamarket"
+						</script>
+					</th:block>
 					<th:block th:each="vo : ${pv.list}">
 						<article class="uk-card" th:onclick="detail([[${vo.idx}]])">
 							<div class="uk-card-media-top">

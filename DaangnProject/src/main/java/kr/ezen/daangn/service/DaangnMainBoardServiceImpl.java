@@ -17,13 +17,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.ezen.daangn.dao.DaangnBoardFileDAO;
 import kr.ezen.daangn.dao.DaangnChatRoomDAO;
-import kr.ezen.daangn.dao.DaangnCommentDAO;
 import kr.ezen.daangn.dao.DaangnLikeDAO;
 import kr.ezen.daangn.dao.DaangnMainBoardDAO;
-import kr.ezen.daangn.dao.DaangnMemberDAO;
 import kr.ezen.daangn.vo.CommonVO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
-import kr.ezen.daangn.vo.DaangnMemberVO;
 import kr.ezen.daangn.vo.PagingVO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,8 +35,6 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 	private DaangnMemberService daangnMemberService;
 	@Autowired
 	private DaangnBoardFileDAO daangnBoardFileDAO;
-	@Autowired
-	private DaangnCommentDAO daangnCommentDAO;
 	@Autowired
 	private DaangnLikeDAO daangnLikeDAO;
 	@Autowired
@@ -127,7 +122,7 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 		DaangnMainBoardVO boardVO = null;
 		try {
 			boardVO = daangnMainBoardDAO.selectByIdx(idx);
-			boardVO.setMember(daangnMemberService.selectByIdx(boardVO.getUserRef()));					// 유저정보
+			boardVO.setMember(daangnMemberService.selectByIdx(boardVO.getUserRef()));				// 유저정보
 			boardVO.setCountLike(daangnLikeDAO.countLike(boardVO.getIdx()));						// 좋아요수
 			boardVO.setBoardFileList(daangnBoardFileDAO.selectFileByBoardIdx(boardVO.getIdx()));	// 파일
 			boardVO.setChatRoomCount(daangnChatRoomDAO.selectCountByBoardIdx(boardVO.getIdx()));	// 채팅 수
@@ -143,16 +138,67 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 	 * @param DaangnMainBoardVO
 	 */
 	@Override
-	public int saveMainBoard(DaangnMainBoardVO boardVO) {
+	public int saveMainBoard(DaangnMainBoardVO board) {
 		int result = 0;
 		try {
-			result = daangnMainBoardDAO.insert(boardVO);
+			result = daangnMainBoardDAO.insert(board);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return result;
 	}
 	
+	/**
+	 * 조회수 증가
+	 */
+	@Override
+	public void updateReadCount(int idx) {
+		try {
+			HashMap<String, Object> map = new HashMap<>();
+			map.put("idx", idx);
+			map.put("readCount", "1");
+			daangnMainBoardDAO.update(map);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 글 수정하기
+	 */
+	@Override
+	public int update(DaangnMainBoardVO board) {
+		int result = 0;
+		try {
+			HashMap<String, Object> map = new HashMap<>();
+			map.put("idx", board.getIdx());
+			map.put("categoryRef", board.getCategoryRef());
+			map.put("statusRef", board.getStatusRef());
+			map.put("subject", board.getSubject());
+			map.put("content", board.getContent());
+			map.put("location", board.getLocation());
+			daangnMainBoardDAO.update(map);
+			result = 1;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	/**
+	 * 글 삭제하기
+	 */
+	@Override
+	public int deleteByIdx(int idx) {
+		int result = 0;
+		try {
+			daangnMainBoardDAO.deleteByIdx(idx);
+			result = 1;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 	
 	/**
 	 * 유저가 쓴 글 주기!

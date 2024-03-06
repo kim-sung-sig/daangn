@@ -61,12 +61,13 @@
 				<div class="uk-margin">
 					<h4>이메일</h4>
 					<div class="uk-inline emails">
-						<input id="email" name="email" type="text" class="uk-input " placeholder="이메일" required="required" /><span class="dot">@</span>
-						<select name="emailAddress" class="uk-select " id="emailAddress">
+						<input id="email" type="text" class="uk-input " placeholder="이메일" required="required" /><span class="dot">@</span>
+						<select class="uk-select " id="emailAddress">
 			                <option selected value="0">선택</option>
 			                <option value="naver.com">naver.com</option>
 			                <option value="google.com">gmail.com</option>
 			            </select>
+			            <input type="hidden" name="email" id="newEmail">
 			            <input type="button" id="sendEmail" class="uk-button uk-button-default" value="메일 인증">
 					</div>
 				</div>
@@ -90,6 +91,11 @@
 						<input name="dtAddress" id="addr2" type="text" class="uk-input" placeholder="사용자 상세 주소" required="required"/>					
 					</div>
 				</div>
+				<h4>이메일 수신동의</h4>
+				<div class="uk-margin" style="border: 1px solid #ccc; padding: 10px 20px;">
+		            <label><input class="uk-radio" type="radio" name="emailOk" value="0"> 이메일 수신에 동의</label><br />
+		            <label><input class="uk-radio" type="radio" name="emailOk" value="1"> 이메일 수신에 동의하지 않음</label>
+		        </div>
 				<div class="uk-margin" style="text-align: right;">
 					<button class="uk-button buttons" type="submit">회 원 가 입</button>
 					<input class="uk-button buttons" type="button" onclick="location.href='/'" value="이전 페이지" />

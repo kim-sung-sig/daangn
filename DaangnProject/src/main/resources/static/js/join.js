@@ -177,6 +177,8 @@ $(function() {
 			$("#daum").focus();
 			return false;
 		}
+		$("#newEmail").val($("#email").val() + "@" + $("#emailAddress").val());
+		console.log($("#newEmail").val())
 		alert("회원가입 성공")
 		return true;
 	})

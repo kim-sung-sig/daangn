@@ -17,10 +17,17 @@ public interface DaangnMainBoardService {
 	DaangnMainBoardVO selectByIdx(int idx);
 
 	// 3. 글쓰기
-	int saveMainBoard(DaangnMainBoardVO mainBoardVO);
-	// 4. 글삭제하기
+	int saveMainBoard(DaangnMainBoardVO board);
 	
+	// 4. 조회수 증가시키기
+	void updateReadCount(int idx);
 	
-	// 5. 유저가 쓴글 보여주기
+	// 5. status 변경하기
+	int update(DaangnMainBoardVO board);
+	
+	// 6. 게시글 삭제하기
+	int deleteByIdx(int idx);
+	
+	// 6. 유저가 쓴글 보여주기
 	List<DaangnMainBoardVO> selectByUserIdx(int userIdx);
 }

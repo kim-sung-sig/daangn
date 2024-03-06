@@ -77,9 +77,8 @@ public class MemberController {
 	}
 
 	@PostMapping(value = {"/joinok"})
-	public String joinOkPost(@ModelAttribute(value = "memberVO") DaangnMemberVO memberVO, @RequestParam(value = "emailAddress") String emailAddress) {
+	public String joinOkPost(@ModelAttribute(value = "memberVO") DaangnMemberVO memberVO) {
 		log.info("joinOkPost 실행 {}",memberVO);
-		memberVO.setEmail(memberVO.getEmail()+"@"+emailAddress);
 		daangnMemberService.insert(memberVO);
 		return "redirect:/member/login";
 	}

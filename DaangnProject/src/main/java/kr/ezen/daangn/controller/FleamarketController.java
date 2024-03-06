@@ -22,12 +22,14 @@ import jakarta.servlet.http.HttpSession;
 import kr.ezen.daangn.service.DaangnBoardFileService;
 import kr.ezen.daangn.service.DaangnLikeService;
 import kr.ezen.daangn.service.DaangnMainBoardService;
+import kr.ezen.daangn.service.PopularService;
 import kr.ezen.daangn.vo.CommonVO;
 import kr.ezen.daangn.vo.DaangnBoardFileVO;
 import kr.ezen.daangn.vo.DaangnLikeVO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
 import kr.ezen.daangn.vo.DaangnMemberVO;
 import kr.ezen.daangn.vo.PagingVO;
+import kr.ezen.daangn.vo.PopularVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -41,6 +43,8 @@ public class FleamarketController {
 	private DaangnLikeService daangnLikeService;
 	@Autowired
 	private DaangnBoardFileService daangnBoardFileService;
+	@Autowired
+	private PopularService popularService;
 	
 	/**
 	 * 중고거래 리스트 보기
@@ -89,18 +93,27 @@ public class FleamarketController {
 	 */
 	@GetMapping(value = "/fleamarketDetail/{idx}")
 	public String fleamarketDetail(Model model, HttpSession session, @PathVariable(value = "idx") int idx){
-		DaangnMainBoardVO board = daangnMainBoardService.selectByIdx(idx);
-		
-		log.info("fleamarketDetail/idx 실행 => idx : {} , board : {}", idx, board);
-		
-		// 좋아요 했는지 안했는지 체크
+		log.info("fleamarketDetail/idx 실행 => idx : {}", idx);
+		String key = "VISITED_"+ idx;
+		Boolean isVisited = (Boolean) session.getAttribute(key);
+		if(isVisited == null || !isVisited) {
+			daangnMainBoardService.updateReadCount(idx);
+			session.setAttribute(key, true);	
+		}
 		if(session.getAttribute("user") != null) {
 			DaangnMemberVO memberVO = (DaangnMemberVO) session.getAttribute("user");
 			DaangnLikeVO likeVO = new DaangnLikeVO();
 			likeVO.setUserIdx(memberVO.getIdx());
 			likeVO.setBoardIdx(idx);
-			model.addAttribute("likeCheck", daangnLikeService.select(likeVO));
+			model.addAttribute("likeCheck", daangnLikeService.select(likeVO)); // 좋아요 했는지 안했는지 체크
+			
+			PopularVO p = new PopularVO();
+			p.setBoardRef(idx);
+			p.setUserRef(memberVO.getIdx());
+			p.setInteraction(1);
+			popularService.insertPopular(p);
 		}
+		DaangnMainBoardVO board = daangnMainBoardService.selectByIdx(idx);
 		model.addAttribute("board", board);
 		return "fleamarket/fleamarketDetail";
 	}

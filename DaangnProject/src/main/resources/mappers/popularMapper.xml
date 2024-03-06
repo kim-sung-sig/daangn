@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "./mybatis-3-mapper.dtd" >
+<mapper namespace="kr.ezen.jung.dao.PopularDAO">
+	<!-- 1. 조회 댓글 좋아요를 한지 저장 -->
+	<insert id="insertPopular" parameterType="PopularVO">
+		INSERT INTO TB_POPULAR values(tb_Popular_idx_seq.nextval, #{boardRef}, #{userRef}, #{interaction}, sysdate)
+	</insert>
+	
+	<select id="findPopularBoard" resultType="list">
+		SELECT
+		    R.board AS boardRef
+		FROM
+		    (
+		        SELECT 
+		            boardRef AS board,
+		            SUM(CASE WHEN interaction = 1 THEN 1 ELSE 0 END) AS 조회,
+		            SUM(CASE WHEN interaction = 2 THEN 1 ELSE 0 END) AS 댓글,
+		            SUM(CASE WHEN interaction = 3 THEN 1 ELSE 0 END) AS 좋아요,
+		            SUM(CASE WHEN interaction = 4 THEN 1 ELSE 0 END) AS 좋아요취소,
+		            SUM(CASE WHEN interaction = 1 THEN 1 ELSE 0 END) * 1 +
+		            SUM(CASE WHEN interaction = 2 THEN 1 ELSE 0 END) * 3 +
+		            SUM(CASE WHEN interaction = 3 THEN 1 ELSE 0 END) * 6 +
+		            SUM(CASE WHEN interaction = 4 THEN 1 ELSE 0 END) * (-6) AS totalScore
+		        FROM 
+		            tb_popular
+		        WHERE
+		            interaction_time >= SYSDATE - 1/2
+		        GROUP BY 
+		            boardRef
+		        ORDER BY 
+		            totalScore DESC
+		    ) R
+		where 
+			<![CDATA[
+				rownum <= 20
+			]]> 
+	</select>
+	
+	<select id="getUserTrendAnalysis" parameterType="hashmap" resultType="PopularVO">
+		select
+			R.*
+		from
+			(
+				select
+					rownum rnum, Q.*
+				from
+					(
+						select
+							*
+						from
+							tb_popular
+						<where>
+							<if test="userRef != null">
+								userRef = #{userRef}
+							</if>
+						</where>
+						order by
+							idx desc
+					) Q
+				where
+					<![CDATA[
+						rownum <= #{endNo}
+					]]> 
+			) R
+		where
+			<![CDATA[
+				rnum >= #{startNo}
+			]]>
+	</select>
+	<select id="totalCountPopular" parameterType="hashmap" resultType="int">
+		select
+			count(*)
+		from
+			tb_popular
+		<where>
+			<if test="userRef != null">
+				userRef = #{userRef}
+			</if>
+		</where> 
+	</select>
+	
+</mapper>

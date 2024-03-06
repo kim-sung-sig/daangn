@@ -82,6 +82,7 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 			daangnMemberDAO.updateLastLoginDate(idx);
 			result = 1;
 		} catch (SQLException e) {
+			log.error("Failed to update lastLoginDate for userIdx:" + idx, e);
 			e.printStackTrace();
 		}
 		return result;
@@ -99,7 +100,6 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 		return result;
 	}
 	
-	// 추후 수정 왜냐? 이거는 boardService로 갈껏같음
 	@Override
 	public List<DaangnMainBoardVO> selectMainBoardByMemberIdx(int idx) {
 		return null;

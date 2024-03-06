@@ -25,6 +25,8 @@ public class CommonVO {
 	private Integer categoryNum;
 	// 상태체크 (판매, 예약, 판매완료)
 	private Integer statusNum;
+	//
+	private Integer userRef;
 	
 	
 	// 페이징

@@ -5,17 +5,31 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import kr.ezen.daangn.service.DaangnMemberService;
+import kr.ezen.daangn.vo.DaangnMemberVO;
 
 
 @Controller
 @Configuration
 public class HomeController {
 	
+	@Autowired
+	private DaangnMemberService daangnMemberService;
+	
 	@GetMapping(value = { "/", "/main", "/index" })
-	public String home(HttpServletRequest request) {
+	public String home(HttpSession session, Model model) {
+		DaangnMemberVO user = (DaangnMemberVO) session.getAttribute("user");
+		if(user != null) {
+			if(!(Boolean) session.getAttribute("isLogin")) {
+				daangnMemberService.updateLastLoginDate(user.getIdx());
+				session.setAttribute("isLogin", true);
+			}
+			model.addAttribute("a", daangnMemberService.selectByIdx(user.getIdx()));
+		}
 		return "index";
 	}
 	//===========================================================================================

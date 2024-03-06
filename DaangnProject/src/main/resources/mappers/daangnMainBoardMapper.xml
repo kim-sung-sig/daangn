@@ -113,10 +113,7 @@
 		    b.idx = #{idx}
 	</select>
 	
-	<!-- 유저가쓴글 보기 -->
-	<select id="selectByRef" parameterType="int" resultType="DaangnMainBoardVO">
-		select * from daangn_board where userRef = #{userRef}
-	</select>
+	
 	
 	<insert id="insert" parameterType="DaangnMainBoardVO">
 		<selectKey keyColumn="idx" keyProperty="idx" resultType="int" order="BEFORE">
@@ -141,4 +138,39 @@
 				, sysdate
 			)
 	</insert>
+	
+	<update id="update" parameterType="hashmap">
+		update
+			daangn_board
+		set
+			<if test="categoryRef != null">
+				categoryRef = #{categoryRef},
+			</if>
+			<if test="statusRef != null">
+				statusRef = #{statusRef},
+			</if>
+			<if test="subject != null">
+				subject = #{subject},
+			</if>
+			<if test="content != null">
+				content = #{content},
+			</if>
+			<if test="location != null">
+				location = #{location},
+			</if>
+			<if test="readCount != null">
+				readCount = readCount + 1
+			</if>
+		where
+			idx = #{idx}
+	</update>
+	
+	<delete id="deleteByIdx" parameterType="int">
+		delete from daangn_board where idx = #{idx}
+	</delete>
+	
+	<!-- 유저가쓴글 보기 -->
+	<select id="selectByRef" parameterType="int" resultType="DaangnMainBoardVO">
+		select * from daangn_board where userRef = #{userRef}
+	</select>
 </mapper>

@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpSession;
 import kr.ezen.daangn.service.DaangnLikeService;
+import kr.ezen.daangn.service.PopularService;
 import kr.ezen.daangn.vo.DaangnLikeVO;
 import kr.ezen.daangn.vo.DaangnMemberVO;
+import kr.ezen.daangn.vo.PopularVO;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -25,6 +27,8 @@ import lombok.extern.slf4j.Slf4j;
 public class ApiController {
 	@Autowired
 	private DaangnLikeService daangnLikeService;
+	@Autowired
+	private PopularService popularService;
 	
 	@PostMapping(value = "/like")
 	@ResponseBody
@@ -39,6 +43,12 @@ public class ApiController {
 		likeVO.setBoardIdx(map.get("boardIdx"));
 		int result = daangnLikeService.insertLike(likeVO);
 		log.info("like result = {}", result);
+		
+		PopularVO p = new PopularVO();
+		p.setBoardRef(map.get("boardIdx"));
+		p.setUserRef(memberVO.getIdx());
+		p.setInteraction(3);
+		popularService.insertPopular(p);
 		return result+"";
 	}
 	
@@ -55,6 +65,12 @@ public class ApiController {
 		likeVO.setBoardIdx(map.get("boardIdx"));
 		int result = daangnLikeService.deleteLike(likeVO);
 		log.info("unlike result = {}", result);
+		
+		PopularVO p = new PopularVO();
+		p.setBoardRef(map.get("boardIdx"));
+		p.setUserRef(memberVO.getIdx());
+		p.setInteraction(4);
+		popularService.insertPopular(p);
 		return result+"";
 	}
 }

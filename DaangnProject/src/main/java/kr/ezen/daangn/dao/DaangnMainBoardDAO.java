@@ -18,9 +18,15 @@ public interface DaangnMainBoardDAO {
 	// 한개 얻기
 	DaangnMainBoardVO selectByIdx(int idx) throws SQLException;
 	
+	// 글 저장 후 idx 리턴
+	int insert(DaangnMainBoardVO mainBoardVO) throws SQLException;
+	
+	void update(HashMap<String, Object> map) throws SQLException;
+	
+	void deleteByIdx(int idx) throws SQLException;
+	
 	// 유저idx 에 해당하는 글 주기
 	List<DaangnMainBoardVO> selectByRef(int ref) throws SQLException;
 	
-	// 글 저장 후 idx 리턴
-	int insert(DaangnMainBoardVO mainBoardVO) throws SQLException;
+	
 }
