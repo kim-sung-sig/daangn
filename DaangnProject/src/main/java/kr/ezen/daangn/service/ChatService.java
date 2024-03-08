@@ -118,6 +118,29 @@ public class ChatService {
 			e.printStackTrace();
 		}
     }
+    
+    /**
+     * 수정
+     * 날라온 idx로 readed--;
+     * @param idx
+     */
+    public void updateReadCount(int idx) {
+    	try {
+			daangnChatMessageDAO.updateChat(idx);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    }
+    public ChatMessageVO selectMessageByIdx(int idx) {
+    	ChatMessageVO messageVO = null;
+    	try {
+    		messageVO = daangnChatMessageDAO.selectByIdx(idx);
+    		messageVO.setNickName(daangnMemberDAO.selectByIdx(messageVO.getSender()).getNickName());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    	return messageVO;
+    }
 	
     // 5. 채팅방 삭제하기?? 이건 고민해봐야될듯
 	

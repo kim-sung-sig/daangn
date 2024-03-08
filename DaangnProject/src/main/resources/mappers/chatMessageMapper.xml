@@ -35,15 +35,33 @@
 	</select>
 	
 	<insert id="insertChat" parameterType="ChatMessageVO">
-		insert into chatMessage values (chatMessage_idx_seq.nextval, #{chatRoom}, #{typeRef}, #{sender}, #{content}, sysdate, 1)
+		<selectKey keyColumn="idx" keyProperty="idx" resultType="int" order="BEFORE">
+			select chatMessage_idx_seq.nextval from dual
+		</selectKey>
+		insert into
+			chatMessage
+		values
+			(
+				#{idx, jdbcType=INTEGER}
+				, #{chatRoom}
+				, #{typeRef}
+				, #{sender}
+				, #{content}
+				, sysdate
+				, 2
+			)
 	</insert>
 	
-	<update id="updateChat" parameterType="ChatMessageVO">
-		update chatMessage set readed = 0 where chatRoom = #{chatRoom} and sender = #{sender}
+	<update id="updateChat" parameterType="int">
+		update chatMessage set readed = readed - 1 where idx = #{idx}
 	</update>
 	
 	<select id="unreadCount" parameterType="ChatMessageVO">
 		select count(*) from chatMessage where chatRoom = #{chatRoom} and sender = #{sender} and readed = 1
+	</select>
+	
+	<select id="selectByIdx" parameterType="int">
+		select * from chatMessage where idx = #{idx}
 	</select>
 	
 	<delete id="deleteChat" parameterType="int">

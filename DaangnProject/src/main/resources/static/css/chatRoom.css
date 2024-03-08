@@ -87,7 +87,7 @@ p{margin: 0;}
     color: #ddd;
 }
 
-.ch1{
+.ch1 {
 	display: flex;
 }
 .ch2 {
@@ -121,6 +121,25 @@ p{margin: 0;}
 	font-size : 12px;
 	white-space: nowrap;
 }
+.ch1 .readed{
+	color: #FF8A3D;
+	position:absolute;
+	left: 100%;
+	bottom: 0;
+	padding: 0;
+	font-size : 12px;
+	white-space: nowrap;
+}
+.ch2 .readed{
+	color: #FF8A3D;
+	position:absolute;
+	right: 100%;
+	bottom: 0;
+	padding: 0;
+	font-size : 12px;
+	white-space: nowrap;
+}
+
 
 #boardImg{
 	padding: 5px;

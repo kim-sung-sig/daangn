@@ -1,16 +1,10 @@
 DROP TABLE daangn_status ;
 DROP SEQUENCE daangn_status_idx_seq;
 CREATE SEQUENCE daangn_status_idx_seq;
-
-
-
 CREATE TABLE  daangn_status(
 	statusIdx NUMBER PRIMARY KEY,
 	statusName varchar2(100) NOT NULL
 );
-
-
-
 SELECT * FROM daangn_status;
 
 

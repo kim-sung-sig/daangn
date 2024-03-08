@@ -80,7 +80,7 @@
 		    * 메시지를 받을때 실행되는 함수
 		    */
 		    function recvMessage(recv) {
-		        const message = {"typeRef": recv.typeRef, "sender": recv.sender, "nickName": recv.nickName, "content": recv.content, "regDate": recv.regDate};
+		        const message = {"typeRef": recv.typeRef, "sender": recv.sender, "nickName": recv.nickName, "content": recv.content, "regDate": recv.regDate, "readed": recv.readed};
 		        if(message.typeRef == 1){
 		        	// ENTER
 		        	// alert("상대방이 입장하였습니다.");
@@ -97,43 +97,36 @@
 		    // pub/sub 이벤트
 		    ws.connect({}, function(frame) {
 		        ws.subscribe("/sub/chat/room/" + chatRoomIdx, function(message) {
-		            var recv = JSON.parse(message.body);
-		            recvMessage(recv);
+		        	// 메시지를 받으면!
+		        	var recv = JSON.parse(message.body);
+		        	if( recv.typeRef != 1){
+		        		axios.put("/chat/read", {
+			        		"idx" : recv.idx, // 이숫자로 chatMessage를 update시키자
+			        	})
+						.then(res => {
+							console.log('업데이트 성공');
+						})
+						.catch(error => {
+							console.error('업데이트 실패');
+						});
+		        	}
+		        	setTimeout(() => {
+		        		if (recv.typeRef != 1){
+		        			axios.get("/chat/get?idx="+recv.idx)
+			        		.then(res => {
+								console.log('잘왓남?', res.data);
+								recvMessage(res.data);
+								console.log(1);
+							})
+							.catch(error => {
+								console.error('메시지받기 실패');
+							});        			
+		        		} else {
+		        			recvMessage(recv);	
+		        		}
+					}, 150);
 		        });
 		        ws.send("/pub/chat/message", {}, JSON.stringify({'typeRef': 1,'chatRoom': chatRoomIdx, 'sender': sender}));
-		        axios.post('/chat/findChatMessage', {
-					"chatRoomIdx": chatRoomIdx,
-					"currentPage": 1,
-				})
-				.then(function (res) {
-					const messageList = $('#chatMessages');
-					const data = res.data
-					console.log(data);
-					data.forEach(message => {
-						let ck = (sender == message.sender ? '2' : '1');
-						const regDate = updateDate(message.regDate);
-						content = `<div class="chat ch${ck}">`;
-				        if(ck==1){
-				        	content += `<div class="icon"><span>${message.nickName[0]}</span></div>`;
-				        }
-				        content += `
-					        	<div class="textbox">
-						    	<p>${message.content}</p>
-								<span class="chat-time">${regDate}</span>
-						    </div>
-						</div>
-				        `;
-			            const messageItem = $('<div>').html(content);
-			            messageList.prepend(messageItem);
-			            setTimeout(function(){
-			                messageList.scrollTop(messageList.prop('scrollHeight'));
-			            }, 50);
-					})
-					
-				})
-				.catch(function (error) {
-					console.log(error);
-				});
 		    }, function(error) {
 		        alert("error " + error);
 		    });
@@ -166,11 +159,12 @@
 		        content += `
 			        	<div class="textbox">
 				    	<p style="word-wrap: break-word;">${message.content}</p>
-						<span class="chat-time">${regDate}<span class="readed">1</span></span>
-						
-				    </div>
-				</div>
+						<span class="chat-time">${regDate}</span>
 		        `;
+		        if(message.readed != 0) {
+		        	content += `<span class="readed">1</span>`;
+		        }
+		        content += `</div></div>`;
 	            const messageItem = $('<div>').html(content);
 	            messageList.append(messageItem);
 	            setTimeout(function(){
@@ -181,7 +175,6 @@
 		    function isSendOk(){
 		    	let result = true;
 		    	const textArea = document.querySelector("#message");
-		    	console.log(textArea.value);
 		    	if(textArea.value.trim().length == 0){
 		    		result = false;
 		    	}
@@ -203,7 +196,6 @@
 		    		$("#send-message-btn").css("background-color", "#F0F0F0");
 		    		$("#send-message-btn").css("color", "#333");
 		    		
-		    		console.log($("#message").val());
 		    		return ;
 		    	}
 		        // Enter 키의 keyCode 값은 13이며, Shift 키와 함께 눌렀을 때 keyCode 값이 10입니다.
