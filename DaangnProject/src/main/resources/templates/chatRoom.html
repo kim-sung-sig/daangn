@@ -25,38 +25,6 @@
 </head>
 <body>
 	<div id="wrap">
-		<header id="header">
-			<div id="header-inner">
-				<div id="navi">
-					<h1 id="logo">
-						<a href="/">
-							<img src="https://i.namu.wiki/i/urKu84c6cV1U3tmZqPiopxkCnQOn96j3gA6Wf730iSTzz41XDOeqypSusjBVPXeHxGe8RJAOjMY11uywzcDqSA.svg" alt="logo" />
-						</a>
-					</h1>
-					<nav>
-						<ul>
-							<li><a href="/fleamarket">중고거래</a></li>
-							<li><a href="/smartLivingTips">생활꿀팁</a></li>
-							<li><a href="#">내 물건 팔기</a></li>
-						</ul>
-					</nav>
-				</div>
-				<div id="search">
-					<form action="" method="get" id="searchForm">
-						<input class="uk-input uk-form-width-long chat" type="text" placeholder="동네 물품을 검색해주세요!" aria-label="Large" name="search" id="searchText">
-					</form>
-					<span>
-						<th:block th:if="${session.user != null}">
-							<a class="uk-button uk-button-default" href="/member/logout">로그아웃</a>					
-							<a class="uk-button uk-button-default" href="/member/home">마이페이지</a>					
-						</th:block>
-						<th:block th:if="${session.user == null}">
-							<a class="uk-button uk-button-default" href="/member/login">로그인</a>						
-						</th:block>
-					</span>
-				</div>
-			</div>
-		</header>
 		<main>
 			<input type="hidden" id="chatRoomIdx" th:value="${chatRoomIdx}">
 			<input type="hidden" id="sender" th:value="${sender}">
@@ -77,7 +45,7 @@
 			    <button id="send-message-btn" class="uk-button">전송</button>			
 			</div>
 		</main>
-		
+		<!-- 
 		<footer>
 			<div id="footer-inner">
 				<div id="likeHeart" style="width: 65px;height:65px;">
@@ -93,6 +61,7 @@
 						<a href="" uk-icon="heart" class=""></a>						
 					</th:block>
 				</div>
+				
 				<div id="footerBox">
 					<div style="font-weight: 500">	
 					</div>
@@ -106,11 +75,11 @@
 				</div>
 			</div>
 		</footer>
+		 -->
 	</div>
 	
 	
 	<script>
-		
 		$(function() {
 			let currentPage = 1;
 			const chatRoomIdx = $("#chatRoomIdx").val();

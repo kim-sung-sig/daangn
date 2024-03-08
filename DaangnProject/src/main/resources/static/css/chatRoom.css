@@ -2,7 +2,7 @@
 
 body, html {font-family: "Noto Sans KR"; font-weight: 300; }
 body{position: relative; height: 100vh; }
-main{width: 400px;margin: auto; position:absolute;top:50%;left:50%;transform:translate(-50%,-50%); height: 80vh;}
+main{width: 400px;margin: auto; position:absolute;top:50%;left:50%;transform:translate(-50%,-50%); height: 100vh;}
 #chatMessages > li {width: 70%;background: #ccc; font-size: 14px; line-height: 1.5;border-radius: 50px;margin-bottom: 30px;}
 #info{height: 100px; background: #cdcdcd; display: flex;}
 #chatMessages{height: calc(100% - 200px); overflow-y: scroll; overflow-x:hidden; box-shadow: 10px #333;}
@@ -55,7 +55,7 @@ main{width: 400px;margin: auto; position:absolute;top:50%;left:50%;transform:tra
 .chat .textbox {
     position: relative;
     display: inline-block;
-    width: 200px;
+    max-width: 200px;
     padding: 10px;
     margin-top: 7px;
     font-size: 13px;
