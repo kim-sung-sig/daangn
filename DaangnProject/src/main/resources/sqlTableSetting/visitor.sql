@@ -1,3 +1,5 @@
+DROP TABLE tb_visitor;
+DROP SEQUENCE tb_visitor_idx_seq;
 CREATE SEQUENCE tb_visitor_idx_seq;
 
 

@@ -17,8 +17,7 @@
 	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-
-	<link rel="stylesheet" href="/css/header.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,200,0,0" />
 	
 	<link rel="stylesheet" href="/css/chatRoom.css">
 	<script src="/js/chatRoom.js"></script>
@@ -42,43 +41,17 @@
 			</div>
 			<div id="inputChatMessages"><!-- 여기가 채팅 form -->
 				<textarea id="message" class="uk-textarea"></textarea>
-			    <button id="send-message-btn" class="uk-button">전송</button>			
+				<div style="display: flex; justify-content: space-between; height: 50px;">
+					<div style="height: 100%;display: flex; align-items: center;">
+						<span class="material-symbols-outlined" id="reserveBtn" style="cursor: pointer;">event_available</span>
+					</div>
+					<div style="height: 100%;display: flex; align-items: center;">
+					    <button id="send-message-btn" class="uk-button" disabled="disabled">전송</button>			
+					</div>
+				</div>
 			</div>
 		</main>
-		<!-- 
-		<footer>
-			<div id="footer-inner">
-				<div id="likeHeart" style="width: 65px;height:65px;">
-					<th:block th:if="${session.user != null}">
-						<th:block th:if=${likeCheck==1}>
-							<a href="" uk-icon="heart" class="active"></a>												
-						</th:block>
-						<th:block th:if=${likeCheck==0}>
-							<a href="" uk-icon="heart" class=""></a>												
-						</th:block>
-					</th:block>
-					<th:block th:if="${session.user == null}">
-						<a href="" uk-icon="heart" class=""></a>						
-					</th:block>
-				</div>
-				
-				<div id="footerBox">
-					<div style="font-weight: 500">	
-					</div>
-					<div>
-						<form th:action="@{/chat/createChatRoom}" method="post" id="chatBtn">
-							<input type="hidden" name="boardIdx" th:value="0">						
-							<input th:if="${session.user == null}" type="submit" onclick="alert('로그인 후 이용가능합니다.'); location.href='/member/login'" class="uk-button uk-button-primary" value="채팅하기"/>				
-							<input th:if="${session.user != null}" type="submit" class="uk-button uk-button-primary" value="채팅하기"/>				
-						</form>
-					</div>
-				</div>
-			</div>
-		</footer>
-		 -->
 	</div>
-	
-	
 	<script>
 		$(function() {
 			let currentPage = 1;
@@ -95,19 +68,30 @@
 		    * 메시지를 보낼때 실행되는 함수
 		    */
 		    function sendMessage() {
-		        var message = $('#message').val();
-		        ws.send("/pub/chat/message", {}, JSON.stringify({'chatRoom': chatRoomIdx, 'sender': sender, 'content': message}));
+		        const content = $('#message').val();
+		        ws.send("/pub/chat/message", {}, JSON.stringify({"typeRef": 2, "chatRoom": chatRoomIdx, "sender": sender, "content": content}));
 		        $('#message').val('');
+		        $("#send-message-btn").prop("disabled", true);
+		        $("#send-message-btn").css("background-color", "#F0F0F0");
+	    		$("#send-message-btn").css("color", "#333");
 		    }
 			
 		    /**
 		    * 메시지를 받을때 실행되는 함수
 		    */
 		    function recvMessage(recv) {
-		    	console.log(recv);
-		        var message = {"sender": recv.sender, "nickName": recv.nickName, "content": recv.content, "regDate": recv.regDate};
-		        messages.unshift(message);
-		        updateMessagesUI(message);
+		        const message = {"typeRef": recv.typeRef, "sender": recv.sender, "nickName": recv.nickName, "content": recv.content, "regDate": recv.regDate};
+		        if(message.typeRef == 1){
+		        	// ENTER
+		        	// alert("상대방이 입장하였습니다.");
+		        } else if(message.typeRef == 2){
+		        	// TALK
+		        	messages.unshift(message);
+			        updateMessagesUI(message);
+		        } else {
+		        	// RESERVE
+		        	
+		        }
 		    }
 	
 		    // pub/sub 이벤트
@@ -116,6 +100,7 @@
 		            var recv = JSON.parse(message.body);
 		            recvMessage(recv);
 		        });
+		        ws.send("/pub/chat/message", {}, JSON.stringify({'typeRef': 1,'chatRoom': chatRoomIdx, 'sender': sender}));
 		        axios.post('/chat/findChatMessage', {
 					"chatRoomIdx": chatRoomIdx,
 					"currentPage": 1,
@@ -149,7 +134,6 @@
 				.catch(function (error) {
 					console.log(error);
 				});
-		        // ws.send("/pub/chat/message", {}, JSON.stringify({roomIdx: roomIdx, sender: sender}));
 		    }, function(error) {
 		        alert("error " + error);
 		    });
@@ -182,7 +166,8 @@
 		        content += `
 			        	<div class="textbox">
 				    	<p style="word-wrap: break-word;">${message.content}</p>
-						<span class="chat-time">${regDate}</span>
+						<span class="chat-time">${regDate}<span class="readed">1</span></span>
+						
 				    </div>
 				</div>
 		        `;
@@ -192,15 +177,42 @@
 	                messageList.scrollTop(messageList.prop('scrollHeight'));
 	            }, 50);
 		    }
-	
+			
+		    function isSendOk(){
+		    	let result = true;
+		    	const textArea = document.querySelector("#message");
+		    	console.log(textArea.value);
+		    	if(textArea.value.trim().length == 0){
+		    		result = false;
+		    	}
+		    	return result;
+		    }
 		    // 메시지 전송 버튼 클릭 이벤트 핸들러
 		    $('#send-message-btn').click(function() {
-		        sendMessage();
+		    	if(isSendOk()){
+		        	sendMessage();
+		    	}
 		    });
 		    $("#message").keyup(function(event) {
+		    	if(isSendOk()){
+		    		$("#send-message-btn").prop("disabled", false);
+		    		$("#send-message-btn").css("background-color", "#FF8A3D");
+		    		$("#send-message-btn").css("color", "#fff");
+		    	} else {
+		    		$("#send-message-btn").prop("disabled", true);
+		    		$("#send-message-btn").css("background-color", "#F0F0F0");
+		    		$("#send-message-btn").css("color", "#333");
+		    		
+		    		console.log($("#message").val());
+		    		return ;
+		    	}
 		        // Enter 키의 keyCode 값은 13이며, Shift 키와 함께 눌렀을 때 keyCode 값이 10입니다.
 		        if (event.which === 13 && !event.shiftKey) {
-		        	sendMessage();
+	        		if(isSendOk()){
+			        	if(!$("#send-message-btn").prop("disabled")){
+				        	sendMessage();
+			        	}
+		        	}
 		        }
 		    });
 		    

@@ -99,10 +99,8 @@ $(function(){
 	            const popupHeight = 705;
 	            const leftPosition = (window.screen.width - popupWidth) / 2;
 	            const topPosition = (window.screen.height - popupHeight) / 2;
-	            const popupWindow = window.open(url, "ChatRoomPopup", "width=" + popupWidth + ", height=" + popupHeight + ", left=" + leftPosition + ", top=" + topPosition);
+	            const popupWindow = window.open(url, "ChatRoomPopup", `width=${popupWidth}, height=${popupHeight}, left=${leftPosition}, top=${topPosition}, resizable=no`);
 	            popupWindow.focus();
-				// 채팅방이 있던가 채팅방을 만들었으면 이동?? 팝업으로 띄워??
-				// location.href="/chat/room/"+data;
 			} else {
 				alert("로그인후 이용가능합니다.")
 			}

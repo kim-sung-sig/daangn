@@ -35,7 +35,7 @@
 	</select>
 	
 	<insert id="insertChat" parameterType="ChatMessageVO">
-		insert into chatMessage values (chatMessage_idx_seq.nextval, #{chatRoom}, #{sender}, #{content}, sysdate, 1)
+		insert into chatMessage values (chatMessage_idx_seq.nextval, #{chatRoom}, #{typeRef}, #{sender}, #{content}, sysdate, 1)
 	</insert>
 	
 	<update id="updateChat" parameterType="ChatMessageVO">

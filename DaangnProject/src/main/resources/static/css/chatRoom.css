@@ -2,27 +2,28 @@
 
 body, html {font-family: "Noto Sans KR"; font-weight: 300; }
 body{position: relative; height: 100vh; }
-main{width: 400px;margin: auto; position:absolute;top:50%;left:50%;transform:translate(-50%,-50%); height: 100vh;}
-#chatMessages > li {width: 70%;background: #ccc; font-size: 14px; line-height: 1.5;border-radius: 50px;margin-bottom: 30px;}
+main{width: 400px; margin: auto; position:absolute;top:50%;left:50%;transform:translate(-50%,-50%); height: 100vh;}
+#chatMessages > li {width: 70%; background: #ccc; font-size: 14px; line-height: 1.5; border-radius: 50px; margin-bottom: 30px;}
 #info{height: 100px; background: #cdcdcd; display: flex;}
-#chatMessages{height: calc(100% - 200px); overflow-y: scroll; overflow-x:hidden; box-shadow: 10px #333;}
+#chatMessages{height: calc(100vh - 250px); overflow-y: scroll; overflow-x:hidden; box-shadow: 10px #333;}
 
-  #chatMessages::-webkit-scrollbar {
-    width: 10px;
-  }
-  #chatMessages::-webkit-scrollbar-thumb {
-    background-color: #FF8A3D;
-    border-radius: 20px;
-  }
-  #chatMessages::-webkit-scrollbar-track {
-    background-color: #ccc;
-    border-radius: 20px;
-    box-shadow: inset 0px 0px 5px white;
-  }
-#inputChatMessages{height: 100px; background: red;}
-#message{width: 100%;resize: none;overflow-y:hidden;}
-#send-message-btn{border: none; display: flex; justify-content: right; text-align: right; }
+#chatMessages::-webkit-scrollbar {
+	width: 10px;
+}
+#chatMessages::-webkit-scrollbar-thumb {
+	background-color: #FF8A3D;
+	border-radius: 20px;
+}
+#chatMessages::-webkit-scrollbar-track {
+	background-color: #ccc;
+	border-radius: 20px;
+	box-shadow: inset 0px 0px 5px white;
+}
+#inputChatMessages{height: 150px;}
+#message{width: 100%;resize: none;overflow-y:hidden; height: 100px;}
+#send-message-btn{border-radius: 15px;background: #F0F0F0; border: none; display: flex; justify-content: right; text-align: right;}
 
+#message:focus{border-color: #FF8A3D;};
 
 /* 채팅디자인 */
 .chat {
@@ -86,7 +87,11 @@ p{margin: 0;}
     color: #ddd;
 }
 
+.ch1{
+	display: flex;
+}
 .ch2 {
+	display: flex;
     flex-direction: row-reverse;
 }
 

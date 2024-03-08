@@ -19,8 +19,8 @@ CREATE TABLE daangn_member(
 
 SELECT * FROM daangn_member;
 
-INSERT INTO daangn_member VALUES (daangn_member_idx_seq.nextval,'admin','123456','ROLE_ADMIN','admin','admin',' ',' ',1,sysdate,sysdate,' ',' ');
-INSERT INTO daangn_member VALUES (daangn_member_idx_seq.nextval,'master','123456','ROLE_ADMIN','master','master',' ',' ',1,sysdate,sysdate,' ',' ');
-INSERT INTO daangn_member VALUES (daangn_member_idx_seq.nextval,'webmaster','123456','ROLE_ADMIN','webmaster','webmaster',' ',' ',1,sysdate,sysdate,' ',' ');
-INSERT INTO daangn_member VALUES (daangn_member_idx_seq.nextval,'root','123456','ROLE_ADMIN','root','root',' ',' ',1,sysdate,sysdate,' ',' ');
-INSERT INTO daangn_member VALUES (daangn_member_idx_seq.nextval,'dba','123456','ROLE_ADMIN','dba','dba',' ',' ',1,sysdate,sysdate,' ',' ');
+INSERT INTO daangn_member VALUES (daangn_member_idx_seq.nextval,'admin','123456','ROLE_ADMIN','admin','admin',' ',1,sysdate,sysdate,' ',' ');
+INSERT INTO daangn_member VALUES (daangn_member_idx_seq.nextval,'master','123456','ROLE_ADMIN','master','master',' ',1,sysdate,sysdate,' ',' ');
+INSERT INTO daangn_member VALUES (daangn_member_idx_seq.nextval,'webmaster','123456','ROLE_ADMIN','webmaster','webmaster',' ',1,sysdate,sysdate,' ',' ');
+INSERT INTO daangn_member VALUES (daangn_member_idx_seq.nextval,'root','123456','ROLE_ADMIN','root','root',' ',1,sysdate,sysdate,' ',' ');
+INSERT INTO daangn_member VALUES (daangn_member_idx_seq.nextval,'dba','123456','ROLE_ADMIN','dba','dba',' ',1,sysdate,sysdate,' ',' ');

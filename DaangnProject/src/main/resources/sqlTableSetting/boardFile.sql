@@ -7,8 +7,7 @@ CREATE TABLE daangn_board_file(
     idx NUMBER PRIMARY KEY,
     boardRef NUMBER NOT NULL,
     originFileName VARCHAR2(1000) NOT NULL,
-    saveFileName VARCHAR2(1000) NOT NULL,
-    FOREIGN KEY (boardRef) REFERENCES daangn_board(idx)
+    saveFileName VARCHAR2(1000) NOT NULL
 );
 
 SELECT * FROM daangn_board_file;
