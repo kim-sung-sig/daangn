@@ -121,21 +121,9 @@ p{margin: 0;}
 	font-size : 12px;
 	white-space: nowrap;
 }
-.ch1 .readed{
-	color: #FF8A3D;
-	position:absolute;
-	left: 100%;
-	bottom: 0;
-	padding: 0;
-	font-size : 12px;
-	white-space: nowrap;
-}
 .ch2 .readed{
 	color: #FF8A3D;
-	position:absolute;
-	right: 100%;
-	bottom: 0;
-	padding: 0;
+	padding: 0 10px;
 	font-size : 12px;
 	white-space: nowrap;
 }
@@ -144,9 +132,12 @@ p{margin: 0;}
 #boardImg{
 	padding: 5px;
 	overflow: hidden;
+	display:flex;
+	align-items: center;
+	justify-content: center;
 	border-radius: 20px;
-	width: 100px;
-	height: 100px;
+	width: 90px;
+	height: 90px;
 }
 #boardDetail{
 	padding: 10px 5px;

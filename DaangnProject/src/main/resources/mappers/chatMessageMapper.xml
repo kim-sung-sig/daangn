@@ -2,36 +2,15 @@
 <!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "./mybatis-3-mapper.dtd" >
 <mapper namespace="kr.ezen.daangn.dao.DaangnChatMessageDAO">
 
-	<select id="selectChatByChatRoomIdx" parameterType="hashmap" resultType="ChatMessageVO">
+	<select id="selectChatByChatRoomIdx" parameterType="int" resultType="ChatMessageVO">
 		select
-			R.*
+			*
 		from
-			(
-			select
-				rownum rnum, Q.*
-			from	
-				(
-					select
-						*
-					from
-						chatMessage
-					where
-						chatRoom = #{chatRoomIdx}
-					order by idx desc
-				) Q
-			where
-				<![CDATA[
-					rownum <= #{endNo}
-				]]>
-			) R
+			chatMessage
 		where
-			<![CDATA[
-				rnum >= #{startNo}
-			]]>
-	</select>
-	
-	<select id="selectChatCountByChatRoomIdx" parameterType="int" resultType="int">
-		select count(*) from chatMessage where chatRoom = #{chatRoomIdx}
+			chatRoom = #{chatRoomIdx}
+		order by
+			idx desc
 	</select>
 	
 	<insert id="insertChat" parameterType="ChatMessageVO">
@@ -54,6 +33,10 @@
 	
 	<update id="updateChat" parameterType="int">
 		update chatMessage set readed = readed - 1 where idx = #{idx}
+	</update>
+	
+	<update id="updateAllChat" parameterType="ChatMessageVO">
+		update chatMessage set readed = readed -1 where chatRoom = #{chatRoom} and sender = #{sender} and readed = 1
 	</update>
 	
 	<select id="unreadCount" parameterType="ChatMessageVO">

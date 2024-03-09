@@ -1,6 +1,5 @@
 package kr.ezen.daangn.controller;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +18,8 @@ import kr.ezen.daangn.service.DaangnMainBoardService;
 import kr.ezen.daangn.service.DaangnMemberService;
 import kr.ezen.daangn.vo.ChatMessageVO;
 import kr.ezen.daangn.vo.ChatRoomVO;
-import kr.ezen.daangn.vo.CommonVO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
 import kr.ezen.daangn.vo.DaangnMemberVO;
-import kr.ezen.daangn.vo.PagingVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -71,20 +68,17 @@ public class ChatRoomController {
 		model.addAttribute("board", boardVO);
 		model.addAttribute("chatRoomIdx", chatRoomIdx);
 		model.addAttribute("sender", memberVO.getIdx());
+		model.addAttribute("list", chatService.selectMessageByChatRoomIdx(chatRoomIdx));
 		return "chatRoom";
 	}
 	
-	@PostMapping(value = "/findChatMessage")
+	@PostMapping("/findChatMessages")
 	@ResponseBody
-	public List<ChatMessageVO> findChatMessage(@RequestBody HashMap<String, Integer> map){
-		log.info("findChatMessage({}) 호출", map);
-		PagingVO<ChatMessageVO> pv = null;
-		int chatRoomIdx = map.get("chatRoomIdx");
-		CommonVO cv = new CommonVO();
-		cv.setP(map.get("currentPage"));
-		cv.setS(50);
-		pv = chatService.selectMessageByChatRoomIdx(chatRoomIdx, cv);
-		return pv.getList();
+	public List<ChatMessageVO> findChatMessages(@RequestBody ChatMessageVO chatMessageVO){
+		List<ChatMessageVO> list = null;
+		log.info("findChatMessages 실행 idx={}", chatMessageVO.getChatRoom());
+		list = chatService.selectMessageByChatRoomIdx(chatMessageVO.getChatRoom());
+		return list;
 	}
 	
 	// 채팅방 조회 및 생성

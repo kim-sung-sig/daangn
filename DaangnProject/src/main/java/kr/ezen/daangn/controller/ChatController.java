@@ -7,11 +7,8 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -44,8 +41,6 @@ public class ChatController {
 		// 메시지 저장
 		if(message.getTypeRef() != 1) {
 			chatService.insertMessage(message);			
-		} else {
-			
 		}
 		// 메시지 보내기
         messagingTemplate.convertAndSend("/sub/chat/room/" + message.getChatRoom(), message);
@@ -56,6 +51,12 @@ public class ChatController {
 	public void messageUpdateReadCount(@RequestBody ChatMessageVO chatMessageVO) {
 		log.info("messageUpdateReadCount실행 : {}", chatMessageVO);
 		chatService.updateReadCount(chatMessageVO.getIdx());
+	}
+	@PutMapping("/chat/readAll")
+	@ResponseBody
+	public void messageUpdateReadCountAll(@RequestBody ChatMessageVO chatMessageVO) {
+		log.info("messageUpdateReadCountAll 실행 : {}", chatMessageVO);
+		chatService.updateReadCountAll(chatMessageVO.getChatRoom(), chatMessageVO.getSender());
 	}
 	
 	@GetMapping("/chat/get")

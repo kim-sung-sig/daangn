@@ -1,7 +1,6 @@
 package kr.ezen.daangn.service;
 
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +8,10 @@ import org.springframework.stereotype.Service;
 
 import kr.ezen.daangn.dao.DaangnChatMessageDAO;
 import kr.ezen.daangn.dao.DaangnChatRoomDAO;
+import kr.ezen.daangn.dao.DaangnMainBoardDAO;
 import kr.ezen.daangn.dao.DaangnMemberDAO;
 import kr.ezen.daangn.vo.ChatMessageVO;
 import kr.ezen.daangn.vo.ChatRoomVO;
-import kr.ezen.daangn.vo.CommonVO;
-import kr.ezen.daangn.vo.PagingVO;
 
 @Service(value = "chatService")
 public class ChatService {
@@ -27,6 +25,9 @@ public class ChatService {
     @Autowired
     private DaangnMemberDAO daangnMemberDAO;
     
+    @Autowired
+    private DaangnMainBoardDAO daangnMainBoardDAO;
+    
     /**
      * 조회
      * 채팅방 사용가능 유저가 누구인지 리턴
@@ -34,13 +35,13 @@ public class ChatService {
      * @return
      */
     public ChatRoomVO selectChatRoom(int chatRoomIdx){
-    	ChatRoomVO ChatRoom = null;
+    	ChatRoomVO chatRoom = null;
     	try {
-    		ChatRoom = daangnChatRoomDAO.selectChatRoomByIdx(chatRoomIdx);
+    		chatRoom = daangnChatRoomDAO.selectChatRoomByIdx(chatRoomIdx);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-    	return ChatRoom;
+    	return chatRoom;
     }
     
     /**
@@ -82,28 +83,21 @@ public class ChatService {
     }
     
     /**
-     * ChatRoomIdx에 해당하는 Message들을 리턴하는 메서드 >> 이것도 나중에 페이징 처리해야함
+     * ChatRoomIdx에 해당하는 Message들을 리턴하는 메서드
      * @param chatRoomIdx
-     * @return
+     * @return List<ChatMessageVO>
      */
-    public PagingVO<ChatMessageVO> selectMessageByChatRoomIdx(int chatRoomIdx, CommonVO cv){
-    	PagingVO<ChatMessageVO> pv = null;
+    public List<ChatMessageVO> selectMessageByChatRoomIdx(int chatRoomIdx){
+    	List<ChatMessageVO> list = null;
     	try {
-    		HashMap<String, Integer> map = new HashMap<>();
-    		int totalCount = daangnChatMessageDAO.selectChatCountByChatRoomIdx(chatRoomIdx);
-    		map.put("chatRoomIdx", chatRoomIdx);
-    		pv = new PagingVO<>(totalCount, cv.getCurrentPage(), cv.getSizeOfPage(), cv.getSizeOfBlock());
-    		map.put("startNo", pv.getStartNo());
-    		map.put("endNo", pv.getEndNo());
-			List<ChatMessageVO> messageList = daangnChatMessageDAO.selectChatByChatRoomIdx(map);
-			for(ChatMessageVO cm : messageList) {
-				cm.setNickName(daangnMemberDAO.selectByIdx(cm.getSender()).getNickName());
+    		list = daangnChatMessageDAO.selectChatByChatRoomIdx(chatRoomIdx);
+    		for(ChatMessageVO cm : list) {
+				cm.setNickName(daangnMemberDAO.selectByIdx(cm.getSender()).getNickName()); // 여기가 나중에 vo 로 변경될 것
 			}
-			pv.setList(messageList);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-    	return pv;
+    	return list;
     }
     
     /**
@@ -131,6 +125,32 @@ public class ChatService {
 			e.printStackTrace();
 		}
     }
+    
+    public void updateReadCountAll(int chatRoomIdx, int sender) {
+    	try {
+    		// 1. chatRoom 과 sender로 상대방을 구한다.
+    		ChatRoomVO chatRoom = daangnChatRoomDAO.selectChatRoomByIdx(chatRoomIdx);
+    		chatRoom.setBoardUserIdx(daangnMainBoardDAO.selectByIdx(chatRoom.getBoardIdx()).getUserRef());
+    		int updateSender = 0;
+    		if (chatRoom.getBoardUserIdx() == sender) {
+    			updateSender = chatRoom.getUserIdx();
+    		} else {
+    			updateSender = chatRoom.getBoardUserIdx();
+    		}
+    		ChatMessageVO messageVO = new ChatMessageVO();
+    		messageVO.setChatRoom(chatRoomIdx);
+    		messageVO.setSender(updateSender);
+    		daangnChatMessageDAO.updateAllChat(messageVO);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    }
+    
+    /**
+     * 조회 idx로 ChatMessageVO 조회
+     * @param idx
+     * @return ChatMessageVO
+     */
     public ChatMessageVO selectMessageByIdx(int idx) {
     	ChatMessageVO messageVO = null;
     	try {

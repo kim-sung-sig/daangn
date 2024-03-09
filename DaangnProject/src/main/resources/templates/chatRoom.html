@@ -54,7 +54,6 @@
 	</div>
 	<script>
 		$(function() {
-			let currentPage = 1;
 			const chatRoomIdx = $("#chatRoomIdx").val();
 		    const sender = $("#sender").val();
 			
@@ -80,10 +79,22 @@
 		    * 메시지를 받을때 실행되는 함수
 		    */
 		    function recvMessage(recv) {
-		        const message = {"typeRef": recv.typeRef, "sender": recv.sender, "nickName": recv.nickName, "content": recv.content, "regDate": recv.regDate, "readed": recv.readed};
+		        const message = {"chatRoom": recv.chatRoom, "typeRef": recv.typeRef, "sender": recv.sender, "nickName": recv.nickName, "content": recv.content, "regDate": recv.regDate, "readed": recv.readed};
 		        if(message.typeRef == 1){
 		        	// ENTER
-		        	// alert("상대방이 입장하였습니다.");
+		        	// 1. updateReadCount 를 실행한다. 지금 까지 readed =1 인것들 readed - 1
+		        	axios.put("/chat/readAll", {
+		        		"chatRoom": recv.chatRoom,
+		        		"sender": recv.sender,
+		        	})
+					.then(res => {
+						console.log('readAll 성공');
+					})
+					.catch(error => {
+						console.error('readAll 실패',error);
+					});
+		        	// 2. 현재 보여지는 창에서 .readed 제거
+		        	$(".readed").remove();
 		        } else if(message.typeRef == 2){
 		        	// TALK
 		        	messages.unshift(message);
@@ -104,17 +115,16 @@
 			        		"idx" : recv.idx, // 이숫자로 chatMessage를 update시키자
 			        	})
 						.then(res => {
-							console.log('업데이트 성공');
+							console.log('read 성공');
 						})
 						.catch(error => {
-							console.error('업데이트 실패');
+							console.error('read 실패');
 						});
 		        	}
 		        	setTimeout(() => {
 		        		if (recv.typeRef != 1){
 		        			axios.get("/chat/get?idx="+recv.idx)
 			        		.then(res => {
-								console.log('잘왓남?', res.data);
 								recvMessage(res.data);
 								console.log(1);
 							})
@@ -127,6 +137,20 @@
 					}, 150);
 		        });
 		        ws.send("/pub/chat/message", {}, JSON.stringify({'typeRef': 1,'chatRoom': chatRoomIdx, 'sender': sender}));
+		        axios.post("/chat/findChatMessages", {
+	        		"chatRoom" : chatRoomIdx, // 이숫자로 chatMessage를 update시키자
+	        	})
+				.then(res => {
+					const data = res.data;
+					reversedData = data.slice().reverse();
+					console.log(reversedData);
+					reversedData.forEach(recv => {
+						recvMessage(recv);
+					})
+				})
+				.catch(error => {
+					console.error('read 실패');
+				});
 		    }, function(error) {
 		        alert("error " + error);
 		    });
@@ -159,12 +183,12 @@
 		        content += `
 			        	<div class="textbox">
 				    	<p style="word-wrap: break-word;">${message.content}</p>
-						<span class="chat-time">${regDate}</span>
+						<span class="chat-time">   
 		        `;
 		        if(message.readed != 0) {
 		        	content += `<span class="readed">1</span>`;
 		        }
-		        content += `</div></div>`;
+		        content += `${regDate}</span></div></div>`;
 	            const messageItem = $('<div>').html(content);
 	            messageList.append(messageItem);
 	            setTimeout(function(){
