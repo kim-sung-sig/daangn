@@ -16,17 +16,17 @@
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fa04a00338cccad468f169754f5e7cc6&libraries=services"></script>
 
 <link rel="stylesheet" href="/css/fleamarket/fleamarketUpload.css">
-<script src="/js/fleamarket/fleamarketUpload.js"></script>
+<script src="/js/fleamarket/fleamarketUpdate.js"></script>
 </head>
 <body>
 	<div class="uk-container uk-container-xsmall">
 		<h2 class="form-heading" style="text-align: center;"><img src="https://i.namu.wiki/i/urKu84c6cV1U3tmZqPiopxkCnQOn96j3gA6Wf730iSTzz41XDOeqypSusjBVPXeHxGe8RJAOjMY11uywzcDqSA.svg" alt="logo" /></h2>
-		<h2>내 물품 팔기</h2>
-		<form action="/fleamarketUploadOk" method="post" enctype="multipart/form-data" id="uploadForm">
-			<input type="hidden" id="latitude" name="latitude"/>
-			<input type="hidden" id="longitude" name="longitude"/>
+		<h2>내 물품 팔기(수정)</h2>
+		<form action="/fleamarketUpdateOk" method="post" enctype="multipart/form-data" id="uploadForm">
+			<input type="hidden" id="latitude" name="latitude" th:value="${board.latitude}"/>
+			<input type="hidden" id="longitude" name="longitude" th:value="${board.longitude}"/>
 			<input type="hidden" id="loc" name="loc"><!-- 서울특별시 강서구 화곡1동 -->
-			
+			<input type="hidden" name="idx" id="idx" th:value="${board.idx}">
 	        <div id="file-drop-area">
 	            <span uk-icon="icon: cloud-upload"></span>
 	            <span class="uk-text-middle">이곳에 파일을 드롭해주세요. 또는 </span>
@@ -42,40 +42,39 @@
 			<div class="uk-margin">
 				<h4>제목</h4>
 				<div class="uk-inline">
-					<input type="text" name="subject" id="subject" class="uk-input" placeholder="제목을 입력해주세요" autocomplete='off' required="required">				
+					<input type="text" name="subject" id="subject" class="uk-input" placeholder="제목을 입력해주세요" autocomplete='off' required="required" th:value="${board.subject}">				
 				</div>
 			</div>
 			<div class="uk-margin">
 				<h4>카테고리</h4>
 				<div class="uk-inline">
 					<select name="categoryRef" id="categoryRef" class="uk-select" required="required">
-						<option value="0" selected="selected">카테고리를 선택해주세요.</option>
-						<option value="1">디지털/가전</option>
-						<option value="2">가구/인테리어</option>
-						<option value="3">유아동/유아도서</option>
-						<option value="4">생활/가공식품</option>
-						<option value="5">스포츠/레저</option>
-						<option value="6">여성잡화</option>
-						<option value="7">여성의류</option>
-						<option value="8">남성패션/잡화</option>
-						<option value="9">게임/취미</option>
-						<option value="10">뷰티/미용</option>
-						<option value="11">반려동물용품</option>
-						<option value="12">도서/티켓/음반</option>
-						<option value="14">기타</option>
+						<option value="1" th:selected="${board.categoryRef == 1}">디지털/가전</option>
+						<option value="2" th:selected="${board.categoryRef == 2}">가구/인테리어</option>
+						<option value="3" th:selected="${board.categoryRef == 3}">유아동/유아도서</option>
+						<option value="4" th:selected="${board.categoryRef == 4}">생활/가공식품</option>
+						<option value="5" th:selected="${board.categoryRef == 5}">스포츠/레저</option>
+						<option value="6" th:selected="${board.categoryRef == 6}">여성잡화</option>
+						<option value="7" th:selected="${board.categoryRef == 7}">여성의류</option>
+						<option value="8" th:selected="${board.categoryRef == 8}">남성패션/잡화</option>
+						<option value="9" th:selected="${board.categoryRef == 9}">게임/취미</option>
+						<option value="10" th:selected="${board.categoryRef == 10}">뷰티/미용</option>
+						<option value="11" th:selected="${board.categoryRef == 11}">반려동물용품</option>
+						<option value="12" th:selected="${board.categoryRef == 12}">도서/티켓/음반</option>
+						<option value="14" th:selected="${board.categoryRef == 14}">기타</option>
 					</select>				
 				</div>
 			</div>
 			<div class="uk-margin">
 				<h4>가격</h4>
 				<div class="uk-inline">
-					<input type="number" name="price" id="price" class="uk-input" placeholder="가격을 입력해주세요." autocomplete='off' required="required">
+					<input type="number" name="price" id="price" class="uk-input" placeholder="가격을 입력해주세요." autocomplete='off' required="required" th:value="${board.price}">
 				</div>
 			</div>
 			<div class="uk-margin">
 				<h4>자세한 설명</h4>
 				<div class="uk-inline">
-					<textarea id="content" class="uk-textarea" name="content" style="resize: none; height: 200px" required="required"></textarea>
+					<textarea id="content" class="uk-textarea" name="content" style="resize: none; height: 200px" required="required">[[${board.content}]]</textarea>
 				</div>
 			</div>
 			<div class="uk-margin">
@@ -87,12 +86,13 @@
 			<div class="uk-margin">
 				<h4>상세주소</h4>
 				<div class="uk-inline">
-					<input type="text" id="detailAddress" name="location" class="uk-input" placeholder="상세주소 입력" autocomplete='off' required="required">
+					<input type="text" id="detailAddress" name="location" class="uk-input" placeholder="상세주소 입력" autocomplete='off' required="required" th:value="${board.location}">
 				</div>
 			</div>
 			<div class="uk-margin" style="text-align: right;">
-				<input type="submit" class="uk-button uk-button-primary uk-button-large" value="물건팔기"></input>
 				<input type="button" id="homeBtn" value="이전페이지" class="uk-button uk-button-primary uk-button-large">			
+				<input type="submit" class="uk-button uk-button-primary uk-button-large" value="수정하기"/>
+				<input type="button" id="deleteBtn" class="uk-button uk-button-danger uk-button-large" value="삭제하기">
 			</div>
 		</form>
 	</div>

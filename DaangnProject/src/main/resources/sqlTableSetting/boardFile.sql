@@ -5,7 +5,7 @@ CREATE SEQUENCE daangn_board_file_idx_seq;
 
 CREATE TABLE daangn_board_file(
     idx NUMBER PRIMARY KEY,
-    boardRef NUMBER NOT NULL,
+    ref NUMBER NOT NULL,
     originFileName VARCHAR2(1000) NOT NULL,
     saveFileName VARCHAR2(1000) NOT NULL
 );

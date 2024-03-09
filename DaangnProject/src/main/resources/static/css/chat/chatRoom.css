@@ -2,9 +2,8 @@
 
 body, html {font-family: "Noto Sans KR"; font-weight: 300; }
 body{position: relative; height: 100vh; }
-main{width: 400px; margin: auto; position:absolute;top:50%;left:50%;transform:translate(-50%,-50%); height: 100vh;}
-#chatMessages > li {width: 70%; background: #ccc; font-size: 14px; line-height: 1.5; border-radius: 50px; margin-bottom: 30px;}
-#info{height: 100px; background: #cdcdcd; display: flex;}
+main{width: 400px; margin: auto; position:absolute;top:50%;left:50%;transform:translate(-50%,-50%); height: 100vh; background: #333; color: #fff;}
+#info{height: 100px; background: #333; display: flex; box-shadow: 0 1px 3px #fff}
 #chatMessages{height: calc(100vh - 250px); overflow-y: scroll; overflow-x:hidden; box-shadow: 10px #333;}
 
 #chatMessages::-webkit-scrollbar {
@@ -20,7 +19,7 @@ main{width: 400px; margin: auto; position:absolute;top:50%;left:50%;transform:tr
 	box-shadow: inset 0px 0px 5px white;
 }
 #inputChatMessages{height: 150px;}
-#message{width: 100%;resize: none;overflow-y:hidden; height: 100px;}
+#message{width: 100%;resize: none;overflow-y:hidden; height: 100px; background: #333; color: #fff;}
 #send-message-btn{border-radius: 15px;background: #F0F0F0; border: none; display: flex; justify-content: right; text-align: right;}
 
 #message:focus{border-color: #FF8A3D;};
@@ -31,6 +30,7 @@ main{width: 400px; margin: auto; position:absolute;top:50%;left:50%;transform:tr
     align-items: flex-start;
     padding: 10px;
     width: 100%;
+    margin-bottom: 2px;
 }
 
 .chat .icon {
@@ -78,32 +78,34 @@ p{margin: 0;}
 
 .ch1 .textbox {
     margin-left: 20px;
-    background-color: #ddd;
+    background-color: #a7a7a7;
 }
 
 .ch1 .textbox::before {
     left: -15px;
     content: "◀";
-    color: #ddd;
+    color: #a7a7a7;
 }
 
 .ch1 {
 	display: flex;
+	margin-bottom: 2px;
 }
 .ch2 {
 	display: flex;
     flex-direction: row-reverse;
+    margin-bottom: 5px;
 }
 
 .ch2 .textbox {
     margin-right: 20px;
-    background-color: #F9EB54;
+    background-color: #FF8A3D;
 }
 
 .ch2 .textbox::before {
     right: -15px;
     content: "▶";
-    color: #F9EB54;
+    color: #FF8A3D;
 }
 .ch1 .chat-time{
 	position:absolute;

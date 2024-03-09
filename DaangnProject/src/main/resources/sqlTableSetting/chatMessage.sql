@@ -1,3 +1,5 @@
+DROP TABLE chatMessage;
+DROP SEQUENCE chatMessage_idx_seq;
 CREATE SEQUENCE chatMessage_idx_seq;
 
 CREATE TABLE chatMessage (
@@ -9,3 +11,5 @@ CREATE TABLE chatMessage (
 	regDate timestamp DEFAULT sysdate,
 	readed NUMBER DEFAULT 1
 );
+
+SELECT * FROM CHATMESSAGE c ;

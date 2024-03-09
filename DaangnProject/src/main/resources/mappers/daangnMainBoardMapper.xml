@@ -143,11 +143,11 @@
 		update
 			daangn_board
 		set
+			<if test="statusRef != null">
+				statusRef = #{statusRef}
+			</if>
 			<if test="categoryRef != null">
 				categoryRef = #{categoryRef},
-			</if>
-			<if test="statusRef != null">
-				statusRef = #{statusRef},
 			</if>
 			<if test="subject != null">
 				subject = #{subject},
@@ -155,8 +155,20 @@
 			<if test="content != null">
 				content = #{content},
 			</if>
+			<if test="price != null">
+				price = #{price},
+			</if>
+			<if test="latitude != null">
+				latitude = #{latitude},
+			</if>
+			<if test="longitude != null">
+				longitude = #{longitude},
+			</if>
 			<if test="location != null">
 				location = #{location},
+			</if>
+			<if test="loc != null">
+				loc = #{loc}
 			</if>
 			<if test="readCount != null">
 				readCount = readCount + 1

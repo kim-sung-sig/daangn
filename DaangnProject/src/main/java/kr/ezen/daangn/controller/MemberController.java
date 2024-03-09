@@ -120,7 +120,6 @@ public class MemberController {
 	}
     
     @GetMapping(value = "/home/Like")
-    @SuppressWarnings("null")
     public String homeLike(HttpSession session, Model model) {
     	if(session.getAttribute("user") == null) {
     		return "redirect:/";

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>채팅목록</title>
+	<!-- jQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<!-- UIkit CSS -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css" />
+	<!-- UIkit JS -->
+	<script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
+	<!-- Google Font -->
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+	<!-- Axios -->
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	
+	<link rel="stylesheet" href="/css/chat/chatRooms.css">
+	<script src="/js/chat/chatRooms.js"></script>
+</head>
+<body>
+	<div id="wrap">
+		<main>
+			<div id="info">
+				<h2>채팅</h2>
+			</div>
+			<div id="chatRoomList">
+				<ul class="chat-list">
+					<li th:each="chatRoom : ${chatList}" class="chat-room" th:onclick="viewChatRoom([[${chatRoom.roomIdx}]])">
+						<div class="profileBox">
+							<div class="user-profile">[[${#strings.substring(chatRoom.member.nickName,0,1)}]]</div>
+							<div class="board-profile">
+								<img th:src="'/upload/' + ${chatRoom.board.boardFileList[0].saveFileName}" alt="" />
+							</div>
+						</div>
+						<div class="chat-info">
+							<div class="room-name">
+								<div class="nickName">[[${chatRoom.member.nickName}]]</div>
+								<span class="regDate">[[${#dates.format(chatRoom.lastUpdateDate, 'yyyy-MM-dd HH:mm:ss')}]]</span>
+							</div>
+							<div class="last-message">[[${chatRoom.messageList[0].content}]]</div>
+		  				</div>
+		  				<div th:if="${chatRoom.unreadCount != 0}" class="unreadCount">[[${chatRoom.unreadCount < 100 ? chatRoom.unreadCount : '99+'}]]</div>
+			  		</li>
+				</ul>
+			</div>
+		</main>	
+	</div>
+	<script type="text/javascript">
+		function viewChatRoom(idx) {
+			location.href = '/chat/room/'+idx;
+		}
+		$(function(){
+			
+			// 시간 바꾸기!
+			let times = document.querySelectorAll(".regDate")
+			times.forEach(time => {
+				let postedDateObj = new Date(time.innerHTML);
+				let currentDateObj = new Date();
+				let timeDiff = Math.abs(currentDateObj.getTime() - postedDateObj.getTime());
+				let diffDays = Math.floor(timeDiff / (1000 * 3600 * 24));
+				if (diffDays < 1) {
+		            let diffHours = Math.floor(timeDiff / (1000 * 3600));
+		            if (diffHours < 1) {
+		                let diffMinutes = Math.floor(timeDiff / (1000 * 60));
+		                console.log( diffMinutes + "분 전");
+		                time.innerHTML = diffMinutes + "분 전";
+		            } else {
+						time.innerHTML = diffHours + "시간 전";
+		            }
+		        } else if (diffDays < 7) {
+					time.innerHTML = diffDays + "일 전";
+		        } else {
+					time.innerHTML = diffDays + "일 전"
+				}
+			})
+		})
+	</script>
+</body>
+</html>

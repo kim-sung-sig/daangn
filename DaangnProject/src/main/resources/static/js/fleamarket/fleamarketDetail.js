@@ -111,6 +111,11 @@ $(function(){
 		
 		return false;
 	})
+	
+	$("#updateBtn").click(function(){
+		const idx = $("#boardIdx").val();
+		location.href = `/fleamarketUpdate/${idx}`;
+	})
 })
 
 

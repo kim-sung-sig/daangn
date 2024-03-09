@@ -46,8 +46,7 @@ public class ChatRoomController {
 		List<ChatRoomVO> chatList = chatService.selectChatRoomByUserIdx(memberVO.getIdx());
 		// 유저의 채팅방을 찾아 model에 넘겨준다
 		model.addAttribute("chatList", chatList);
-		
-		return "chatRooms";
+		return "chat/chatRooms";
 	}
 	
 	// 채팅 보기
@@ -69,7 +68,7 @@ public class ChatRoomController {
 		model.addAttribute("chatRoomIdx", chatRoomIdx);
 		model.addAttribute("sender", memberVO.getIdx());
 		model.addAttribute("list", chatService.selectMessageByChatRoomIdx(chatRoomIdx));
-		return "chatRoom";
+		return "chat/chatRoom";
 	}
 	
 	@PostMapping("/findChatMessages")

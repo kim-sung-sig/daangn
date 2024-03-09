@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 
 import kr.ezen.daangn.dao.DaangnChatMessageDAO;
 import kr.ezen.daangn.dao.DaangnChatRoomDAO;
-import kr.ezen.daangn.dao.DaangnMainBoardDAO;
-import kr.ezen.daangn.dao.DaangnMemberDAO;
 import kr.ezen.daangn.vo.ChatMessageVO;
 import kr.ezen.daangn.vo.ChatRoomVO;
 
@@ -23,10 +21,10 @@ public class ChatService {
     private DaangnChatMessageDAO daangnChatMessageDAO;
     
     @Autowired
-    private DaangnMemberDAO daangnMemberDAO;
+    private DaangnMemberService daangnMemberService;
     
     @Autowired
-    private DaangnMainBoardDAO daangnMainBoardDAO;
+    private DaangnMainBoardService daangnMainBoardService;
     
     /**
      * 조회
@@ -55,11 +53,11 @@ public class ChatService {
     	int result = 0;
     	try {
     		if(daangnChatRoomDAO.findChatRoom(chatRoomVO) == 0) { // 없으면 만들기!
+    			chatRoomVO.setBoardUserIdx(daangnMainBoardService.selectByIdx(chatRoomVO.getBoardIdx()).getUserRef());
     			daangnChatRoomDAO.createChatRoom(chatRoomVO);    			
     			result = chatRoomVO.getRoomIdx();
     		} else { // 있으면 roomIdx넘겨주기
-    			ChatRoomVO dbChatRoomVO = daangnChatRoomDAO.selectChatRoom(chatRoomVO);
-    			result = dbChatRoomVO.getRoomIdx();
+    			result = daangnChatRoomDAO.findChatRoom(chatRoomVO);
     		}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -76,7 +74,25 @@ public class ChatService {
     	List<ChatRoomVO> list = null;
     	try {
 			list = daangnChatRoomDAO.selectChatRoomByUserIdx(userIdx);
-		} catch (SQLException e) {
+			for(ChatRoomVO chatRoomVO: list) {
+				chatRoomVO.setBoard(daangnMainBoardService.selectByIdx(chatRoomVO.getBoardIdx()));
+				chatRoomVO.setMessageList(daangnChatMessageDAO.selectChatByChatRoomIdx(chatRoomVO.getRoomIdx()));
+				
+				if(userIdx == chatRoomVO.getUserIdx()) {
+					chatRoomVO.setMember(daangnMemberService.selectByIdx(chatRoomVO.getBoardUserIdx()));
+					ChatMessageVO ch = new ChatMessageVO();
+					ch.setChatRoom(chatRoomVO.getRoomIdx());
+					ch.setSender(chatRoomVO.getBoardUserIdx());
+					chatRoomVO.setUnreadCount(daangnChatMessageDAO.unreadCount(ch));
+				} else {
+					chatRoomVO.setMember(daangnMemberService.selectByIdx(chatRoomVO.getUserIdx()));
+					ChatMessageVO ch = new ChatMessageVO();
+					ch.setChatRoom(chatRoomVO.getRoomIdx());
+					ch.setSender(chatRoomVO.getUserIdx());
+					chatRoomVO.setUnreadCount(daangnChatMessageDAO.unreadCount(ch));
+				}
+			}
+    	} catch (SQLException e) {
 			e.printStackTrace();
 		}
     	return list;
@@ -92,7 +108,7 @@ public class ChatService {
     	try {
     		list = daangnChatMessageDAO.selectChatByChatRoomIdx(chatRoomIdx);
     		for(ChatMessageVO cm : list) {
-				cm.setNickName(daangnMemberDAO.selectByIdx(cm.getSender()).getNickName()); // 여기가 나중에 vo 로 변경될 것
+				cm.setNickName(daangnMemberService.selectByIdx(cm.getSender()).getNickName()); // 여기가 나중에 vo 로 변경될 것
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -130,7 +146,7 @@ public class ChatService {
     	try {
     		// 1. chatRoom 과 sender로 상대방을 구한다.
     		ChatRoomVO chatRoom = daangnChatRoomDAO.selectChatRoomByIdx(chatRoomIdx);
-    		chatRoom.setBoardUserIdx(daangnMainBoardDAO.selectByIdx(chatRoom.getBoardIdx()).getUserRef());
+    		chatRoom.setBoardUserIdx(daangnMainBoardService.selectByIdx(chatRoom.getBoardIdx()).getUserRef());
     		int updateSender = 0;
     		if (chatRoom.getBoardUserIdx() == sender) {
     			updateSender = chatRoom.getUserIdx();
@@ -147,6 +163,18 @@ public class ChatService {
     }
     
     /**
+     * 수정 채팅방의 LastUpdateDate를 업데이트
+     * @param roomIdx
+     */
+    public void updateChatRoomLastUpdateDate(int roomIdx) {
+    	try {
+			daangnChatRoomDAO.updateLastUpdateDate(roomIdx);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    }
+    
+    /**
      * 조회 idx로 ChatMessageVO 조회
      * @param idx
      * @return ChatMessageVO
@@ -155,13 +183,10 @@ public class ChatService {
     	ChatMessageVO messageVO = null;
     	try {
     		messageVO = daangnChatMessageDAO.selectByIdx(idx);
-    		messageVO.setNickName(daangnMemberDAO.selectByIdx(messageVO.getSender()).getNickName());
+    		messageVO.setNickName(daangnMemberService.selectByIdx(messageVO.getSender()).getNickName());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
     	return messageVO;
     }
-	
-    // 5. 채팅방 삭제하기?? 이건 고민해봐야될듯
-	
 }

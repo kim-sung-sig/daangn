@@ -15,7 +15,7 @@ select:focus {outline: none;}
 .uk-card-media-top {
 	height: 223px; overflow: hidden; display: flex; align-items: center;
 	border-radius: 12px; background-color: #F8F9FA;
-	box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.15);
+	box-shadow: 3px 5px 4px rgba(0, 0, 0, 0.15);
 } 
 .uk-card-title {font-size:16px;color:#212529; white-space:nowrap;text-overflow:ellipsis; margin: 0 !important}
 .uk-card-body {display: flex; flex-direction: column; justify-content: center;padding: 0;margin-top: 12px;}

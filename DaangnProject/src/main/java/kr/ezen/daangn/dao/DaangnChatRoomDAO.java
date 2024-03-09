@@ -10,23 +10,49 @@ import kr.ezen.daangn.vo.ChatRoomVO;
 @Mapper
 public interface DaangnChatRoomDAO {
 	
-	// 0. 채팅방 조회
-	ChatRoomVO selectChatRoomByIdx(int chatRoomIdx) throws SQLException;
+	/**
+	 * roomIdx 로 채팅방 조회
+	 * @param roomIdx
+	 * @return ChatRoomVO
+	 * @throws SQLException
+	 */
+	ChatRoomVO selectChatRoomByIdx(int roomIdx) throws SQLException;
 	
-	ChatRoomVO selectChatRoom(ChatRoomVO chatRoom) throws SQLException;
-	// 1. 채팅방 생성(기본키 리턴)
+	/**
+	 * 채팅방 생성
+	 * @param chatRoom
+	 * @throws SQLException
+	 */
     void createChatRoom(ChatRoomVO chatRoom) throws SQLException;
     
-    // 2. 채팅방 조회!
+    /**
+     * userIdx에 해당하는 채팅방 리스트 얻기
+     * @param userIdx
+     * @return List<ChatRoomVO>
+     * @throws SQLException
+     */
     List<ChatRoomVO> selectChatRoomByUserIdx(int userIdx) throws SQLException;
     
-    // 3. boardIdx에 해당하는 ChatRoom갯수얻기
+    /**
+     * 게시글에 해당하는 채팅수 얻기
+     * @param boardIdx
+     * @return 게시글에 해당하는 채팅수
+     * @throws SQLException
+     */
     int selectCountByBoardIdx(int boardIdx) throws SQLException;
     
-    // 4. 채팅방 삭제
-    void deleteChatRoom(long roomIdx) throws SQLException;
-    
-    // 5. 채팅방 있는지 없는지 확인!(idx 리턴)
+    /**
+     * 채팅방이 있는지 없는지 판단 있으면 ChatRoomVO의 idx 없으면 0
+     * @param chatRoom
+     * @return ChatRoomVO의 idx 없으면 0
+     * @throws SQLException
+     */
     int findChatRoom(ChatRoomVO chatRoom) throws SQLException;
     
+    /**
+     * roomIdx로 lastUpdateDate를 업데이트
+     * @param roomIdx
+     * @throws SQLException
+     */
+    void updateLastUpdateDate(int roomIdx) throws SQLException;
 }

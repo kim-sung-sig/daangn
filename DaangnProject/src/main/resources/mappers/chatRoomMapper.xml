@@ -3,38 +3,53 @@
 <mapper namespace="kr.ezen.daangn.dao.DaangnChatRoomDAO">
 
 	<select id="selectChatRoomByIdx" parameterType="int" resultType="ChatRoomVO">
-		select * from chatroom where roomIdx = #{chatRoomIdx}
-	</select>
-	
-	<select id="selectChatRoom" parameterType="ChatRoomVO" resultType="ChatRoomVO">
-		select * from chatroom where (userIdx = #{userIdx} and boardIdx = #{boardIdx})
+		select * from chatroom where roomIdx = #{roomIdx}
 	</select>
 	
 	<insert id="createChatRoom" parameterType="ChatRoomVO">
 		<selectKey keyColumn="roomIdx" keyProperty="roomIdx" resultType="int" order="BEFORE">
 			select chatRoom_idx_seq.nextval from dual
 		</selectKey>
-		insert into chatRoom values (#{roomIdx, jdbcType=INTEGER}, #{userIdx}, #{boardIdx})
+		insert into
+			chatRoom
+		values
+			(
+				#{roomIdx, jdbcType=INTEGER}
+				, #{userIdx}
+				, #{boardIdx}
+				, #{boardUserIdx}
+				, SYSDATE
+			)
 	</insert>
 	
 	<select id="selectChatRoomByUserIdx" parameterType="int" resultType="ChatRoomVO">
-		select * from chatRoom where userIdx = #{userIdx}
+		select
+			*
+		from
+			chatRoom
+		where
+			userIdx = #{userIdx} or boardUserIdx = #{userIdx}
+		ORDER BY
+			lastUpdateDate DESC
 	</select>
 	
 	<select id="selectCountByBoardIdx" parameterType="int" resultType="int">
 		select count(*) from chatRoom where boardIdx = #{boardIdx}
 	</select>
 	
-	<delete id="deleteChatRoom" parameterType="int">
-		delete from chatRoom where roomIdx = #{roomIdx}
-	</delete>
-	
 	<select id="findChatRoom" parameterType="ChatRoomVO" resultType="int">
-		select
-			count(*)
-		from
-			chatRoom
-		where
-			(userIdx = #{userIdx} and boardIdx = #{boardIdx})
+		SELECT
+		    CASE 
+		        WHEN (SELECT count(*) FROM CHATROOM c WHERE (userIdx = #{userIdx} AND boardIdx = #{boardIdx})) = 1 THEN
+		            (SELECT roomIdx FROM CHATROOM c WHERE (userIdx = #{userIdx} AND boardIdx = #{boardIdx}))
+		        ELSE
+		            0
+		    END AS roomIdx
+		FROM
+		    dual
 	</select>
+	
+	<update id="updateLastUpdateDate" parameterType="int">
+		update chatRoom set lastUpdateDate = sysdate where roomIdx = #{roomIdx}
+	</update>
 </mapper>

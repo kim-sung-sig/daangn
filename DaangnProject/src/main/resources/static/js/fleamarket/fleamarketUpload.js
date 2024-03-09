@@ -216,6 +216,15 @@ $(function() {
 			return false;
 		}
 		
+		value = $("#price").val();
+		const maxValue = 2147483647; // 자바의 최대정수
+		if (parseInt(value) > maxValue) {
+		    alert("입력범위보다 큰 값을 입력하셨습니다.");
+		    $("#price").val('');
+		    $("#price").focus();
+		    return false;
+		}
+		
 		value = $("#content").val();
 		if(value.trim().length == 0){
 			alert('내용을 입력해주세요.');

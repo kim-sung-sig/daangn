@@ -173,10 +173,13 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 			HashMap<String, Object> map = new HashMap<>();
 			map.put("idx", board.getIdx());
 			map.put("categoryRef", board.getCategoryRef());
-			map.put("statusRef", board.getStatusRef());
 			map.put("subject", board.getSubject());
 			map.put("content", board.getContent());
+			map.put("price", board.getPrice());
+			map.put("latitude", board.getLatitude());
+			map.put("longitude", board.getLongitude());
 			map.put("location", board.getLocation());
+			map.put("loc", board.getLoc());
 			daangnMainBoardDAO.update(map);
 			result = 1;
 		} catch (SQLException e) {

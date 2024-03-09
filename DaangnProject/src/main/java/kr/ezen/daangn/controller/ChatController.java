@@ -40,7 +40,8 @@ public class ChatController {
 		log.info("message : {}", message);
 		// 메시지 저장
 		if(message.getTypeRef() != 1) {
-			chatService.insertMessage(message);			
+			chatService.insertMessage(message);
+			chatService.updateChatRoomLastUpdateDate(message.getChatRoom());
 		}
 		// 메시지 보내기
         messagingTemplate.convertAndSend("/sub/chat/room/" + message.getChatRoom(), message);

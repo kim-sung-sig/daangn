@@ -10,11 +10,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -24,7 +27,7 @@ import kr.ezen.daangn.service.DaangnLikeService;
 import kr.ezen.daangn.service.DaangnMainBoardService;
 import kr.ezen.daangn.service.PopularService;
 import kr.ezen.daangn.vo.CommonVO;
-import kr.ezen.daangn.vo.DaangnBoardFileVO;
+import kr.ezen.daangn.vo.DaangnFileVO;
 import kr.ezen.daangn.vo.DaangnLikeVO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
 import kr.ezen.daangn.vo.DaangnMemberVO;
@@ -61,9 +64,12 @@ public class FleamarketController {
 					   , @PathVariable(value = "gu", required = false) String gu
 					   , @PathVariable(value = "dong", required = false) String dong
 					   , @RequestParam(value = "search", required = false) String search
+					   , @RequestParam(value = "isOk", required = false) String isOk
 					   ) {
 		log.debug("list 실행 region: {}, gu: {}, dong: {}, search: {}, p: {}", region, gu, dong, search);
-
+		if(isOk != null) {
+			model.addAttribute("isOk", isOk);
+		}
 		CommonVO commonVO = new CommonVO(region, gu, dong, search);
 		commonVO.setS(18);
 		commonVO.setB(5);
@@ -149,8 +155,8 @@ public class FleamarketController {
 	 */
 	@PostMapping("/fleamarketUploadOk")
 	@Transactional
-	public String flfleamarketUploadOkPost(HttpSession session, MultipartHttpServletRequest request, @ModelAttribute(value = "boardVO") DaangnMainBoardVO boardVO) {
-		log.info("flfleamarketUploadOkPost 실행 : {}", boardVO);
+	public String fleamarketUploadOkPost(HttpSession session, MultipartHttpServletRequest request, @ModelAttribute(value = "boardVO") DaangnMainBoardVO boardVO) {
+		log.info("fleamarketUploadOkPost 실행 : {}", boardVO);
 		DaangnMemberVO memberVO = (DaangnMemberVO) session.getAttribute("user");
 		boardVO.setUserRef(memberVO.getIdx());
 		daangnMainBoardService.saveMainBoard(boardVO); // 저장된 idx_seq를 리턴한다!
@@ -177,8 +183,8 @@ public class FleamarketController {
 						File savaFile = new File(uploadPath, saveFileName);
 						FileCopyUtils.copy(file.getBytes(), savaFile);
 						
-						DaangnBoardFileVO fileVO = new DaangnBoardFileVO();
-						fileVO.setBoardRef(boardIdx);
+						DaangnFileVO fileVO = new DaangnFileVO();
+						fileVO.setRef(boardIdx);
 						fileVO.setSaveFileName(saveFileName);
 						fileVO.setOriginFileName(originFileName);
 						log.info("fileVO : {}", fileVO);
@@ -190,5 +196,91 @@ public class FleamarketController {
 			e.printStackTrace();
 		}
 		return "redirect:/fleamarket";
+	}
+	
+	
+	/**
+	 * 글 수정할 수 있는 페이지
+	 */
+	@GetMapping(value = "/fleamarketUpdate/{idx}")
+	public String fleamarketUpdate(@PathVariable(value = "idx") int idx, Model model, HttpSession session) {
+		if(session.getAttribute("user") == null) {
+			return "redirect:/";
+		}
+		DaangnMainBoardVO boardVO = daangnMainBoardService.selectByIdx(idx);
+		DaangnMemberVO user = (DaangnMemberVO) session.getAttribute("user");
+		if(boardVO.getUserRef() != user.getIdx()) {
+			return "redirect:/";
+		}
+		model.addAttribute("board", boardVO);
+		return "fleamarket/fleamarketUpdate";
+	}
+	
+	/**
+	 * 중고거래 글 수정하기
+	 * @param session
+	 * @param request
+	 * @param boardVO
+	 * @return 
+	 */
+	@PostMapping("/fleamarketUpdateOk")
+	@Transactional
+	public String fleamarketUpdateOkPost(HttpSession session, MultipartHttpServletRequest request, @ModelAttribute(value = "boardVO") DaangnMainBoardVO boardVO) {
+		log.info("fleamarketUpdateOkPost 실행 : {}", boardVO);
+		int userRef = daangnMainBoardService.selectByIdx(boardVO.getIdx()).getUserRef();
+		DaangnMemberVO memberVO = (DaangnMemberVO) session.getAttribute("user");
+		if(userRef != memberVO.getIdx()) {
+			return "redirect:/";
+		}
+		boardVO.setUserRef(memberVO.getIdx());
+		daangnMainBoardService.update(boardVO);					// 업데이트
+		daangnBoardFileService.deleteByRef(boardVO.getIdx());	// 기존 사진 지우고 새로 업로드
+		// file save
+		String uploadPath = request.getServletContext().getRealPath("/upload/");
+		// 파일 객체 생성
+		File file2 = new File(uploadPath);
+		// 폴더가 없다면 폴더를 생성해준다.
+		if (!file2.exists()) {
+			file2.mkdirs();
+		}
+		log.info("서버 실제 경로 : " + uploadPath);
+		// --------------------------------------------------------------------------------------
+		List<MultipartFile> list = request.getFiles("file"); // form에 있는 name과 일치
+		try {
+			if (list != null && list.size() > 0) {
+				for(MultipartFile file :list) {
+					if(file != null && file.getSize() >0) {
+						String saveFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+						String originFileName = file.getOriginalFilename();
+						File savaFile = new File(uploadPath, saveFileName);
+						FileCopyUtils.copy(file.getBytes(), savaFile);
+						
+						DaangnFileVO fileVO = new DaangnFileVO();
+						fileVO.setRef(boardVO.getIdx());
+						fileVO.setSaveFileName(saveFileName);
+						fileVO.setOriginFileName(originFileName);
+						log.info("fileVO : {}", fileVO);
+						daangnBoardFileService.insert(fileVO);
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "redirect:/fleamarketDetail/" + boardVO.getIdx();
+	}
+	
+	@PostMapping(value = "/fleamarketDeleteOk")
+	@Transactional
+	public String fleamarketDeleteOk(HttpSession session, @ModelAttribute(value = "boardVO") DaangnMainBoardVO boardVO) {
+		log.info("fleamarketDeleteOk 실행 : {}", boardVO);
+		int userRef = daangnMainBoardService.selectByIdx(boardVO.getIdx()).getUserRef();
+		DaangnMemberVO memberVO = (DaangnMemberVO) session.getAttribute("user");
+		if(userRef != memberVO.getIdx()) {
+			return "redirect:/";
+		}
+		daangnBoardFileService.deleteByRef(boardVO.getIdx());
+		daangnMainBoardService.deleteByIdx(boardVO.getIdx());
+		return "redirect:/fleamarket?isOk=ok";
 	}
 }

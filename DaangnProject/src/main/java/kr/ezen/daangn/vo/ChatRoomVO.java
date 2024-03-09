@@ -1,5 +1,8 @@
 package kr.ezen.daangn.vo;
 
+import java.util.Date;
+import java.util.List;
+
 import lombok.Data;
 
 @Data
@@ -7,13 +10,12 @@ public class ChatRoomVO {
 	private int roomIdx;
 	private int userIdx;
 	private int boardIdx;
-	
-	// 유저가 이 chatRoom을 삭제했는가?
-	// boardIDx의 유저가 chatRoom을 삭제했는가?
-	// 둘다 삭제했으면 쳇룸폭파
-	
-	// 추가하면 CRD가능
-	
-	// db설계
 	private int boardUserIdx;
+	private Date lastUpdateDate;
+	// db설계
+	
+	private DaangnMainBoardVO board;
+	private DaangnMemberVO member;
+	private List<ChatMessageVO> messageList;
+	private int unreadCount;
 }

@@ -37,6 +37,16 @@ $(function(){
 			return false;
 		}
 	})
+	
+	$("#chatBtn").click(function(){
+		const url = `http://localhost/chat/rooms`;
+		const popupWidth = 400;
+        const popupHeight = 705;
+        const leftPosition = (window.screen.width - popupWidth) / 2;
+        const topPosition = (window.screen.height - popupHeight) / 2;
+        const popupWindow = window.open(url, "ChatRoomPopup", `width=${popupWidth}, height=${popupHeight}, left=${leftPosition}, top=${topPosition}, resizable=no`);
+        popupWindow.focus();
+	});
 })
 
 
