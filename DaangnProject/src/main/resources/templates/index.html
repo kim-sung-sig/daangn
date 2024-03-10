@@ -12,56 +12,15 @@
 <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="../css/index.css">
+<link rel="stylesheet" href="/css/index.css">
 
-<script src="../js/index.js"></script>
+<script src="/js/index.js"></script>
 
 <title>당근마켓</title>
 </head>
 <body>
 	<div id="wrap">
-		<header id="header">
-			<div id="header-inner">
-				<div id="navi">
-					<h1 id="logo">
-						<a href="/">
-							<img src="https://i.namu.wiki/i/urKu84c6cV1U3tmZqPiopxkCnQOn96j3gA6Wf730iSTzz41XDOeqypSusjBVPXeHxGe8RJAOjMY11uywzcDqSA.svg" alt="logo" />
-						</a>
-					</h1>
-					<nav>
-						<ul>
-							<li><a href="/fleamarket">중고거래</a></li>
-							<li><a href="/smartLivingTips">생활꿀팁</a></li>
-							<li><a href="#">내 물건 팔기</a></li>
-						</ul>
-					</nav>
-				</div>
-				<div id="search">
-					<span>
-						<form action="" method="get">
-							<div class="uk-margin">
-								<input class="uk-input uk-form-width-long chat" type="text" placeholder="동네 물품을 검색해주세요!" aria-label="Large">
-							</div>
-						</form>
-					</span>
-					<span>
-						<th:block th:if="${session.user != null}">
-							<a class="uk-button uk-button-default" href="/member/logout">로그아웃</a>					
-							<th:block th:if="${session.user.role == 'ROLE_ADMIN'}">
-								<a class="uk-button uk-button-default" href="/adm">관리자 페이지</a>													
-							</th:block>
-							<th:block th:if="${session.user.role != 'ROLE_ADMIN'}">													
-								<a class="uk-button uk-button-default" href="/member/home">마이페이지</a>					
-							</th:block>
-						</th:block>
-						<th:block th:if="${session.user == null}">
-							<a class="uk-button uk-button-default" href="/member/login">로그인</a>						
-						</th:block>
-					</span>
-				</div>
-			</div>
-		</header>
-		
+		<th:block th:insert="~{/indexHeader.html}"></th:block>
 		<main>
 			<div class="uk-container uk-container-large">
 				<section>

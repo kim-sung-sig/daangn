@@ -34,6 +34,7 @@ public class SecurityConfig {
 					.requestMatchers("/member/login/useridcheck","/member/login","/member/logout","/member/join","/member/joinok","/member/send").permitAll()
 					// 중고거래 리스트 사이트!
 					.requestMatchers("/fleamarket/**","/fleamarketDetail/**").permitAll()
+					.requestMatchers("/news/**").permitAll()
 					// 생활꿀팁 리스트 사이트!
 					.requestMatchers("/smartLivingTips").permitAll()
 					// 지정 주소에 대한 권한 설정 : hasRole(권한)은 지정 권한이 있는 사용자만 접근이 가능하다.

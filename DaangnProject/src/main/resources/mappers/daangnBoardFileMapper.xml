@@ -8,13 +8,13 @@
 	</insert>
 	
 	<!-- 1. 파일 삭제하기 (게시글에 대한) -->
-	<delete id="deleteLike" parameterType="int">
-		delete from	daangn_board_file where ref = #{ref}	   
+	<delete id="deleteFileByBoardIdx" parameterType="int">
+		delete from	daangn_board_file where ref = #{boardIdx}	   
 	</delete>
 	
 	<!-- 게시글에 대한 사진 얻기 -->
 	<select id="selectFileByBoardIdx" parameterType="int" resultType="DaangnFileVO">
-		select * from daangn_board_file where ref = #{ref}
+		select * from daangn_board_file where ref = #{boardIdx}
 	</select>
 	
 </mapper>

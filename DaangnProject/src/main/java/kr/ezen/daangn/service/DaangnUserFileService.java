@@ -2,7 +2,7 @@ package kr.ezen.daangn.service;
 
 import kr.ezen.daangn.vo.DaangnFileVO;
 
-public interface DaangnBoardFileService {
+public interface DaangnUserFileService {
 	void insert(DaangnFileVO fileVO);
-	void deleteByBoardIdx(int boardIdx);
+	void deleteByUserIdx(int userIdx);
 }

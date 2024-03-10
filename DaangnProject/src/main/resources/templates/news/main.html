@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <title>당근-실시간 뉴스</title>
+    <!-- font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css"/>
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="/css/header.css">
+    <style type="text/css">
+    	*{margin: 0; padding: 0; box-sizing: border-box;}
+		a{text-decoration: none; color: inherit;}
+		body {background: #302F2B;font-family: "Noto Sans KR", sans-serif;}
+		main{color: #333; padding: 130px 0;max-width: 1160px;margin: auto;}
+		#gridBox {
+			display: grid; grid-template-columns:repeat(5,1fr); gap: 40px;
+		}
+		.newsBox{
+			width: 200px;
+			height: 200px;
+			background: #fff;
+			border-radius: 20px;
+			padding: 10px;
+			box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.3);
+			position: relative;
+			transition: 0.3s;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #fff;
+			font-size: 24px;
+			font-weight: 700;
+			cursor: pointer;
+		}
+		.newsBox:hover{
+			transform:scale(1.1);
+			color: #929292;
+		}
+		.s1 {background: url("/img/news/news_news.jpg") center center;}
+		.s2 {background: url("/img/news/news_it.jpg") center center;}
+		.s3 {background: url("/img/news/news_economy.jpg") center center;}
+		.s4 {background: url("/img/news/news_securities.jpg") center center;}
+		.s5 {background: url("/img/news/news_realEstate.jpg") center center;}
+		.s6 {background: url("/img/news/news_entertainment.jpg") center center;}
+		.s7 {background: url("/img/news/news_life.jpg") center center;}
+		.s8 {background: url("/img/news/news_sport.jpg") center center;}
+		.s9 {background: url("/img/news/news_international.jpg") center center;}
+		.s10 {background: url("/img/news/news_society.jpg") center center;}
+		.s11 {background: url("/img/news/news_politics.jpg") center center;}
+		
+    </style>
+</head>
+<body>
+	<div id="wrap">
+		<th:block th:insert="~{/indexHeader.html}"></th:block>
+		
+		<main>
+			<h2 style="color: #fff">한국경제 실시간 뉴스</h2>
+			<div id="gridBox">
+				<div class="newsBox s1" onclick="location.href='/news/all-news'">전체뉴스</div>
+				<div class="newsBox s2" onclick="location.href='/news/it'">IT</div>
+				<div class="newsBox s3" onclick="location.href='/news/economy'">경제</div>
+				<div class="newsBox s4" onclick="location.href='/news/finance'">증권</div>
+				<div class="newsBox s5" onclick="location.href='/news/realetate'">부동산</div>
+				<div class="newsBox s6" onclick="location.href='/news/entertainment'">연예</div>
+				<div class="newsBox s7" onclick="location.href='/news/life'">생활</div>
+				<div class="newsBox s8" onclick="location.href='/news/sports'">스포츠</div>
+				<div class="newsBox s9" onclick="location.href='/news/international'">국제</div>
+				<div class="newsBox s10" onclick="location.href='/news/society'">사회</div>
+				<div class="newsBox s11" onclick="location.href='/news/politics'">정치</div>
+			</div>
+		</main>
+	</div>
+</body>
+</html>

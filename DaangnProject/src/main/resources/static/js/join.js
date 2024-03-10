@@ -100,7 +100,9 @@ $(function() {
 		}
 		email = email + '@' + emailAddress;
 		// Ajax를 호출하여 처리 한다.
-		axios.get('/member/send?to=' + email)
+		axios.post('/member/send',{
+			'to': email,
+		})
 		.then(function(res) {
 			if (res.data != "") {
 				alert("메일 발송 성공")

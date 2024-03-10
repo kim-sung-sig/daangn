@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <title>뉴스</title>
+    <!-- font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- ChartJs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css"/>
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="/css/header.css">
+    <style type="text/css">
+    	*{margin: 0; padding: 0; box-sizing: border-box;}
+		a{text-decoration: none; color: inherit;}
+		body {background: #302F2B;font-family: "Noto Sans KR", sans-serif;}
+		main{color: #fff;padding: 130px 0;width: 780px; margin: auto;}
+		#title {color: #fff; font-weight: bold;}
+		#newsContainer{border-top: 1px solid #e5e5e5; padding-top:20px ;color: #fff; display: flex;}
+		.today{width: 90px; font-size: 16px; font-weight: bold; position: absolute; left: -90px;}
+		#itemBox{margin-left:90px;}
+		.item{
+			display: flex;
+			justify-content: space-between;
+			gap:30px;
+			position: relative;
+			padding-left: 25px;
+			margin-bottom: 20px;
+		}
+		.item a {
+			color: #fff;
+		}
+		.item::before{
+			content: '';
+		    display: inline-block;
+		    position: absolute;
+		    top: 3px;
+		    left: 2px;
+		    width: 11px;
+		    height: 11px;
+		    border-radius: 100%;
+		    background: #e5e5e5;
+		}
+		.item::after{
+			content: '';
+		    display: inline-block;
+		    position: absolute;
+		    top: 3px;
+		    left: 7px;
+		    width: 1px;
+		    height: 130px;
+		    background: #e5e5e5;
+		}
+		.textArea{
+			width: calc(100% - 140px);
+		}
+		.time{
+			font-weight: bold;
+			font-size: 14px;
+		}
+		.news-title{
+			margin: 15px 0 10px;
+			font-size: 20px;
+			line-height: 25px;
+		}
+		.imgArea{
+			position: relative;
+			width: 110px;
+			height: 110px;
+			overflow: hidden;
+			border-radius: 10px;
+		}
+		.imgArea img{
+			display: block;
+			width: 100%;
+		    height: 100%;
+		    object-fit: cover;
+		    object-position: center top;
+		}
+		.imgArea a {
+			display: block;
+			width: 100%;
+			height: 100%;
+		}
+		
+		#goTopBtn{
+			width: 50px; height: 50px;
+			background: rgba(0,0,0,0.5);
+			position: fixed;
+			right: 210px; bottom: 50px;
+			border-radius: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer;
+		}
+    </style>
+</head>
+<body>
+	<div id="goTopBtn">
+		<span class="material-symbols-outlined">expand_less</span>
+	</div>
+	<th:block th:insert="~{/indexHeader.html}"></th:block>
+	<div id="main-wrap">
+		<main>
+			<h2 id="title">한국경제 [[${title}]]</h2>
+			<div id="newsContainer">
+				<ul id="itemBox">
+					<li th:each="item: ${items}" class="item">
+		                <div class="today">[[${#dates.format(item.pubDate, 'yyyy.MM.dd')}]]</div>
+						<div class="textArea">
+							<p class="time">[[${#strings.substring(item.pubDate, 17, 22)}|]]</p>
+							<h3 class="news-title">
+								<a th:href="${item.link}">[[${item.title}]]</a>
+							</h3>
+						</div>
+						<div class="imgArea">
+							<a th:href="${item.link}">
+								<img th:src="${item.image}" alt="" />
+							</a>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</main>
+	</div>
+	<script type="text/javascript">
+		$(function(){
+			// today 숨길지 보일지 확인
+			let today = "";
+		    $(".today").each(function() {
+		        let currentDate = $(this).text();
+		        if (currentDate === today) {
+		            $(this).hide();
+		        } else {
+		            today = currentDate;
+		        }
+		    });
+			
+			// 위로가기 버튼
+			$("#goTopBtn").click(function(){
+				window.scrollTo({
+			        top: 0,
+			        behavior: 'smooth' // 부드러운 스크롤 효과 적용
+			    });
+			})
+		})
+	</script>
+</body>
+</html>

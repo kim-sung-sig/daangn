@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.ezen.daangn.dao.DaangnCommentDAO;
 import kr.ezen.daangn.dao.DaangnMemberDAO;
+import kr.ezen.daangn.dao.DaangnUserFileDAO;
 import kr.ezen.daangn.vo.CommonVO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
 import kr.ezen.daangn.vo.DaangnMemberVO;
@@ -26,6 +27,8 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 	private DaangnMemberDAO daangnMemberDAO;
 	@Autowired
 	private DaangnCommentDAO daangnCommentDAO;
+	@Autowired
+	private DaangnUserFileDAO daangnUserFileDAO;
 		
 	//=========================================================
 	// 유저 서비스
@@ -45,7 +48,11 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 		log.info(memberVO + "리턴");
 		return memberVO;
 	}
-
+	
+	/**
+	 * 저장하기
+	 * 유저 비빌번호를 암호화한 후 저장
+	 */
 	@Override
 	public void insert(DaangnMemberVO memberVO) {
 		if(memberVO != null) {
@@ -60,6 +67,9 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 		}
 	}
 	
+	/**
+	 * 유저 정보 수정하기
+	 */
 	@Override
 	public int update(DaangnMemberVO memberVO) {
 		int result = 0;
@@ -75,6 +85,10 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 		}
 		return result;
 	}
+	
+	/**
+	 * 마지막으로 로그인한 날짜 업데이트
+	 */
 	@Override
 	public int updateLastLoginDate(int idx) {
 		int result = 0;
@@ -87,7 +101,10 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 		}
 		return result;
 	}
-
+	
+	/**
+	 * 유저 삭제하기
+	 */
 	@Override
 	public int deleteByIdx(int idx) {
 		int result = 0;
@@ -115,11 +132,16 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 		try {
 			memberVO = daangnMemberDAO.selectByIdx(idx);
 			memberVO.setUserVal(daangnCommentDAO.selectScoreByUserIdx(idx));
+			memberVO.setUserFile(daangnUserFileDAO.selectFileByUserIdx(idx));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return memberVO;
 	}
+	
+	/**
+	 * 아이디 중복체크를 위한 메서드
+	 */
 	@Override
 	public int selectCountByUsername(String username) {
 		int result = 0;
@@ -130,7 +152,10 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 		}
 		return result;
 	}
-
+	
+	/**
+	 * 닉네임 중복체크를 위한 메서드 (아직 미사용)
+	 */
 	@Override
 	public int selectCountByNickName(String nickName) {
 		int result = 0;
@@ -141,6 +166,10 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 		}
 		return result;
 	}
+	
+	/**
+	 * 비밀번호가 일치하는지 확인하기 위한 메서드
+	 */
 	@Override
 	public int checkPasswordMatch(DaangnMemberVO sessionUser, String password) {
 		int result = 0;

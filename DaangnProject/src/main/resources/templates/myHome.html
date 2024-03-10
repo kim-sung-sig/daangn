@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>당근-마이페이지</title>
+<!--제이쿼리 추가-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<!-- UIkit CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css" />
+<!-- UIkit JS -->
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<!-- Ajax처리를 위한 포함 -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<!-- 다음 우편번호 API를 이용하려면 포함해야 한다. -->
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+<link href="/css/header.css" rel="stylesheet">
+<link href="/css/home.css" rel="stylesheet">
+<script src="/js/mypage/home.js"></script>
+</head>
+<body>
+	<div id="wrap">
+		<th:block th:insert="~{indexHeader.html}"></th:block>
+		<main>
+			<div id="leftArea">
+				<div id="userProfileImg">
+					<img src="/img/스크린샷(1).png" alt="내 프로필사진" />
+				</div>
+				<p id="userName">[[${user.username}]]</p>
+				<ul class="mypageNav">
+					<li><a href="#">내가 쓴 글</a></li>
+					<li><a href="#">좋아요한 글</a></li>
+					<li><a href="#">최근 방문</a></li>
+				</ul>
+			</div>
+			<div id="rightArea">
+				<div class="userProfile">
+					<div class="myprofile">
+						<div class="info_title">
+							<div class="uk-inline">
+            					<span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: info"></span>
+								<h3 class="title_text">회원정보</h3>
+        					</div>
+						</div>
+					</div>
+					<div class="myinfo_area">
+						<div class="flexAlign">
+							<div class="myphoto">
+								<img src="/img/스크린샷(1).png" alt="내 프로필사진" />
+							</div>
+							<div class="myname">
+								[[${user.name}]]
+							</div>
+						</div>
+						<!-- 
+						<div>
+							<button class="uk-button updateBtn" value="name">수정</button>
+						</div>
+						 -->
+					</div>
+					<ul class="info_area">
+						<li>
+					        <div class="uk-inline flexCenBet">
+					            <span class="uk-form-icon" uk-icon="icon: user"></span>
+					            <p class="info" style="font-weight: 400">[[${user.nickName}]]</p>
+					            <button class="uk-button updateBtn" value="nickName">수정</button>
+					        </div>
+						</li>
+						<li>
+					        <div class="uk-inline flexCenBet">
+					            <span class="uk-form-icon" uk-icon="icon: mail"></span>
+					            <p class="info">[[${user.email}]]</p>
+					            <button class="uk-button updateBtn" value="email">수정</button>
+					        </div>
+						</li>
+						<li>
+					        <div class="uk-inline flexCenBet">
+					            <span class="uk-form-icon" uk-icon="icon: receiver"></span>
+					            <p class="info">전화번호</p>
+					            <button class="uk-button updateBtn" value="phone">수정</button>
+					        </div>
+						</li>
+						<li>
+					        <div class="uk-inline flexCenBet">
+					            <span class="uk-form-icon" uk-icon="icon: location"></span>
+					            <p class="info">[[${user.stAddress}]], [[${user.dtAddress}]]</p>
+					            <button class="uk-button updateBtn" value="address">수정</button>
+					        </div>
+						</li>
+						<li>
+					        <div class="uk-inline flexCenBet">
+					            <span class="uk-form-icon" uk-icon="icon: lock"></span>
+					            <p class="info">비밀번호 수정하기</p>
+					            <button class="uk-button updateBtn" value="password">수정</button>
+					        </div>
+						</li>
+					</ul>
+				</div>
+				<div class="userProfile">
+					<div class="myprofile">
+						<div class="info_title">
+							<div class="uk-inline">
+            					<span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: info"></span>
+								<h3 class="title_text">이메일 수신동의</h3>
+        					</div>
+						</div>
+					</div>
+					<ul class="info_area">
+						<li>
+					        <div class="uk-inline flexCenBet">
+					            <span class="uk-form-icon" uk-icon="icon: mail"></span>
+					            <p class="info">[[${user.email}]]</p>
+					            <div>
+						            <label>동의</label> <input class="uk-radio" type="radio" name="emailOk" value="0" th:checked="${user.emailOk == 0}" disabled="disabled">
+						            &nbsp;
+						            <label>미동의</label> <input class="uk-radio" type="radio" name="emailOk" value="1" th:checked="${user.emailOk == 1}" disabled="disabled">
+						            <button class="uk-button updateBtn" value="emailOk">수정</button>
+					            </div>
+					        </div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</main>
+	</div>
+	<div id="modalBackground"></div>
+	<div id="nickNameModal" class="modal">
+		<div class="modal-inner">
+			<p class="modal-title"><b>[[${user.nickName}]]</b>님의 회원정보 중 <span class="highlight">닉네임</span>을 수정합니다.</p>
+			<input class="uk-input" id="nickName" name="nickName" placeholder="닉네임을 2~12글자 내외로 입력하세요.">
+			<span id="nickNameCk"></span>
+			<div class="modalBtns">
+				<input style="width: 40%;" type="button" class="uk-button cancleBtn" value="취소"/>
+				<input style="width: 60%;" type="submit" class="uk-button" id="nickNameBtn" value="수정하기"/>
+			</div>
+			<div class="modalCloseBtn">X</div>
+		</div>
+	</div>
+	
+	<div id="emailModal" class="modal">
+		<div class="modal-inner">
+			<p class="modal-title"><b>[[${user.nickName}]]</b>님의 회원정보 중 <span class="highlight">이메일</span>을 수정하기 위해 인증절차가 필요합니다.</p>
+			<input id="email" type="text" class="uk-input " placeholder="이메일" required="required" />
+			<select class="uk-select " id="emailAddress" style="margin-top: 10px;">
+                <option selected value="0">이메일을 선택하세요.</option>
+                <option value="naver.com">naver.com</option>
+                <option value="google.com">gmail.com</option>
+            </select>
+            <div style="width:100%;text-align: right; margin-top: 10px;">
+	            <input type="button" id="sendEmail" class="uk-button uk-button-default" value="메일 인증">
+            </div>
+            <div id="emailCheckBox" style="display: none;">
+				<input style="margin-top: 10px;" type="text" id="emailCheck" class="uk-input" placeholder="인증번호를 입력해주세요" autocomplete="off">
+				<div style="width:100%;text-align: right; margin-top: 10px;">
+					<input type="button" id="emailCheckBtn" class="uk-button uk-button-default" value="인증번호체크">
+				</div>
+            </div>
+			<div class="modalBtns">
+				<input style="width: 40%;" type="button" class="uk-button cancleBtn" value="취소"/>
+				<input style="width: 60%;" type="submit" class="uk-button" id="emailBtn" value="수정하기"/>
+			</div>
+			<div class="modalCloseBtn">X</div>
+		</div>
+	</div>
+	
+	<div id="addressModal" class="modal">
+		<div class="modal-inner">
+			<p class="modal-title"><b>[[${user.nickName}]]</b>님의 회원정보 중 <span class="highlight">주소</span>를 수정합니다.</p>
+			<div class="uk-inline" style="display: flex;">
+				<input type="text" name="postcode" id="postcode" class="uk-input " aria-describedby="passwordHelpInline" readonly="readonly" disabled="disabled" required="required">
+				<input id="daum" class="uk-button uk-button-default" type="button" value="우편번호 검색" onclick="daumPostcode()"/>						
+			</div>
+			<div class="uk-inline">
+				<input name="stAddress" id="addr1" type="text" class="uk-input" placeholder="사용자 주소" readonly="readonly" required="required"/>
+				<input style="margin-top: 10px;" name="dtAddress" id="addr2" type="text" class="uk-input" placeholder="사용자 상세 주소" required="required"/>					
+			</div>
+			<div class="modalBtns">
+				<input style="width: 40%;" type="button" class="uk-button cancleBtn" value="취소"/>
+				<input style="width: 60%;" type="submit" class="uk-button" id="addressBtn" value="수정하기"/>
+			</div>
+			<div class="modalCloseBtn">X</div>
+		</div>
+	</div>
+	<div id="passwordModal" class="modal">
+		<div class="modal-inner">
+			<p class="modal-title"><b>[[${user.nickName}]]</b>님의 회원정보 중 <span class="highlight">비밀번호</span>를 수정합니다. 비밀번호를 특수문자, 숫자 포함 8~20자 이내로 작성해주세요.</p>
+			<input id="password" name="password" type="password" class="uk-input" placeholder="비밀번호를 특수문자,숫자 포함 8~20자 이내로 작성해주세요." required="required" aria-label="Not clickable icon" maxlength="20">
+			<span id="pwmessage"></span>
+			<input id="password2" type="password" class="uk-input" placeholder="비밀번호 재확인" required="required" aria-label="Not clickable icon" maxlength="20">
+			<span id="pwmessage2"></span>
+			<input type="hidden" id="passwordCk" value="0">
+			<div class="modalBtns">
+				<input style="width: 40%;" type="button" class="uk-button cancleBtn" value="취소"/>
+				<input style="width: 60%;" type="submit" class="uk-button" id="passwordBtn" value="수정하기"/>
+			</div>
+			<div class="modalCloseBtn">X</div>
+		</div>
+	</div>
+	
+	<div id="pwCheckModal" class="modal">
+		<div class="modal-inner">
+			<p class="modal-title"><b>[[${user.nickName}]]</b>님의 회원정보를 수정하기 위해 인증절차가 필요합니다.</p>
+			<input type="password" class="uk-input" id="pwCk" placeholder="비밀번호를 입력해주세요."/>		
+			<div class="modalBtns">
+				<input style="width: 40%;" type="button" class="uk-button cancleBtn" value="취소"/>
+				<input style="width: 60%;" type="button" class="uk-button" id="pwCkBtn" value="인증"/>
+			</div>
+			<div class="modalCloseBtn">X</div>
+		</div>
+	</div>
+	
+	<script type="text/javascript">
+		$(function(){
+			let modal;
+			let emailVal;
+			$("main button").click(function(){
+				const value = $(this).val();
+				$("#pwCheckModal").fadeIn();
+				$("#modalBackground").fadeIn();
+				modal = value;
+			});
+			
+			// 취소버튼
+			$(".modalCloseBtn, .modalBtns input[value='취소']").click(function(){
+				allClear()
+			});
+			
+		    $("#pwCkBtn").click(function(){
+		        const password = $("#pwCk").val();
+		        axios.post('/member/checkPasswordMatch', { 'password': password })
+	            .then(res => {
+	                const data = res.data;
+	                pwOk(data);
+	            })
+	            .catch(error =>{
+	                console.error('Error checking password:', error);
+	            });
+		    });
+			function pwOk(data){
+				if(data == 1){
+					const returnStr = "#" + modal + "Modal";
+					$(".modal").fadeOut();
+					$("#pwCk").val('');
+					$(returnStr).fadeIn();
+				} else {
+					alert("비밀번호가 일치하지 않습니다.");
+					$("#pwCk").val('');
+					$("#pwCk").focus();
+				}
+			}
+			/** 회원 수정이 실패한 경우 실행될 함수 */
+			function allClear(){
+				$(".modal").fadeOut();
+				$("#modalBackground").fadeOut();
+				$("#pwCk").val('');
+				$("#nickName").val('');
+				$("#nickNameCk").html('');
+				$("#email").val('');
+				$("#email").prop("disabled",false);
+				$("#emailAddress").val(0);
+				$("#emailAddress").prop("disabled",false);
+				$("#sendEmail").prop("disabled",false);
+				$("#emailCheckBox").css('display','none');
+				$("#emailCheck").val('');
+				$("#emailCheck").prop("disabled",false);
+				$("#emailCheckBtn").prop("disabled", false);
+				$("#postcode").val('');
+				$("#addr1").val('');
+				$("#addr2").val('');
+			}
+			//======================================================================================
+			// 닉네임
+			//======================================================================================
+			/** 닉네임 중복검사 */
+			function nickNameCheckHandler() {
+				// 원하는대로 리턴이 안되서 이상한거 이용함..
+			    return new Promise((resolve, reject) => {
+			        let nickName = $("#nickName").val();
+			        if (nickName.search(/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi) >= 0) {
+			            $("#nickNameCk").html("특수문자는 입력할 수 없습니다.").css('color', 'red');
+			            resolve(false);
+			        } else if (nickName.indexOf(" ") != -1) {
+			            $("#nickNameCk").html("공백은 포함할 수 없습니다.").css('color', 'red');
+			            resolve(false);
+			        } else if (2 <= nickName.length && nickName.length <= 12) {
+			            axios.post('/member/login/userNickNamecheck', { 'nickName': nickName })
+			                .then(res => {
+			                    if (res.data * 1 == 0) {
+			                        $("#nickNameCk").html("사용가능한 닉네임입니다.").css('color', 'blue');
+			                        resolve(true);
+			                    } else {
+			                        $("#nickNameCk").html("사용 불가능한 닉네임입니다.").css('color', 'red');
+			                        resolve(false);
+			                    }
+			                })
+			                .catch(error => {
+			                    console.log(error);
+			                    reject(error);
+			                });
+			        } else {
+			            $("#nickNameCk").html("2~12글자 내외로 작성해주세요.").css('color', 'black');
+			            resolve(false);
+			        }
+			    });
+			}
+			$("#nickName").keyup(function(){
+				nickNameCheckHandler();
+			})
+			$("#nickNameBtn").click(function(){
+				const result = nickNameCheckHandler();
+				console.log(result);
+				if(result){
+					const nickName = $("#nickName").val();
+					axios.put("/member/update", {
+						"nickName": nickName,
+					}).then(res => {
+						const data = res.data;
+						if(data == "1"){
+							alert("수정되었습니다.")
+							location.href='/member/home';
+						} else {
+							alert("오류가 발생했습니다. 잠시후 다시 시도해 주세요.");
+							allClear();
+						}
+					}).catch(e => {
+						console.log(e);
+					})
+				}
+			})
+			
+			
+			//======================================================================================
+			// 이메일
+			//======================================================================================
+			/** 이메일을 전송해도 되는지 확인하는 함수*/
+			function emailSendOk(){
+				return new Promise((resolve, reject) => {
+			        let email = $("#email").val();
+			        if (email.search(/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi) >= 0) {
+			            resolve(false);
+			        } else if (email.indexOf(" ") != -1) {
+			            resolve(false);
+			        } else if ($("#emailAddress").val() == 0){
+			        	resolve(false);
+			        } else {
+			        	resolve(true);
+			        }
+			    });
+			}
+			$("#sendEmail").click(function() {
+			    emailSendOk().then(result => {
+			        if (result) {
+			        	let email = $("#email").val() + '@' + $("#emailAddress").val();
+			    		// Ajax를 호출하여 처리 한다.
+			    		axios.post('/member/send',{
+			    			'to': email	
+			    		})
+			    		.then(function(res) {
+			    			if (res.data != "") {
+			    				alert("메일 발송 성공")
+			    				emailVal = res.data;
+			    				console.log(emailVal);
+			    				$("#emailCheckBox").css('display','block');
+			    				$("#email").prop("disabled",true);
+			    				$("#emailAddress").prop("disabled", true);
+			    				$("#sendEmail").prop("disabled",true);
+			    			} else {
+			    				alert("메일 발송 실패")
+			    			}
+			    		})
+			    		.catch(function(error) {
+			    			console.log(error);
+			    		})
+			    		.finally(function() {
+			    			// 항상 실행되는 영역
+			    		});
+			        } else {
+			            alert('이메일을 확인해주세요.');
+			            $("#email").val('');
+			            $("#emailAddress").val(0);
+			            $("#email").focus();
+			        }
+			    }).catch(error => {
+			        console.error(error);
+			    });
+			});
+			
+			$("#emailCheckBtn").click(function(){
+				let value = $("#emailCheck").val();
+				if(value == emailVal){
+					alert("인증되었습니다.");
+					$("#emailCheck").prop("disabled",true);
+    				$("#emailCheckBtn").prop("disabled", true);
+				}
+			})
+			/** 이메일 인증을 완료했는지 확인하는 함수 */
+			function emailCheckOk(){
+				return $("#emailCheckBtn").prop("disabled");
+			}
+			$("#emailBtn").click(function(){
+				if(emailCheckOk()){
+					axios.put("/member/update", {
+						"email": $("#email").val()+'@'+$("#emailAddress").val(),
+					}).then(res => {
+						const data = res.data;
+						if(data == "1"){
+							alert("수정되었습니다.")
+							location.href='/member/home';
+						} else {
+							alert("오류가 발생했습니다. 잠시후 다시 시도해 주세요.");
+							allClear();
+						}
+					}).catch(e => {
+						console.log(e);
+					})			
+				} else {
+					alert("메일인증을 완료해주세요.");
+				}
+			})
+			
+			//======================================================================================
+			// 주소
+			//======================================================================================
+			/** 주소 검증 */
+			$("#addressBtn").click(function(){
+				let value = $("#addr1").val();
+				if(value.trim().length==0){
+					alert('주소를 확인해주세요.');
+					return ;
+				} else if ($("#addr2").val().trim().length==0){
+					alert('상세주소를 입력해주세요.');
+					$("#addr2").val("");
+					$("#addr2").focus();
+				} else if ($("#addr2").val().trim().length > 15){
+					alert('상세주소는 15자 내외로 입력헤주세요.');
+					$("#addr2").val("");
+					$("#addr2").focus();
+				} else {
+					axios.put("/member/update", {
+						"stAddress": $("#addr1").val(),
+						"dtAddress": $("#addr2").val(),
+					}).then(res => {
+						const data = res.data;
+						if(data == "1"){
+							alert("수정되었습니다.")
+							location.href='/member/home';
+						} else {
+							alert("오류가 발생했습니다. 잠시후 다시 시도해 주세요.");
+							allClear();
+						}
+					}).catch(e => {
+						console.log(e);
+					})
+				}
+			});
+			
+			//======================================================================================
+			// 비밀번호
+			//======================================================================================
+			/** 비밀번호 확인 */
+			$("#password").blur(function(){
+				let password = $("#password").val();
+				if(password.indexOf(" ") != -1){
+					$("#pwmessage").html("공백은 포함할 수 없습니다.").css('color', 'red');
+					return ;			
+				}
+				if(password.search(/[ㄱ-ㅎㅏ-ㅣ가-힣]/g) >=0) {
+					$("#pwmessage").html("한글은 사용할 수 없습니다.").css('color', 'red');
+					return ;
+				}
+				if(password.search(/[0-9]/g) < 0){
+					$("#pwmessage").html("숫자를 포함해주세요.").css('color', 'red');
+					return ;
+				}
+				if(password.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi) < 0){
+					$("#pwmessage").html("특수문자를 포함해주세요.").css('color', 'red');
+					return ;
+				}
+				if(password.length < 8 || 20 < password.length ){
+					$("#pwmessage").html("8~20자 이내로 작성해주세요.").css('color', 'red');
+					return ;
+				}
+				$("#pwmessage").html("사용가능한 비밀번호입니다.").css('color', 'blue');
+			})
+			/** 비밀번호 이중 체크 */
+			$("#password2").keyup(function(){
+				let password = $("#password").val();
+				let password2 = $("#password2").val();
+				if(password != password2) {
+					$("#pwmessage2").html("비밀번호가 일치하지 않습니다.").css('color', 'red');
+					return ;
+				}
+				$("#pwmessage2").html("비밀번호가 일치합니다.").css('color', 'blue');
+				$("#passwordCk").val(1);
+			})
+			
+			$("#passwordBtn").click(function(){
+				let value = $("#passwordCk").val();
+				if(value == 1){
+					axios.put("/member/update", {
+						"password": $("#password").val(),
+					}).then(res => {
+						const data = res.data;
+						if(data == "1"){
+							alert("수정되었습니다. 로그아웃합니다.")
+							location.href='/member/logout';
+						} else {
+							alert("오류가 발생했습니다. 잠시후 다시 시도해 주세요.");
+							allClear();
+						}
+					}).catch(e => {
+						console.log(e);
+					})
+				} else {
+					alert('비밀번호를 확인해주세요.');
+				}
+			})
+			
+		})
+		// 다음 우편번호 API를 이용한 우편번호 검색 함수
+		function daumPostcode() {
+			new daum.Postcode({
+				oncomplete: function(data) {
+					// 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+					// 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
+					// 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+					var roadAddr = data.roadAddress; // 도로명 주소 변수
+		
+					// 우편번호와 주소 정보를 해당 필드에 넣는다.
+					document.getElementById('postcode').value = data.zonecode;
+					document.getElementById("addr1").value = roadAddr;
+				}
+			}).open();
+			document.getElementById("addr2").focus();
+		}
+	</script>
+</body>
+</html>

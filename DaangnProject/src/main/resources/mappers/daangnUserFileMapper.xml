@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "./mybatis-3-mapper.dtd" >
+<mapper namespace="kr.ezen.daangn.dao.DaangnUserFileDAO">
+	
+	<!-- 유저 파일 저장하기 -->
+	<insert id="insertFile" parameterType="DaangnFileVO">
+		insert into daangn_user_file values (daangn_board_file_idx_seq.nextval, #{ref}, #{originFileName}, #{saveFileName})
+	</insert>
+	
+	<!-- 1. 파일 삭제하기 (유저에 대한) -->
+	<delete id="deleteFileByUserIdx" parameterType="int">
+		delete from	daangn_user_file where ref = #{userIdx}	   
+	</delete>
+	
+	<!-- 유저에 대한 사진 얻기 -->
+	<select id="selectFileByUserIdx" parameterType="int" resultType="DaangnFileVO">
+		select * from daangn_user_file where ref = #{userIdx}
+	</select>
+	
+</mapper>

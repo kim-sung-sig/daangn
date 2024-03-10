@@ -10,14 +10,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -234,7 +231,7 @@ public class FleamarketController {
 		}
 		boardVO.setUserRef(memberVO.getIdx());
 		daangnMainBoardService.update(boardVO);					// 업데이트
-		daangnBoardFileService.deleteByRef(boardVO.getIdx());	// 기존 사진 지우고 새로 업로드
+		daangnBoardFileService.deleteByBoardIdx(boardVO.getIdx());	// 기존 사진 지우고 새로 업로드
 		// file save
 		String uploadPath = request.getServletContext().getRealPath("/upload/");
 		// 파일 객체 생성
@@ -279,7 +276,7 @@ public class FleamarketController {
 		if(userRef != memberVO.getIdx()) {
 			return "redirect:/";
 		}
-		daangnBoardFileService.deleteByRef(boardVO.getIdx());
+		daangnBoardFileService.deleteByBoardIdx(boardVO.getIdx());
 		daangnMainBoardService.deleteByIdx(boardVO.getIdx());
 		return "redirect:/fleamarket?isOk=ok";
 	}

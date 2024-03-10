@@ -60,8 +60,8 @@ $(function() {
         	// 메시지를 받으면!
         	var recv = JSON.parse(message.body);
         	if( recv.typeRef != 1){
-        		axios.put("/chat/read", {
-	        		"idx" : recv.idx, // 이숫자로 chatMessage를 update시키자
+        		axios.put("/chat/read", { // chatMessage를 업데이트 시켜주는 요청
+	        		"idx" : recv.idx,
 	        	})
 				.then(res => {
 					console.log('read 성공');
@@ -85,9 +85,11 @@ $(function() {
         		}
 			}, 150);
         });
+        // 입장함을 알리기
         ws.send("/pub/chat/message", {}, JSON.stringify({'typeRef': 1,'chatRoom': chatRoomIdx, 'sender': sender}));
-        axios.post("/chat/findChatMessages", {
-    		"chatRoom" : chatRoomIdx, // 이숫자로 chatMessage를 update시키자
+        
+        axios.post("/chat/findChatMessages", { // 이전 채팅목록을 불러오는 요청
+    		"chatRoom" : chatRoomIdx,
     	})
 		.then(res => {
 			const data = res.data;
@@ -98,7 +100,7 @@ $(function() {
 			})
 		})
 		.catch(error => {
-			console.error('read 실패');
+			console.error('이전메시지 불러오기 실패');
 		});
     }, function(error) {
         alert("error " + error);
@@ -120,7 +122,9 @@ $(function() {
     	return finalTime;
     }
     
-    
+    /**
+	 * 받은 메시지를 뿌려주는 함수
+	 */
     function updateMessagesUI(message) {
         const messageList = $('#chatMessages');
         let ck = (sender == message.sender ? '2' : '1');
@@ -144,6 +148,11 @@ $(function() {
             messageList.scrollTop(messageList.prop('scrollHeight'));
         }, 50);
     }
+	
+	
+	//======================================================================
+	// 여기부터 보내는 영역
+	
 	
     function isSendOk(){
     	let result = true;

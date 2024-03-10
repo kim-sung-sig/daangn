@@ -97,13 +97,13 @@
 	<update id="update" parameterType="DaangnMemberVO">
 	    update daangn_member
 	    <set>
-	        <if test="password != null">password = #{password},</if>
-	        <if test="role != null">role = #{role},</if>
-	        <if test="nickName != null">nickName = #{nickName},</if>
-	        <if test="email != null">email = #{email},</if>
-	        <if test="emailOk != null">emailOk = #{emailOk},</if>
+	        <if test="password != null">password = #{password}</if>
+	        <if test="role != null">role = #{role}</if>
+	        <if test="nickName != null">nickName = #{nickName}</if>
+	        <if test="email != null">email = #{email}</if>
+	        <if test="emailOk != null">emailOk = #{emailOk}</if>
 	        <if test="stAddress != null">stAddress = #{stAddress},</if>
-	        <if test="dtAddress != null">dtAddress = #{dtAddress},</if>
+	        <if test="dtAddress != null">dtAddress = #{dtAddress}</if>
 	    </set>
 	    where idx = #{idx}
 	</update>

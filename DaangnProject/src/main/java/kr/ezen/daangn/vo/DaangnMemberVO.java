@@ -36,7 +36,7 @@ public class DaangnMemberVO implements UserDetails{
 	private String dtAddress;				// 상세주소		(이름 추천)
 	//====================================================================
 	
-	// private DaangnFileVO userProfile;	// 프로필 사진!
+	private DaangnFileVO userFile;			// 프로필 사진!
 	private Float userVal;					// 유저평
 	
 	

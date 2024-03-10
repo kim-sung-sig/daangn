@@ -1,0 +1,46 @@
+<header id="header">
+	<div id="header-inner">
+		<div id="navi">
+			<h1 id="logo">
+				<a href="/">
+					<img src="https://i.namu.wiki/i/urKu84c6cV1U3tmZqPiopxkCnQOn96j3gA6Wf730iSTzz41XDOeqypSusjBVPXeHxGe8RJAOjMY11uywzcDqSA.svg" alt="logo" />
+				</a>
+			</h1>
+			<nav>
+				<ul>
+					<li><a href="/fleamarket">중고거래</a></li>
+					<li><a href="/smartLivingTips">생활꿀팁</a></li>
+					<li><a href="/news">실시간 뉴스</a></li>
+				</ul>
+			</nav>
+		</div>
+		<div id="search">
+			<span>
+				<form action="/fleamarket" method="get">
+					<div class="uk-margin">
+						<div class="uk-inline">
+				        	<span class="uk-form-icon" uk-icon="icon: search"></span>
+				        	<input class="uk-input uk-form-width-long chat" type="text" aria-label="Not clickable icon" placeholder="동네 물품을 검색해주세요!" name="search" id="searchText">
+					    </div>
+					</div>
+				</form>
+			</span>
+			<span>
+				<th:block th:if="${session.user != null}">
+					<a class="uk-button uk-button-default" href="/member/logout">로그아웃</a>					
+					<th:block th:if="${isMyPage == null}">
+						<th:block th:if="${session.user.role == 'ROLE_ADMIN'}">
+							<a class="uk-button uk-button-default" href="/adm">관리자 페이지</a>													
+						</th:block>
+						<th:block th:if="${session.user.role != 'ROLE_ADMIN'}">													
+							<a class="uk-button uk-button-default" href="/member/home">마이페이지</a>					
+						</th:block>						
+					</th:block>
+				</th:block>
+				<th:block th:if="${session.user == null}">
+					<a class="uk-button uk-button-default" href="/member/login">로그인</a>						
+				</th:block>
+			</span>
+		</div>
+	</div>
+</header>

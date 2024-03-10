@@ -33,6 +33,6 @@ public class SmartLivingTipsController {
 		
 		model.addAttribute("cv",cv);
 		model.addAttribute("pv",pv);
-		return "smartLivingTips/index";
+		return "smartLivingTips/smartLivingTips";
 	}
 }

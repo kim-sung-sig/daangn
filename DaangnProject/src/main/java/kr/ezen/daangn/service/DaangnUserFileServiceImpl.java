@@ -6,29 +6,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import kr.ezen.daangn.dao.DaangnBoardFileDAO;
+import kr.ezen.daangn.dao.DaangnUserFileDAO;
 import kr.ezen.daangn.vo.DaangnFileVO;
 
-@Service(value = "daangnBoardFileService")
+@Service(value = "daangnUserFileService")
 @Transactional
-public class DaangnBoardFileServiceImpl implements DaangnBoardFileService{
+public class DaangnUserFileServiceImpl implements DaangnUserFileService{
 	
 	@Autowired
-	private DaangnBoardFileDAO daangnBoardFileDAO;
+	private DaangnUserFileDAO daangnUserFileDAO;
 	
 	@Override
 	public void insert(DaangnFileVO fileVO) {
 		try {
-			daangnBoardFileDAO.insertFile(fileVO);
+			daangnUserFileDAO.insertFile(fileVO);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void deleteByBoardIdx(int boardIdx) {
+	public void deleteByUserIdx(int userIdx) {
 		try {
-			daangnBoardFileDAO.deleteFileByBoardIdx(boardIdx);
+			daangnUserFileDAO.deleteFileByUserIdx(userIdx);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
