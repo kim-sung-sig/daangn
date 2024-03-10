@@ -16,6 +16,8 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <!-- 다음 우편번호 API를 이용하려면 포함해야 한다. -->
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<!-- 구글아이콘 사용 -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0" />
 
 <link href="/css/header.css" rel="stylesheet">
 <link href="/css/home.css" rel="stylesheet">
@@ -26,8 +28,14 @@
 		<th:block th:insert="~{indexHeader.html}"></th:block>
 		<main>
 			<div id="leftArea">
-				<div id="userProfileImg">
-					<img src="/img/스크린샷(1).png" alt="내 프로필사진" />
+				<div style="position: relative;">
+					<div id="userProfileImg">
+						<img th:if="${user.userFile == null}" src="/img/스크린샷(1).png" alt="내 프로필사진" />
+						<img th:if="${user.userFile != null}" th:src="'/upload/' + ${user.userFile.saveFileName}" alt="내 프로필사진" />
+					</div>
+					<button class="uk-button" id="userProfileImgUpdateBtn" value="userProfileImg">
+						<span class="material-symbols-outlined">add_a_photo</span>
+					</button>
 				</div>
 				<p id="userName">[[${user.username}]]</p>
 				<ul class="mypageNav">
@@ -76,6 +84,7 @@
 					            <button class="uk-button updateBtn" value="email">수정</button>
 					        </div>
 						</li>
+						<!-- 
 						<li>
 					        <div class="uk-inline flexCenBet">
 					            <span class="uk-form-icon" uk-icon="icon: receiver"></span>
@@ -83,6 +92,7 @@
 					            <button class="uk-button updateBtn" value="phone">수정</button>
 					        </div>
 						</li>
+						 -->
 						<li>
 					        <div class="uk-inline flexCenBet">
 					            <span class="uk-form-icon" uk-icon="icon: location"></span>
@@ -114,9 +124,9 @@
 					            <span class="uk-form-icon" uk-icon="icon: mail"></span>
 					            <p class="info">[[${user.email}]]</p>
 					            <div>
-						            <label>동의</label> <input class="uk-radio" type="radio" name="emailOk" value="0" th:checked="${user.emailOk == 0}" disabled="disabled">
+						            <label>동의</label> <input class="uk-radio" type="radio" value="0" th:checked="${user.emailOk == 0}" disabled="disabled">
 						            &nbsp;
-						            <label>미동의</label> <input class="uk-radio" type="radio" name="emailOk" value="1" th:checked="${user.emailOk == 1}" disabled="disabled">
+						            <label>미동의</label> <input class="uk-radio" type="radio" value="1" th:checked="${user.emailOk == 1}" disabled="disabled">
 						            <button class="uk-button updateBtn" value="emailOk">수정</button>
 					            </div>
 					        </div>
@@ -126,6 +136,8 @@
 			</div>
 		</main>
 	</div>
+	
+	<!-- 모달창들 -->
 	<div id="modalBackground"></div>
 	<div id="nickNameModal" class="modal">
 		<div class="modal-inner">
@@ -200,6 +212,39 @@
 		</div>
 	</div>
 	
+	<div id="emailOkModal" class="modal">
+		<div class="modal-inner">
+			<p class="modal-title"><b>[[${user.nickName}]]</b>님의 회원정보 중 <span class="highlight">이메일 수신동의</span>를 수정합니다.</p>
+			<label>동의</label> <input class="uk-radio" type="radio" name="emailOk" value="0" th:checked="${user.emailOk == 0}">
+			&nbsp;
+			<label>미동의</label> <input class="uk-radio" type="radio" name="emailOk" value="1" th:checked="${user.emailOk == 1}">
+			<div class="modalBtns">
+				<input style="width: 40%;" type="button" class="uk-button cancleBtn" value="취소"/>
+				<input style="width: 60%;" type="submit" class="uk-button" id="emailOkBtn" value="수정하기"/>
+			</div>
+			<div class="modalCloseBtn">X</div>
+		</div>
+	</div>
+	
+	<div id="userProfileImgModal" class="modal">
+		<div class="modal-inner">
+			<p class="modal-title">
+				<b>[[${user.nickName}]]</b>님의 회원정보 중 <span class="highlight">프로필 사진</span>을 수정합니다.
+				<br />사진을 <span class="highlight">드래그엔드롭</span> 또는 <span class="highlight">클릭</span>해 사진을 선택하세요.
+			</p>
+			<form action="/member/updateUserProfile" method="post" id="updateUserProfileForm" enctype="multipart/form-data">
+		    	<input type="file" name="file" class="uk-button">
+			</form>
+			<div class="modalBtns">
+				<input style="width: 40%;" type="button" class="uk-button cancleBtn" value="취소"/>
+				<input style="width: 60%;" type="submit" class="uk-button" id="userProfileImgBtn" value="수정하기"/>
+			</div>
+			<div class="modalCloseBtn">X</div>
+		</div>
+	</div>
+	
+	
+	
 	<div id="pwCheckModal" class="modal">
 		<div class="modal-inner">
 			<p class="modal-title"><b>[[${user.nickName}]]</b>님의 회원정보를 수정하기 위해 인증절차가 필요합니다.</p>
@@ -270,6 +315,11 @@
 				$("#postcode").val('');
 				$("#addr1").val('');
 				$("#addr2").val('');
+				$("#password").val('');
+				$("#password2").val('');
+				$("#pwmessage").html('');
+				$("#pwmessage2").html('');
+				$("#passwordCk").val(0);
 			}
 			//======================================================================================
 			// 닉네임
@@ -519,6 +569,37 @@
 				}
 			})
 			
+			//======================================================================================
+			// 이메일 수신 동의
+			//======================================================================================
+			$("#emailOkBtn").click(function(){
+				const selectedValue = $("input[name='emailOk']:checked").val();
+				axios.put("/member/update", {
+					"emailOk": selectedValue,
+				}).then(res => {
+					const data = res.data;
+					if(data == "1"){
+						alert("수정되었습니다.")
+						location.href='/member/home';
+					} else {
+						alert("오류가 발생했습니다. 잠시후 다시 시도해 주세요.");
+						allClear();
+					}
+				}).catch(e => {
+					console.log(e);
+				})
+			})
+			//======================================================================================
+			// 유저프로필 업데이트
+			//======================================================================================
+			$("#userProfileImgBtn").click(function(event) {
+		        // 파일 입력 필드에서 파일이 선택되지 않았는지 확인
+		        if ($("input[name='file']").val() == "") {
+		            alert("파일을 선택해주세요.");
+		            return false;
+		        }
+		        $("#updateUserProfileForm").submit();
+		    });
 		})
 		// 다음 우편번호 API를 이용한 우편번호 검색 함수
 		function daumPostcode() {

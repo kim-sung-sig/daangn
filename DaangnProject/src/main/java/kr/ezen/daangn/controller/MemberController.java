@@ -1,13 +1,16 @@
 package kr.ezen.daangn.controller;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +18,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -24,6 +30,7 @@ import kr.ezen.daangn.service.DaangnMainBoardService;
 import kr.ezen.daangn.service.DaangnMemberService;
 import kr.ezen.daangn.service.DaangnUserFileService;
 import kr.ezen.daangn.service.MailService;
+import kr.ezen.daangn.vo.DaangnFileVO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
 import kr.ezen.daangn.vo.DaangnMemberVO;
 import lombok.extern.slf4j.Slf4j;
@@ -170,13 +177,48 @@ public class MemberController {
     	return result + "";
     }
     
+    @PostMapping(value = "/updateUserProfile")
+    public String updateUserProfile(HttpSession session, HttpServletRequest request, @RequestPart(value = "file") MultipartFile file) {
+    	log.info("updateUserProfile 실행");
+    	if(session.getAttribute("user") == null) {
+    		return "redirect:/";
+    	}
+    	// file save
+		String uploadPath = request.getServletContext().getRealPath("/upload/");
+		// 파일 객체 생성
+		File file2 = new File(uploadPath);
+		// 폴더가 없다면 폴더를 생성해준다.
+		if (!file2.exists()) {
+			file2.mkdirs();
+		}
+		log.info("서버 실제 경로 : " + uploadPath);
+		if (file != null && file.getSize() > 0) { // 파일이 넘어왔다면
+			try {
+				// 저장파일의 이름 중복을 피하기 위해 저장파일이름을 유일하게 만들어 준다.
+				String saveFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+				String originFileName = file.getOriginalFilename();
+				// 파일 객체를 만들어 저장해 준다.
+				File saveFile = new File(uploadPath, saveFileName);
+				// 파일 복사
+				FileCopyUtils.copy(file.getBytes(), saveFile); // 이걸로 저장을 시킨다.!
+				DaangnFileVO fileVO = new DaangnFileVO();
+				DaangnMemberVO sessionUser = (DaangnMemberVO) session.getAttribute("user");
+				fileVO.setRef(sessionUser.getIdx());
+				fileVO.setOriginFileName(originFileName);
+				fileVO.setSaveFileName(saveFileName);
+				daangnUserFileService.insert(fileVO);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+    	return "redirect:/member/home";
+    }
+    
     
     //=====================================================================================
     // 여기는 아직 보류
     //=====================================================================================
-    /**
-     * 좋아요한 글 보여주는?
-     */
+    /** 좋아요한 글 보여주는 */
     @GetMapping(value = "/home/Like")
     public String homeLike(HttpSession session, Model model) {
     	if(session.getAttribute("user") == null) {

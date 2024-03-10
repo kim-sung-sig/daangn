@@ -97,8 +97,8 @@
 	<update id="update" parameterType="DaangnMemberVO">
 	    update daangn_member
 	    <set>
-	        <if test="password != null">password = #{password}</if>
 	        <if test="role != null">role = #{role}</if>
+	        <if test="password != null">password = #{password}</if>
 	        <if test="nickName != null">nickName = #{nickName}</if>
 	        <if test="email != null">email = #{email}</if>
 	        <if test="emailOk != null">emailOk = #{emailOk}</if>
