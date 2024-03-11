@@ -197,10 +197,10 @@ public class MemberController {
     
     /** 로그인안한유저 비밀번호 바꾸기 */
     @PostMapping(value = "/passwordUpdateByUsername")
-    @ResponseBody
-    public String passwordUpdateByUsername(@RequestBody DaangnMemberVO memberVO) {
-    	int result = 0 //daangnMemberService.checkPasswordMatch(user, password);
-    	return result + "";
+    public String passwordUpdateByUsername (@ModelAttribute DaangnMemberVO memberVO) {
+    	log.info("passwordUpdateByUsername 실행 {}", memberVO);
+    	daangnMemberService.updatePasswordByUsername(memberVO.getUsername(), memberVO.getPassword());
+    	return "redirect:/member/login";
     }
     
     

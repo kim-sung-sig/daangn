@@ -205,6 +205,7 @@
 			<input id="password2" type="password" class="uk-input" placeholder="비밀번호 재확인" required="required" aria-label="Not clickable icon" maxlength="20">
 			<span id="pwmessage2"></span>
 			<input type="hidden" id="passwordCk" value="0">
+			<input type="hidden" id="passwordCk2" value="0">
 			<div class="modalBtns">
 				<input style="width: 40%;" type="button" class="uk-button cancleBtn" value="취소"/>
 				<input style="width: 60%;" type="submit" class="uk-button" id="passwordBtn" value="수정하기"/>
@@ -520,25 +521,31 @@
 				let password = $("#password").val();
 				if(password.indexOf(" ") != -1){
 					$("#pwmessage").html("공백은 포함할 수 없습니다.").css('color', 'red');
+					$("#passwordCk").val(0);
 					return ;			
 				}
 				if(password.search(/[ㄱ-ㅎㅏ-ㅣ가-힣]/g) >=0) {
 					$("#pwmessage").html("한글은 사용할 수 없습니다.").css('color', 'red');
+					$("#passwordCk").val(0);
 					return ;
 				}
 				if(password.search(/[0-9]/g) < 0){
 					$("#pwmessage").html("숫자를 포함해주세요.").css('color', 'red');
+					$("#passwordCk").val(0);
 					return ;
 				}
 				if(password.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi) < 0){
 					$("#pwmessage").html("특수문자를 포함해주세요.").css('color', 'red');
+					$("#passwordCk").val(0);
 					return ;
 				}
 				if(password.length < 8 || 20 < password.length ){
 					$("#pwmessage").html("8~20자 이내로 작성해주세요.").css('color', 'red');
+					$("#passwordCk").val(0);
 					return ;
 				}
 				$("#pwmessage").html("사용가능한 비밀번호입니다.").css('color', 'blue');
+				$("#passwordCk").val(1);
 			})
 			/** 비밀번호 이중 체크 */
 			$("#password2").keyup(function(){
@@ -546,15 +553,15 @@
 				let password2 = $("#password2").val();
 				if(password != password2) {
 					$("#pwmessage2").html("비밀번호가 일치하지 않습니다.").css('color', 'red');
+					$("#passwordCk2").val(0);
 					return ;
 				}
 				$("#pwmessage2").html("비밀번호가 일치합니다.").css('color', 'blue');
-				$("#passwordCk").val(1);
+				$("#passwordCk2").val(1);
 			})
 			
 			$("#passwordBtn").click(function(){
-				let value = $("#passwordCk").val();
-				if(value == 1){
+				if($("#passwordCk").val() + $("#passwordCk2").val() == 2){
 					axios.put("/member/update", {
 						"password": $("#password").val(),
 					}).then(res => {

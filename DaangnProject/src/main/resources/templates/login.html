@@ -137,15 +137,16 @@
 			<div class="modalCloseBtn">X</div>
 		</div>
 	</div>
-	<div id="PasswordUpdateModal" class="modal" style="display: block;">
+	<div id="PasswordUpdateModal" class="modal">
 		<div class="modal-inner">
 			<p class="modal-title">
 				<b>비밀번호 변경</b><br />
 				<span class="highlight">비밀번호를 변경</span>합니다.<br />
 				비밀번호를 <span class="highlight">특수문자, 숫자 포함 8~20</span>자 이내로 작성해주세요.
 			</p>
-			<form action="">
+			<form action="/member/passwordUpdateByUsername" method="post" id="passwordUpdateForm">
 				<input type="hidden" id="pwUpdateOk" value="0"/>
+				<input type="hidden" id="pwUpdateOk2" value="0"/>
 				<input type="hidden" id="username3" name="username" class="uk-input" style="margin-bottom: 10px;"/>
 				<div style="margin-bottom: 10px;">
 					<span id="pwmessage"></span>
@@ -210,6 +211,8 @@
 				$("#password").val('');
 				$("#pwmessage2").html('');
 				$("#password2").val('');
+				$("#pwUpdateOk").val(0);
+				$("#pwUpdateOk2").val(0);
 			}
 			
 			
@@ -407,25 +410,31 @@
 				let password = $("#password").val();
 				if(password.indexOf(" ") != -1){
 					$("#pwmessage").html("공백은 포함할 수 없습니다.").css('color', 'red');
+					$("#pwUpdateOk").val(0);
 					return ;			
 				}
 				if(password.search(/[ㄱ-ㅎㅏ-ㅣ가-힣]/g) >=0) {
 					$("#pwmessage").html("한글은 사용할 수 없습니다.").css('color', 'red');
+					$("#pwUpdateOk").val(0);
 					return ;
 				}
 				if(password.search(/[0-9]/g) < 0){
 					$("#pwmessage").html("숫자를 포함해주세요.").css('color', 'red');
+					$("#pwUpdateOk").val(0);
 					return ;
 				}
 				if(password.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi) < 0){
 					$("#pwmessage").html("특수문자를 포함해주세요.").css('color', 'red');
+					$("#pwUpdateOk").val(0);
 					return ;
 				}
 				if(password.length < 8 || 20 < password.length ){
 					$("#pwmessage").html("8~20자 이내로 작성해주세요.").css('color', 'red');
+					$("#pwUpdateOk").val(0);
 					return ;
 				}
 				$("#pwmessage").html("사용가능한 비밀번호입니다.").css('color', 'blue');
+				$("#pwUpdateOk").val(1);
 			})
 			// 비밀번호 이중 체크
 			$("#password2").keyup(function(){
@@ -433,18 +442,18 @@
 				let password2 = $("#password2").val();
 				if(password != password2) {
 					$("#pwmessage2").html("비밀번호가 일치하지 않습니다.").css('color', 'red');
+					$("#pwUpdateOk2").val(0);
 					return ;
 				}
 				$("#pwmessage2").html("비밀번호가 일치합니다.").css('color', 'blue');
-				$("#pwUpdateOk").val(1);
+				$("#pwUpdateOk2").val(1);
 			})
 			
 			$(".passwordUpdateBtn").click(function (){
-				if($("#pwUpdateOk").val() == 0) {
-					alert('비밀번호를 확인해주세요.');
-					return ;
+				if($("#pwUpdateOk").val() + $("#pwUpdateOk2").val() == 2) {
+					$("#passwordUpdateForm").submit();
 				}
-				
+				alert('비밀번호를 확인해주세요.');
 			})
 			
 		})
