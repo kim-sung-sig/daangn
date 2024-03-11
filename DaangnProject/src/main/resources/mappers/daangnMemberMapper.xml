@@ -42,6 +42,9 @@
 		select count(*) from daangn_member where nickName = #{nickName}
 	</select>
 	
+	<select id="selectUserNameByEmail" parameterType="string" resultType="string">
+		select username from daangn_member where email = #{email}
+	</select>
 	
 	<!-- 마이페이지 및 관리자페이지용 -->	
 	<!-- 모두 얻기 (admin용) 이거 페이징 처리해야댐 -->
@@ -112,17 +115,7 @@
 	<update id="updateLastLoginDate" parameterType="int">
 		update daangn_member set lastLoginDate = sysdate where idx = #{idx}
 	</update>
-	
-	<!-- 비밀번호 수정 암호화해서 넘겨야한다 -->
-	<update id="updatePassword" parameterType="DaangnMemberVO">
-		update 
-			daangn_member 
-		set 
-			
-		where 
-			username = #{username}
-	</update>
-	
+
 	<!-- 탈퇴하기 idx-->
 	<delete id="deleteByIdx" parameterType="int">
 		delete from daangn_member where idx = #{idx}

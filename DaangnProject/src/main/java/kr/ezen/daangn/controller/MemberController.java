@@ -7,7 +7,6 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -52,9 +50,7 @@ public class MemberController {
 	private DaangnUserFileService daangnUserFileService;
 	
 	
-	/**
-	 * 로그인 주소
-	 */
+	/** 로그인 주소 */
 	@GetMapping(value = "/login")
 	public String login(@RequestParam(value = "error", required = false) String error,
 			@RequestParam(value = "logout", required = false) String logout, Model model) {
@@ -65,9 +61,7 @@ public class MemberController {
 		return "login";
 	}
 
-	/**
-	 * 회원가입 주소
-	 */
+	/** 회원가입 주소 */
 	@GetMapping(value = "/join")
 	public String join(HttpSession session) {
 		if (session.getAttribute("user") != null) { // 나쁜사람 방지
@@ -110,7 +104,7 @@ public class MemberController {
 		daangnMemberService.insert(memberVO);
 		return "redirect:/member/login";
 	}
-	
+	/** 로그아웃 */
 	@GetMapping(value = "/logout")
 	public String logout(HttpServletRequest request) {
 		log.info("logout 실행");
@@ -120,7 +114,7 @@ public class MemberController {
 		return "redirect:/";
 	}
 	
-	/**회원가입중 필요한 메일을 보내는 주소*/
+	/** 회원가입중 필요한 메일을 보내는 주소 */
     @PostMapping(value = "/send", produces = "text/plain" )
     @ResponseBody
     public String send(@RequestBody HashMap<String, String> map) {
@@ -131,8 +125,48 @@ public class MemberController {
     	return result;
     }
     
+    /** 회원 찾기중 email의 해당하는 username 주는 주소 */
+    @PostMapping(value = "/findUserName")
+    @ResponseBody
+    public String findUserName(@RequestBody DaangnMemberVO memberVO) {
+    	String result = null;
+    	String userName = daangnMemberService.selectUserNameByEmail(memberVO.getEmail());
+    	if( userName != null) {
+            StringBuffer sb = new StringBuffer();
+            for(int i = 0; i < userName.length(); i++) {
+                if (2 <=i && i < 6) {
+                    sb.append("*");
+                } else {
+                	if(10<=i && i <14) {
+                		sb.append("*");
+                	} else {
+                		sb.append(userName.charAt(i));	                		
+                	}
+                }
+            }
+            result = sb.toString();
+    	}
+    	return result;
+    }
     
-    /**마이페이지!*/
+    /** 회원 찾기중 username에 해당하는 email과 넘어온 email이 일치함을 확인하는 주소 */
+    @PostMapping(value = "/checkEmailAndUsername")
+    @ResponseBody
+    public String checkEmailAndUsername(@RequestBody DaangnMemberVO memberVO) {
+    	log.info("checkEmailAndUsername : {}", memberVO);
+    	int result = 0;
+    	String userName = daangnMemberService.selectUserNameByEmail(memberVO.getEmail());
+    	log.info("username => {}", userName);
+    	if(userName != null) {
+    		if(memberVO.getUsername().equals(userName)) {
+    			result = 1;
+    		}
+    	}
+    	return result + "";
+    }
+    
+    
+    /** 마이페이지! */
     @GetMapping(value = "/home")
 	public String home(HttpSession session, Model model) {
     	if(session.getAttribute("user") == null) {
@@ -146,7 +180,7 @@ public class MemberController {
 		return "myHome";
 	}
     
-    /**현재 로그인한 유저의 비밀번호와 보낸 비밀번호가 일치하는지 확인하는 주소*/
+    /** 현재 로그인한 유저의 비밀번호와 보낸 비밀번호가 일치하는지 확인하는 주소 */
     @PostMapping(value = "/checkPasswordMatch")
     @ResponseBody
     public String checkPasswordMatch(HttpSession session, @RequestBody DaangnMemberVO memberVO) {
@@ -160,6 +194,17 @@ public class MemberController {
     	int result = daangnMemberService.checkPasswordMatch(user, password);
     	return result + "";
     }
+    
+    /** 로그인안한유저 비밀번호 바꾸기 */
+    @PostMapping(value = "/passwordUpdateByUsername")
+    @ResponseBody
+    public String passwordUpdateByUsername(@RequestBody DaangnMemberVO memberVO) {
+    	int result = 0 //daangnMemberService.checkPasswordMatch(user, password);
+    	return result + "";
+    }
+    
+    
+    /** 업데이트를 실행할 주소 */
     @PutMapping(value = "/update")
     @ResponseBody
     public String update(HttpSession session, @RequestBody DaangnMemberVO memberVO) {
@@ -183,6 +228,9 @@ public class MemberController {
     	if(session.getAttribute("user") == null) {
     		return "redirect:/";
     	}
+    	DaangnMemberVO sessionUser = (DaangnMemberVO) session.getAttribute("user");
+    	// 이전 파일 삭제!
+    	daangnUserFileService.deleteByUserIdx(sessionUser.getIdx());
     	// file save
 		String uploadPath = request.getServletContext().getRealPath("/upload/");
 		// 파일 객체 생성
@@ -202,7 +250,6 @@ public class MemberController {
 				// 파일 복사
 				FileCopyUtils.copy(file.getBytes(), saveFile); // 이걸로 저장을 시킨다.!
 				DaangnFileVO fileVO = new DaangnFileVO();
-				DaangnMemberVO sessionUser = (DaangnMemberVO) session.getAttribute("user");
 				fileVO.setRef(sessionUser.getIdx());
 				fileVO.setOriginFileName(originFileName);
 				fileVO.setSaveFileName(saveFileName);

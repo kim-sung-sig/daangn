@@ -24,7 +24,7 @@ $(function() {
     * 메시지를 받을때 실행되는 함수
     */
     function recvMessage(recv) {
-        const message = {"chatRoom": recv.chatRoom, "typeRef": recv.typeRef, "sender": recv.sender, "nickName": recv.nickName, "content": recv.content, "regDate": recv.regDate, "readed": recv.readed};
+        const message = {"chatRoom": recv.chatRoom, "typeRef": recv.typeRef, "sender": recv.sender, "nickName": recv.nickName,"userProfileName": recv.userProfileName, "content": recv.content, "regDate": recv.regDate, "readed": recv.readed};
         if(message.typeRef == 1){
         	// ENTER
         	// 1. updateReadCount 를 실행한다. 지금 까지 readed =1 인것들 readed - 1
@@ -75,7 +75,6 @@ $(function() {
         			axios.get("/chat/get?idx="+recv.idx)
 	        		.then(res => {
 						recvMessage(res.data);
-						console.log(1);
 					})
 					.catch(error => {
 						console.error('메시지받기 실패');
@@ -94,7 +93,6 @@ $(function() {
 		.then(res => {
 			const data = res.data;
 			reversedData = data.slice().reverse();
-			console.log(reversedData);
 			reversedData.forEach(recv => {
 				recvMessage(recv);
 			})
@@ -129,9 +127,11 @@ $(function() {
         const messageList = $('#chatMessages');
         let ck = (sender == message.sender ? '2' : '1');
         const regDate = updateDate(message.regDate);
+        const userProfile = message.userProfileName ? "/upload/"+message.userProfileName : '/img/user.png';
+        console.log(userProfile);
         content = `<div class="chat ch${ck}">`;
         if(ck==1){
-        	content += `<div class="icon"><span>${message.nickName[0]}</span></div>`;
+        	content += `<div class="icon"><img src="${userProfile}" alt="user"/></div>`;
         }
         content += `
 	        	<div class="textbox">

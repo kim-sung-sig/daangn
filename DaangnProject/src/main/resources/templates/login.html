@@ -15,7 +15,10 @@
 <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
 <!-- jQuery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-<link rel="stylesheet" href="../css/login.css" />
+<!-- Ajax처리를 위한 포함 -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<link rel="stylesheet" href="/css/login.css" />
 </head>
 <body>
 	<div class="uk-section-container">
@@ -58,11 +61,393 @@
 							<div class="uk-margin-small">
 								<input class="uk-button uk-width-1" type="button" onclick="location.href='/'" value="Home" />
 							</div>
+							<ul id="findUserData" class="uk-margin-small" style="display: flex;justify-content:center;padding: 0px 70px; list-style: none;">
+								<li><a id="findUserNameBtn">아이디 찾기</a></li>
+								<li><a id="findPasswordBtn">비밀번호 찾기</a></li>
+							</ul>
 						</form>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+	
+	<!-- 모달창들 -->
+	<div id="modalBackground"></div>
+	<div id="UserNameModal" class="modal">
+		<div class="modal-inner">
+			<p class="modal-title">
+				<b>아이디 찾기</b><br />
+				아이디를 찾기위해 <span class="highlight">이메일 인증</span> 절차가 필요합니다.
+			</p>
+			<input id="email" type="text" class="uk-input " placeholder="이메일" required="required" />
+			<select class="uk-select " id="emailAddress" style="margin-top: 10px;">
+                <option selected value="0">이메일을 선택하세요.</option>
+                <option value="naver.com">naver.com</option>
+                <option value="google.com">gmail.com</option>
+            </select>
+            <div style="width:100%;text-align: right; margin-top: 10px;">
+	            <input type="button" id="sendEmail" class="uk-button uk-button-default" value="메일 인증">
+            </div>
+            <div id="emailCheckBox" style="display: none;">
+				<input style="margin-top: 10px;" type="text" id="emailCheck" class="uk-input" placeholder="인증번호를 입력해주세요" autocomplete="off">
+				<div style="width:100%;text-align: right; margin-top: 10px;">
+					<input type="button" id="emailCheckBtn" class="uk-button uk-button-default" value="인증번호체크">
+				</div>
+            </div>
+            <div id="UserNameModalResult" style="display: none;">
+            	<p id="UserNameResultText" style="margin: 5px 0;"></p>
+            	<input style="margin-top:10px" type="text" id="UserNameResult" class="uk-input" readonly="readonly" disabled="disabled" placeholder="등록된 회원이 없습니다.">
+            </div>
+			<div class="modalBtns">
+				<input style="width: 100%;" type="button" class="uk-button cancleBtn" value="취소"/>
+			</div>
+			<div class="modalCloseBtn">X</div>
+		</div>
+	</div>
+	<div id="PasswordModal" class="modal">
+		<div class="modal-inner">
+			<p class="modal-title">
+				<b>비밀번호 찾기</b><br />
+				비밀번호를 찾기위해<br />
+				<span class="highlight">이메일 인증</span> 절차가 필요합니다.
+			</p>
+			<input type="text" id="username2" class="uk-input" style="margin-bottom: 10px;" placeholder="아이디를 입력하세요."/>
+			<input id="email2" type="text" class="uk-input " placeholder="이메일" required="required" />
+			<select class="uk-select " id="emailAddress2" style="margin-top: 10px;">
+                <option selected value="0">이메일을 선택하세요.</option>
+                <option value="naver.com">naver.com</option>
+                <option value="google.com">gmail.com</option>
+            </select>
+            <div style="width:100%;text-align: right; margin-top: 10px;">
+	            <input type="button" id="sendEmail2" class="uk-button uk-button-default" value="메일 인증">
+            </div>
+            <div id="emailCheckBox2" style="display: none;">
+				<input style="margin-top: 10px;" type="text" id="emailCheck2" class="uk-input" placeholder="인증번호를 입력해주세요" autocomplete="off">
+				<div style="width:100%;text-align: right; margin-top: 10px;">
+					<input type="button" id="emailCheckBtn2" class="uk-button uk-button-default" value="인증번호체크">
+				</div>
+            </div>
+            <div style="width:100%;text-align: center; margin-top: 10px;">
+            	<input type="button" id="passwordSeachBtn" class="uk-button uk-button-default" value="비밀번호 찾기">
+            </div>
+			<div class="modalBtns">
+				<input style="width: 100%;" type="button" class="uk-button cancleBtn" value="취소"/>
+			</div>
+			<div class="modalCloseBtn">X</div>
+		</div>
+	</div>
+	<div id="PasswordUpdateModal" class="modal" style="display: block;">
+		<div class="modal-inner">
+			<p class="modal-title">
+				<b>비밀번호 변경</b><br />
+				<span class="highlight">비밀번호를 변경</span>합니다.<br />
+				비밀번호를 <span class="highlight">특수문자, 숫자 포함 8~20</span>자 이내로 작성해주세요.
+			</p>
+			<form action="">
+				<input type="hidden" id="pwUpdateOk" value="0"/>
+				<input type="hidden" id="username3" name="username" class="uk-input" style="margin-bottom: 10px;"/>
+				<div style="margin-bottom: 10px;">
+					<span id="pwmessage"></span>
+					<input id="password" name="password" type="password" class="uk-input" placeholder="비밀번호를 특수문자,숫자 포함 8~20자 이내로 작성해주세요." required="required" aria-label="Not clickable icon" maxlength="20">
+				</div>
+				<div style="margin-bottom: 10px;">
+					<span id="pwmessage2"></span>
+					<input id="password2" type="password" class="uk-input" placeholder="비밀번호 재확인" required="required" aria-label="Not clickable icon" maxlength="20">
+				</div>
+			</form>
+			
+			<div class="modalBtns">
+				<input style="width: 40%;" type="button" class="uk-button cancleBtn" value="취소"/>
+				<input style="width: 60%;" type="button" class="uk-button passwordUpdateBtn" value="변경하기"/>
+			</div>
+			<div class="modalCloseBtn">X</div>
+		</div>
+	</div>
+	
+	<script type="text/javascript">
+		$(function(){
+			/** 아이디 찾기 모달 띄우기 */
+			$("#findUserNameBtn").click(function(){
+				$("#modalBackground").fadeIn();
+				$("#UserNameModal").fadeIn();
+			})
+			/** 비밀번호 찾기 모달 띄우기 */
+			$("#findPasswordBtn").click(function(){
+				$("#modalBackground").fadeIn();
+				$("#PasswordModal").fadeIn();
+			})
+			/** 취소버튼 */
+			$(".modalCloseBtn, .modalBtns input[value='취소']").click(function(){
+				allClear()
+			});
+			function allClear(){
+				$(".modal").fadeOut();
+				$("#modalBackground").fadeOut();
+				$("#email").val('');
+				$("#email").prop("disabled",false);
+				$("#emailAddress").val(0);
+				$("#emailAddress").prop("disabled",false);
+				$("#sendEmail").prop("disabled",false);
+				$("#emailCheckBox").css('display','none');
+				$("#emailCheck").val('');
+				$("#emailCheck").prop("disabled",false);
+				$("#emailCheckBtn").prop("disabled", false);
+				$("#UserNameResultText").html('');
+				$("#UserNameModalResult").css('display','none');
+				$("#username2").val('');
+				$("#username2").prop('disabled', false);
+				$("#email2").val('');
+				$("#email2").prop("disabled",false);
+				$("#emailAddress2").val(0);
+				$("#emailAddress2").prop("disabled",false);
+				$("#sendEmail2").prop("disabled",false);
+				$("#emailCheckBox2").css('display','none');
+				$("#emailCheck2").val('');
+				$("#emailCheck2").prop("disabled",false);
+				$("#emailCheckBtn2").prop("disabled", false);
+				$("#pwmessage").html('');
+				$("#password").val('');
+				$("#pwmessage2").html('');
+				$("#password2").val('');
+			}
+			
+			
+			/** 이메일을 전송해도 되는지 확인하는 함수*/
+			function emailSendOk(){
+				return new Promise((resolve, reject) => {
+			        let email = $("#email").val();
+			        if(email.trim().length == 0){
+			        	resolve(false);
+			        } else if (email.search(/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi) >= 0) {
+			            resolve(false);
+			        } else if (email.indexOf(" ") != -1) {
+			            resolve(false);
+			        } else if ($("#emailAddress").val() == 0){
+			        	resolve(false);
+			        } else {
+			        	resolve(true);
+			        }
+			    });
+			}
+			
+			$("#sendEmail").click(function() {
+			    emailSendOk().then(result => {
+			        if (result) {
+			        	let email = $("#email").val() + '@' + $("#emailAddress").val();
+			    		// Ajax를 호출하여 처리 한다.
+			    		axios.post('/member/send',{
+			    			'to': email	
+			    		})
+			    		.then(res => {
+			    			if (res.data != "") {
+			    				alert("메일 발송 성공")
+			    				emailVal = res.data;
+			    				$("#emailCheckBox").css('display','block');
+			    				$("#email").prop("disabled",true);
+			    				$("#emailAddress").prop("disabled", true);
+			    				$("#sendEmail").prop("disabled",true);
+			    			} else {
+			    				alert("메일 발송 실패")
+			    			}
+			    		})
+			    		.catch(error => {
+			    			console.log(error);
+			    		})
+			    		.finally(function() {
+			    			// 항상 실행되는 영역
+			    		});
+			        } else {
+			            alert('이메일을 확인해주세요.');
+			            $("#email").val('');
+			            $("#emailAddress").val(0);
+			            $("#email").focus();
+			        }
+			    }).catch(error => {
+			        console.error(error);
+			    });
+			});
+			
+			$("#emailCheckBtn").click(function(){
+				let value = $("#emailCheck").val();
+				if(value == emailVal){
+					alert("인증되었습니다.");
+					$("#emailCheck").prop("disabled",true);
+    				$("#emailCheckBtn").prop("disabled", true);
+    				axios.post('/member/findUserName', {
+    					'email': $("#email").val() + '@' + $("#emailAddress").val(),
+    				})
+    				.then(res => {
+    					const data = res.data;
+    					if(data){
+    						$("#UserNameModalResult").css('display','block');
+    						$("#UserNameResult").val(data);
+    						$("#UserNameResultText").html('회원조회 성공');
+    					} else {
+    						$("#UserNameModalResult").css('display','block');
+    					}
+		    		})
+		    		.catch(error => {
+		    			console.log(error);
+		    		})
+				} else {
+					alert('메일을 확인해 주세요.');
+					$("#emailCheck").val('')
+					$("#emailCheck").focus();
+				}
+			})
+			
+			//========================================================================================
+			// 비밀번호 찾기
+			//========================================================================================
+			$("#passwordSeachBtn").click(function(){
+				let value = $("#username2").val();
+				if(value.trim().length == 0){
+					alert('아이디를 입력하세요.');
+					$("#username2").val('');
+					$("#username2").focus();
+					return ;
+				}
+				if(!$("#emailCheckBtn2").prop('disabled')){
+					alert('메일인증을 완료해주세요.');
+					return ;
+				}
+				$("#username2").prop('disabled', true);
+				// 여기 까지 넘어왓다면
+				// username과 email을 보내 등록된 유저가 있는지 확인하겠다. 근데 email이 있는지 없는지 부터 찾아야하는거 아닌가? 나중에 해보겠다.
+				axios.post('/member/checkEmailAndUsername', {
+					'username': $("#username2").val(),
+					'email': $("#email2").val() + "@" + $("#emailAddress2").val(),
+				})
+				.then(res => {
+					const data = res.data;
+					console.log(data);
+					if(data == 1){
+						$(".modal").fadeOut();
+						$("#PasswordUpdateModal").fadeIn();
+						$("#username3").val($("#username2").val());
+					} else {
+						alert('등록된 회원이 없습니다.');
+						allClear();
+					}
+				})
+				.catch(error => {
+	    			console.log(error);
+	    		})
+			})
+			
+			/** 이메일을 전송해도 되는지 확인하는 함수*/
+			function emailSendOk2(){
+				return new Promise((resolve, reject) => {
+			        let email = $("#email2").val();
+			        if(email.trim().length == 0){
+			        	resolve(false);
+			        } else if (email.search(/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi) >= 0) {
+			            resolve(false);
+			        } else if (email.indexOf(" ") != -1) {
+			            resolve(false);
+			        } else if ($("#emailAddress2").val() == 0){
+			        	resolve(false);
+			        } else {
+			        	resolve(true);
+			        }
+			    });
+			}
+			
+			$("#sendEmail2").click(function() {
+			    emailSendOk2().then(result => {
+			        if (result) {
+			        	let email = $("#email2").val() + '@' + $("#emailAddress2").val();
+			    		// Ajax를 호출하여 처리 한다.
+			    		axios.post('/member/send',{
+			    			'to': email	
+			    		})
+			    		.then(res => {
+			    			if (res.data != "") {
+			    				alert("메일 발송 성공")
+			    				emailVal = res.data;
+			    				$("#emailCheckBox2").css('display','block');
+			    				$("#email2").prop("disabled",true);
+			    				$("#emailAddress2").prop("disabled", true);
+			    				$("#sendEmail2").prop("disabled",true);
+			    			} else {
+			    				alert("메일 발송 실패")
+			    			}
+			    		})
+			    		.catch(error => {
+			    			console.log(error);
+			    		})
+			        } else {
+			            alert('이메일을 확인해주세요.');
+			            $("#email2").val('');
+			            $("#emailAddress2").val(0);
+			            $("#email2").focus();
+			        }
+			    }).catch(error => {
+			        console.error(error);
+			    });
+			});
+			
+			$("#emailCheckBtn2").click(function(){
+				let value = $("#emailCheck2").val();
+				if(value == emailVal){
+					alert("인증되었습니다.");
+					$("#emailCheck2").prop("disabled",true);
+    				$("#emailCheckBtn2").prop("disabled", true);
+				} else {
+					alert('메일을 확인해 주세요.');
+					$("#emailCheck").val('')
+					$("#emailCheck").focus();
+				}
+			})
+			
+			
+			// 비밀번호 체크
+			$("#password").blur(function(){
+				let password = $("#password").val();
+				if(password.indexOf(" ") != -1){
+					$("#pwmessage").html("공백은 포함할 수 없습니다.").css('color', 'red');
+					return ;			
+				}
+				if(password.search(/[ㄱ-ㅎㅏ-ㅣ가-힣]/g) >=0) {
+					$("#pwmessage").html("한글은 사용할 수 없습니다.").css('color', 'red');
+					return ;
+				}
+				if(password.search(/[0-9]/g) < 0){
+					$("#pwmessage").html("숫자를 포함해주세요.").css('color', 'red');
+					return ;
+				}
+				if(password.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi) < 0){
+					$("#pwmessage").html("특수문자를 포함해주세요.").css('color', 'red');
+					return ;
+				}
+				if(password.length < 8 || 20 < password.length ){
+					$("#pwmessage").html("8~20자 이내로 작성해주세요.").css('color', 'red');
+					return ;
+				}
+				$("#pwmessage").html("사용가능한 비밀번호입니다.").css('color', 'blue');
+			})
+			// 비밀번호 이중 체크
+			$("#password2").keyup(function(){
+				let password = $("#password").val();
+				let password2 = $("#password2").val();
+				if(password != password2) {
+					$("#pwmessage2").html("비밀번호가 일치하지 않습니다.").css('color', 'red');
+					return ;
+				}
+				$("#pwmessage2").html("비밀번호가 일치합니다.").css('color', 'blue');
+				$("#pwUpdateOk").val(1);
+			})
+			
+			$(".passwordUpdateBtn").click(function (){
+				if($("#pwUpdateOk").val() == 0) {
+					alert('비밀번호를 확인해주세요.');
+					return ;
+				}
+				
+			})
+			
+		})
+	</script>
 </body>
 </html>

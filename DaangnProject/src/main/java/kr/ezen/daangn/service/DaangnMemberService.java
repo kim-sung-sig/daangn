@@ -42,8 +42,11 @@ public interface DaangnMemberService extends UserDetailsService{
 	
 	// 비밀번호가 일치하는지 확인
 	int checkPasswordMatch(DaangnMemberVO sessionUser, String password);
-	//=========================================================
 	
+	// email로 userName 찾기
+	String selectUserNameByEmail(String email);
+	//=========================================================
+	int updatePasswordByUsername(String username, String password);
 	
 	//=========================================================
 	// adminService 나중에 한번에 뭉쳐야겟음..

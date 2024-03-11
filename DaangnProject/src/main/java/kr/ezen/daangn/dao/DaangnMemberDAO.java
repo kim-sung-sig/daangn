@@ -10,29 +10,29 @@ import kr.ezen.daangn.vo.DaangnMemberVO;
 
 @Mapper
 public interface DaangnMemberDAO {
-	// 로그인
-	DaangnMemberVO selectByUsername(String username) throws SQLException;
-	
-	// 저장
+	/** 저장하기 */
 	void insert(DaangnMemberVO memberVO) throws SQLException;
-	// 수정
-	void update(DaangnMemberVO memberVO) throws SQLException;
-	void updateLastLoginDate(int idx) throws SQLException;
-	// 삭제 idx
-	void deleteByIdx(int idx) throws SQLException;
-	
-	
-	// idx로 유저 얻기
+	/** 로그인 */
+	DaangnMemberVO selectByUsername(String username) throws SQLException;
+	/** idx에 해당하는 DaangnMemberVO 리턴*/
 	DaangnMemberVO selectByIdx(int idx) throws SQLException;
-	
-	// 중복확인을 위한 코드
+	/** 중복확인을 위한 코드 */
 	int selectCountByUsername(String username) throws SQLException;
+	/** 중복확인을 위한 코드 */
 	int selectCountByNickName(String nickName) throws SQLException;
-	int checkPasswordMatch(DaangnMemberVO memberVO) throws SQLException;
-
-	// 여기부터 관리자 및 마이페이지를 위한 용도
-	// 페이징해서 얻기
+	/** email에 해당하는 username 리턴 */
+	String selectUserNameByEmail(String email) throws SQLException;
+	
+	
+	// 마이페이지 및 관리자 페이지용
+	/** 페이징해서 얻기 */
 	List<DaangnMemberVO> selectUser(HashMap<String, Object> map) throws SQLException;
+	/** 전체개수 얻기 */
 	int selectCountUser(HashMap<String, Object> map) throws SQLException;
-
+	/** 수정하기 */
+	void update(DaangnMemberVO memberVO) throws SQLException;
+	/** 마지막으로 로그인 할 날짜 업데이트 */
+	void updateLastLoginDate(int idx) throws SQLException;
+	/** 삭제 idx */
+	void deleteByIdx(int idx) throws SQLException;
 }

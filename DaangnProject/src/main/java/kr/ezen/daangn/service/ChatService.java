@@ -10,6 +10,7 @@ import kr.ezen.daangn.dao.DaangnChatMessageDAO;
 import kr.ezen.daangn.dao.DaangnChatRoomDAO;
 import kr.ezen.daangn.vo.ChatMessageVO;
 import kr.ezen.daangn.vo.ChatRoomVO;
+import kr.ezen.daangn.vo.DaangnMemberVO;
 
 @Service(value = "chatService")
 public class ChatService {
@@ -107,8 +108,14 @@ public class ChatService {
     	List<ChatMessageVO> list = null;
     	try {
     		list = daangnChatMessageDAO.selectChatByChatRoomIdx(chatRoomIdx);
-    		for(ChatMessageVO cm : list) {
-				cm.setNickName(daangnMemberService.selectByIdx(cm.getSender()).getNickName()); // 여기가 나중에 vo 로 변경될 것
+    		for(ChatMessageVO messageVO : list) {
+    			DaangnMemberVO dbUserData = daangnMemberService.selectByIdx(messageVO.getSender());
+    			if(dbUserData != null) {
+    				messageVO.setNickName(dbUserData.getNickName());
+    				if(dbUserData.getUserFile() != null) {
+    					messageVO.setUserProfileName(dbUserData.getUserFile().getSaveFileName());				
+    				}
+    			}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -146,17 +153,19 @@ public class ChatService {
     	try {
     		// 1. chatRoom 과 sender로 상대방을 구한다.
     		ChatRoomVO chatRoom = daangnChatRoomDAO.selectChatRoomByIdx(chatRoomIdx);
-    		chatRoom.setBoardUserIdx(daangnMainBoardService.selectByIdx(chatRoom.getBoardIdx()).getUserRef());
-    		int updateSender = 0;
-    		if (chatRoom.getBoardUserIdx() == sender) {
-    			updateSender = chatRoom.getUserIdx();
-    		} else {
-    			updateSender = chatRoom.getBoardUserIdx();
+    		if(chatRoom != null) {
+    			chatRoom.setBoardUserIdx(daangnMainBoardService.selectByIdx(chatRoom.getBoardIdx()).getUserRef());
+    			int updateSender = 0;
+    			if (chatRoom.getBoardUserIdx() == sender) {
+    				updateSender = chatRoom.getUserIdx();
+    			} else {
+    				updateSender = chatRoom.getBoardUserIdx();
+    			}
+    			ChatMessageVO messageVO = new ChatMessageVO();
+    			messageVO.setChatRoom(chatRoomIdx);
+    			messageVO.setSender(updateSender);
+    			daangnChatMessageDAO.updateAllChat(messageVO);
     		}
-    		ChatMessageVO messageVO = new ChatMessageVO();
-    		messageVO.setChatRoom(chatRoomIdx);
-    		messageVO.setSender(updateSender);
-    		daangnChatMessageDAO.updateAllChat(messageVO);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -183,7 +192,15 @@ public class ChatService {
     	ChatMessageVO messageVO = null;
     	try {
     		messageVO = daangnChatMessageDAO.selectByIdx(idx);
-    		messageVO.setNickName(daangnMemberService.selectByIdx(messageVO.getSender()).getNickName());
+    		if(messageVO != null) {
+    			DaangnMemberVO dbUserData = daangnMemberService.selectByIdx(messageVO.getSender());
+    			if(dbUserData != null) {
+    				messageVO.setNickName(dbUserData.getNickName());
+    				if(dbUserData.getUserFile() != null) {
+    					messageVO.setUserProfileName(dbUserData.getUserFile().getSaveFileName());    					
+    				}
+    			}  			
+    		}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

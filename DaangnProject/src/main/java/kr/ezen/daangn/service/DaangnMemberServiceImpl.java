@@ -67,9 +67,7 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 		}
 	}
 	
-	/**
-	 * 유저 정보 수정하기
-	 */
+	/** 유저 정보 수정하기 */
 	@Override
 	public int update(DaangnMemberVO memberVO) {
 		int result = 0;
@@ -86,9 +84,7 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 		return result;
 	}
 	
-	/**
-	 * 마지막으로 로그인한 날짜 업데이트
-	 */
+	/** 마지막으로 로그인한 날짜 업데이트 */
 	@Override
 	public int updateLastLoginDate(int idx) {
 		int result = 0;
@@ -102,9 +98,7 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 		return result;
 	}
 	
-	/**
-	 * 유저 삭제하기
-	 */
+	/** 유저 삭제하기 */
 	@Override
 	public int deleteByIdx(int idx) {
 		int result = 0;
@@ -139,9 +133,7 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 		return memberVO;
 	}
 	
-	/**
-	 * 아이디 중복체크를 위한 메서드
-	 */
+	/** 아이디 중복체크를 위한 메서드 */
 	@Override
 	public int selectCountByUsername(String username) {
 		int result = 0;
@@ -153,9 +145,7 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 		return result;
 	}
 	
-	/**
-	 * 닉네임 중복체크를 위한 메서드 (아직 미사용)
-	 */
+	/** 닉네임 중복체크를 위한 메서드 (아직 미사용) */
 	@Override
 	public int selectCountByNickName(String nickName) {
 		int result = 0;
@@ -167,9 +157,7 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 		return result;
 	}
 	
-	/**
-	 * 비밀번호가 일치하는지 확인하기 위한 메서드
-	 */
+	/** 비밀번호가 일치하는지 확인하기 위한 메서드 */
 	@Override
 	public int checkPasswordMatch(DaangnMemberVO sessionUser, String password) {
 		int result = 0;
@@ -180,6 +168,36 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 		return result;
 	}
 	
+	/** 아이디 찾기 => email을 받아 있으면 userName 리턴 */
+	@Override
+	public String selectUserNameByEmail(String email) {
+		String result = null;
+		try {
+			result = daangnMemberDAO.selectUserNameByEmail(email);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	/** username으로 passwordUpdate하기*/
+	@Override
+	public int updatePasswordByUsername(String username, String password) {
+		int result = 0;
+		try {
+			DaangnMemberVO memberVO = daangnMemberDAO.selectByUsername(username);
+			BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+			memberVO.setPassword(passwordEncoder.encode(password));
+			DaangnMemberVO sendUserData = new DaangnMemberVO();
+			sendUserData.setIdx(memberVO.getIdx());
+			sendUserData.setPassword(passwordEncoder.encode(password));
+			daangnMemberDAO.update(sendUserData);
+			result = 1;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 	//=========================================================
 	// adminService 나중에 한번에 뭉쳐야겟음..
 	//=========================================================

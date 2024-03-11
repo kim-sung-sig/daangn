@@ -42,17 +42,14 @@
 				    <div class="uk-card uk-card-default uk-width-1-1@m">
 					    <div class="uk-card-header">
 					        <div class="uk-grid-small uk-flex-middle" uk-grid>
-					            <div class="uk-width-auto" style="padding:0;width: 40px;height:40px;display: flex;align-items: center;justify-content: center;border-radius: 50%;background: #333">
-					                <img th:if="${board.member.userFile == null}" class="uk-border-circle" src="/img/스크린샷(1).png" alt="유저프로필사진">
-					                <img th:if="${board.member.userFile != null}" class="uk-border-circle" th:src="'/upload/' + ${board.member.userFile.saveFileName}" alt="유저프로필사진">
+					            <div class="uk-width-auto" style="padding:0;width: 40px;height:40px;display: flex;align-items: center;justify-content: center;border-radius: 50%;background: #333;overflow: hidden;">
+					                <img th:if="${board.member.userFile == null}" class="uk-border-circle" src="/img/user.png" alt="user">
+					                <img th:if="${board.member.userFile != null}" class="uk-border-circle" th:src="'/upload/' + ${board.member.userFile.saveFileName}" alt="user">
 					            </div>
 					            <div class="uk-width-expand" id="board-head-line">
 					            	<div>
 						                <h4 class="uk-card-title uk-margin-remove-bottom">[[${board.member.nickName}]]</h4>
-						                <p>
-						                	[[${board.loc}]]
-						                	
-						                </p>
+						                <p>[[${board.loc}]]</p>
 					            	</div>
 									<div>
 										평점 : [[${board.member.userVal}]]

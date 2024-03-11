@@ -24,6 +24,6 @@ public class ChatMessageVO {
 	
 	private ChatRoomVO chatRoomVO;			// 여기에서 boardIdx를 이용해 board를 구하고 board의 ref를 이용해 ??
 	private String typeStr;					// ENTER, TALK, RESERVE   3개로만 구성하겠다.
-	private String nickName;				// 보낸이의 정보를 담을 vo 나중에 member로 교체 할 것임
-	
+	private String nickName;
+	private String userProfileName;
 }
