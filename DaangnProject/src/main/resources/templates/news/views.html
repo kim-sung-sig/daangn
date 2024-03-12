@@ -81,6 +81,10 @@
 			overflow: hidden;
 			border-radius: 10px;
 		}
+		.imgArea .noImg{
+			border: 1px solid #fff;
+			border-radius: 10px;
+		}
 		.imgArea img{
 			display: block;
 			width: 100%;
@@ -126,9 +130,16 @@
 							</h3>
 						</div>
 						<div class="imgArea">
-							<a th:href="${item.link}">
-								<img th:src="${item.image}" alt="" />
-							</a>
+							<th:block th:if="${item.image != null}">
+								<a th:href="${item.link}" target='_blank'>
+									<img th:src="${item.image}" alt="" />
+								</a>							
+							</th:block>
+							<th:block th:if="${item.image == null}">
+								<a th:href="${item.link}" class="noImg" target='_blank' style="display: flex; align-items: center; justify-content: center;">
+									사진 없음
+								</a>							
+							</th:block>
 						</div>
 					</li>
 				</ul>
