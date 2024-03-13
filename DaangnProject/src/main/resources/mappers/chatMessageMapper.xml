@@ -36,8 +36,11 @@
 	</update>
 	
 	<update id="updateAllChat" parameterType="ChatMessageVO">
-		update chatMessage set readed = readed -1 where chatRoom = #{chatRoom} and sender = #{sender} and readed = 1
+	    <![CDATA[
+	        update chatMessage set readed = 0 where chatRoom = #{chatRoom} and sender <> #{sender}
+	    ]]>
 	</update>
+
 	
 	<select id="unreadCount" parameterType="ChatMessageVO">
 		select count(*) from chatMessage where chatRoom = #{chatRoom} and sender = #{sender} and readed = 1

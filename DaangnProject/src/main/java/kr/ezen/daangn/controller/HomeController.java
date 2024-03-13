@@ -7,12 +7,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpSession;
 import kr.ezen.daangn.service.DaangnMemberService;
 import kr.ezen.daangn.vo.DaangnMemberVO;
+import lombok.extern.slf4j.Slf4j;
 
-
+@Slf4j
 @Controller
 @Configuration
 public class HomeController {
@@ -53,5 +55,21 @@ public class HomeController {
 		jdbcTemplate.update("update daangn_member set password=? where username=?", passwordEncoder.encode("123456"),"dba");
 		return "redirect:/";
 	}
-		
+	
+	@GetMapping(value = "/asd")
+	public String test() {
+		return "test";
+	}
+	@GetMapping(value = "/qwe")
+	public String test2() {
+		return "test2";
+	}
+	
+	@GetMapping(value = "/chatLeaveTest")
+	@ResponseBody
+	public String chatLeaveTest() {
+		log.info("채팅방을 떠남을 알림");
+		return "1";
+	}
+	
 }

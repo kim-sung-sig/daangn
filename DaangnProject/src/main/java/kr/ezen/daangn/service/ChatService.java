@@ -149,23 +149,13 @@ public class ChatService {
 		}
     }
     
+    /** 상대방의 채팅을 모두 읽음 처리한다. */
     public void updateReadCountAll(int chatRoomIdx, int sender) {
     	try {
-    		// 1. chatRoom 과 sender로 상대방을 구한다.
-    		ChatRoomVO chatRoom = daangnChatRoomDAO.selectChatRoomByIdx(chatRoomIdx);
-    		if(chatRoom != null) {
-    			chatRoom.setBoardUserIdx(daangnMainBoardService.selectByIdx(chatRoom.getBoardIdx()).getUserRef());
-    			int updateSender = 0;
-    			if (chatRoom.getBoardUserIdx() == sender) {
-    				updateSender = chatRoom.getUserIdx();
-    			} else {
-    				updateSender = chatRoom.getBoardUserIdx();
-    			}
-    			ChatMessageVO messageVO = new ChatMessageVO();
-    			messageVO.setChatRoom(chatRoomIdx);
-    			messageVO.setSender(updateSender);
-    			daangnChatMessageDAO.updateAllChat(messageVO);
-    		}
+    		ChatMessageVO messageVO = new ChatMessageVO();
+    		messageVO.setChatRoom(chatRoomIdx);
+    		messageVO.setSender(sender);
+    		daangnChatMessageDAO.updateAllChat(messageVO);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

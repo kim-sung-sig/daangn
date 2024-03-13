@@ -125,8 +125,10 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 		DaangnMemberVO memberVO = null;
 		try {
 			memberVO = daangnMemberDAO.selectByIdx(idx);
-			memberVO.setUserVal(daangnCommentDAO.selectScoreByUserIdx(idx));
-			memberVO.setUserFile(daangnUserFileDAO.selectFileByUserIdx(idx));
+			if(memberVO != null) {
+				memberVO.setUserVal(daangnCommentDAO.selectScoreByUserIdx(idx));
+				memberVO.setUserFile(daangnUserFileDAO.selectFileByUserIdx(idx));				
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

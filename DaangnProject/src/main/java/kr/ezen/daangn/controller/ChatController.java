@@ -35,14 +35,16 @@ public class ChatController {
 	@MessageMapping("/chat/message")
     public void message(ChatMessageVO message) {
 		DaangnMemberVO memberVO = daangnMemberService.selectByIdx(message.getSender());
-		message.setRegDate(new Date());
-		message.setNickName(memberVO.getNickName());
-		if(memberVO.getUserFile() != null) {
-			message.setUserProfileName(memberVO.getUserFile().getSaveFileName());			
+		if(memberVO != null) {
+			message.setRegDate(new Date());
+			message.setNickName(memberVO.getNickName());			
+			if(memberVO.getUserFile() != null) {
+				message.setUserProfileName(memberVO.getUserFile().getSaveFileName());			
+			}
 		}
 		log.info("message : {}", message);
 		// 메시지 저장
-		if(message.getTypeRef() != 1) {
+		if(message.getTypeRef() == 2 || message.getTypeRef() == 4) { // TALK 또는 RESERVE
 			chatService.insertMessage(message);
 			chatService.updateChatRoomLastUpdateDate(message.getChatRoom());
 		}

@@ -1,16 +1,14 @@
 $(function() {
 	const chatRoomIdx = $("#chatRoomIdx").val();
-    const sender = $("#sender").val();
-	
+	const sender = $("#sender").val();
+	let isJoined = false;
     // WebSocket 및 Stomp 초기화
     var sock = new SockJS("/ws");
     var ws = Stomp.over(sock);
     
     var messages = [];
 	
-    /**
-    * 메시지를 보낼때 실행되는 함수
-    */
+    /** 메시지를 보낼때 실행되는 함수 */
     function sendMessage() {
         const content = $('#message').val();
         ws.send("/pub/chat/message", {}, JSON.stringify({"typeRef": 2, "chatRoom": chatRoomIdx, "sender": sender, "content": content}));
@@ -20,86 +18,68 @@ $(function() {
 		$("#send-message-btn").css("color", "#333");
     }
 	
-    /**
-    * 메시지를 받을때 실행되는 함수
-    */
+    /** 메시지를 받을때 실행되는 함수 */
     function recvMessage(recv) {
-        const message = {"chatRoom": recv.chatRoom, "typeRef": recv.typeRef, "sender": recv.sender, "nickName": recv.nickName,"userProfileName": recv.userProfileName, "content": recv.content, "regDate": recv.regDate, "readed": recv.readed};
-        if(message.typeRef == 1){
-        	// ENTER
-        	// 1. updateReadCount 를 실행한다. 지금 까지 readed =1 인것들 readed - 1
-        	axios.put("/chat/readAll", {
-        		"chatRoom": recv.chatRoom,
-        		"sender": recv.sender,
-        	})
-			.then(res => {
-				console.log('readAll 성공');
-			})
-			.catch(error => {
-				console.error('readAll 실패',error);
-			});
-        	// 2. 현재 보여지는 창에서 .readed 제거
-        	if(message.sender != sender){
-	        	$(".ch2 .readed").remove();				
-			} else {
-				$(".ch1 .readed").remove();
+        let message = {"chatRoom": recv.chatRoom, "typeRef": recv.typeRef, "sender": recv.sender, "nickName": recv.nickName,"userProfileName": recv.userProfileName, "content": recv.content, "regDate": recv.regDate, "readed": recv.readed};
+        if(isJoined) {
+			message.readed = 0;
+		} else {
+			if(message.readed != 0) {
+				message.readed = 1;				
 			}
-        } else if(message.typeRef == 2){
-        	// TALK
-        	messages.unshift(message);
-	        updateMessagesUI(message);
-        } else {
-        	// RESERVE
-        	
-        }
+		}
+        updateMessagesUI(message);
+        console.log(isJoined);
     }
 
     // pub/sub 이벤트
     ws.connect({}, function(frame) {
+		// 입장 모두 읽음 처리
+		axios.put("/chat/readAll", {
+    		"chatRoom": chatRoomIdx,
+    		"sender": sender,
+    	})
+		.then(res => console.log('readAll 성공'))
+		.catch(error => console.error('readAll 실패',error));
+		// 구독
         ws.subscribe("/sub/chat/room/" + chatRoomIdx, function(message) {
-        	// 메시지를 받으면!
-        	var recv = JSON.parse(message.body);
-        	if( recv.typeRef != 1){
-        		axios.put("/chat/read", { // chatMessage를 업데이트 시켜주는 요청
-	        		"idx" : recv.idx,
-	        	})
-				.then(res => {
-					console.log('read 성공');
-				})
-				.catch(error => {
-					console.error('read 실패');
-				});
-        	}
-        	setTimeout(() => {
-        		if (recv.typeRef != 1){
-        			axios.get("/chat/get?idx="+recv.idx)
-	        		.then(res => {
-						recvMessage(res.data);
-					})
-					.catch(error => {
-						console.error('메시지받기 실패');
-					});        			
-        		} else {
-        			recvMessage(recv);	
-        		}
-			}, 150);
-        });
-        // 입장함을 알리기
+        	let recv = JSON.parse(message.body);
+        	if(recv.typeRef == 1){ // 입장 메시지를 받으면!
+				if(recv.sender != sender) {
+					// 다른 유저가 접속 했다면!
+					if(!isJoined){
+						ws.send("/pub/chat/message", {}, JSON.stringify({'typeRef': 1,'chatRoom': chatRoomIdx, 'sender': sender}));
+						console.log('상대방 입장');
+						isJoined = true;
+						$(".readed").remove();						
+					}
+				}
+			} else if(recv.typeRef == 2) {
+				axios.put("/chat/read", {'idx': recv.idx })
+				.then(res => console.log('read 성공'))
+				.catch(e => console.log('read 실패', e))
+				
+				recvMessage(recv);
+			} else if (recv.typeRef == 3) {
+				if(recv.sender != sender){
+					isJoined = false
+					console.log('상대방 떠남');					
+				}
+			}
+        }); // subscribe - end
         ws.send("/pub/chat/message", {}, JSON.stringify({'typeRef': 1,'chatRoom': chatRoomIdx, 'sender': sender}));
-        
-        axios.post("/chat/findChatMessages", { // 이전 채팅목록을 불러오는 요청
+        axios.post("/chat/findChatMessages", {
     		"chatRoom" : chatRoomIdx,
     	})
 		.then(res => {
 			const data = res.data;
 			reversedData = data.slice().reverse();
+			console.log(reversedData);
 			reversedData.forEach(recv => {
 				recvMessage(recv);
 			})
 		})
-		.catch(error => {
-			console.error('이전메시지 불러오기 실패');
-		});
+		.catch(e => console.error('이전메시지 불러오기 실패', e));
     }, function(error) {
         alert("error " + error);
     });
@@ -120,15 +100,12 @@ $(function() {
     	return finalTime;
     }
     
-    /**
-	 * 받은 메시지를 뿌려주는 함수
-	 */
+    /**받은 메시지를 뿌려주는 함수 */
     function updateMessagesUI(message) {
         const messageList = $('#chatMessages');
         let ck = (sender == message.sender ? '2' : '1');
         const regDate = updateDate(message.regDate);
         const userProfile = message.userProfileName ? "/upload/"+message.userProfileName : '/img/user.png';
-        console.log(userProfile);
         content = `<div class="chat ch${ck}">`;
         if(ck==1){
         	content += `<div class="icon"><img src="${userProfile}" alt="user"/></div>`;
@@ -148,7 +125,23 @@ $(function() {
             messageList.scrollTop(messageList.prop('scrollHeight'));
         }, 50);
     }
-	
+	window.addEventListener('beforeunload', function(event) {
+	    event.preventDefault();
+	    ws.send("/pub/chat/message", {}, JSON.stringify({'typeRef': 3,'chatRoom': chatRoomIdx, 'sender': sender}));
+	});
+	window.addEventListener('unload', function(event) {
+		event.preventDefault();
+        ws.send("/pub/chat/message", {}, JSON.stringify({'typeRef': 3,'chatRoom': chatRoomIdx, 'sender': sender}));
+	});
+	// 사용자가 확인 대화상자에 대답할 때 호출되는 함수
+	function handleUserResponse() {
+	    const response = confirm('채팅방을 나가시겠습니까?');
+	    if (response) {
+			ws.send("/pub/chat/message", {}, JSON.stringify({'typeRef': 3,'chatRoom': chatRoomIdx, 'sender': sender}));
+	    } else {
+			console.log('나 안떠낫어!!');
+	    }
+	};
 	
 	//======================================================================
 	// 여기부터 보내는 영역
