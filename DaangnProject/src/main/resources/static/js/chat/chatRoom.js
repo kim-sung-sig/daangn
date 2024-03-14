@@ -11,7 +11,7 @@ $(function() {
     /** 메시지를 보낼때 실행되는 함수 */
     function sendMessage() {
         const content = $('#message').val();
-        ws.send("/pub/chat/message", {}, JSON.stringify({"typeRef": 2, "chatRoom": chatRoomIdx, "sender": sender, "content": content}));
+        ws.send("/pub/chat/message", {}, JSON.stringify({"typeRef": 2, "chatRoom": chatRoomIdx, "sender": sender, "content": content, "readed":2}));
         $('#message').val('');
         $("#send-message-btn").prop("disabled", true);
         $("#send-message-btn").css("background-color", "#F0F0F0");
@@ -21,6 +21,8 @@ $(function() {
     /** 메시지를 받을때 실행되는 함수 */
     function recvMessage(recv) {
         let message = {"chatRoom": recv.chatRoom, "typeRef": recv.typeRef, "sender": recv.sender, "nickName": recv.nickName,"userProfileName": recv.userProfileName, "content": recv.content, "regDate": recv.regDate, "readed": recv.readed};
+        console.log("처리전")
+        console.log(message);
         if(isJoined) {
 			message.readed = 0;
 		} else {
@@ -28,6 +30,8 @@ $(function() {
 				message.readed = 1;				
 			}
 		}
+        console.log("처리후")
+		console.log(message);
         updateMessagesUI(message);
         console.log(isJoined);
     }
@@ -44,6 +48,7 @@ $(function() {
 		// 구독
         ws.subscribe("/sub/chat/room/" + chatRoomIdx, function(message) {
         	let recv = JSON.parse(message.body);
+        	console.log(recv);
         	if(recv.typeRef == 1){ // 입장 메시지를 받으면!
 				if(recv.sender != sender) {
 					// 다른 유저가 접속 했다면!

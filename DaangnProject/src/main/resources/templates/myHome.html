@@ -561,7 +561,7 @@
 			})
 			
 			$("#passwordBtn").click(function(){
-				if($("#passwordCk").val() + $("#passwordCk2").val() == 2){
+				if(Number($("#passwordCk").val()) + Number($("#passwordCk2").val()) == 2){
 					axios.put("/member/update", {
 						"password": $("#password").val(),
 					}).then(res => {

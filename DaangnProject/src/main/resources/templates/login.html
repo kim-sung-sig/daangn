@@ -450,10 +450,27 @@
 			})
 			
 			$(".passwordUpdateBtn").click(function (){
-				if($("#pwUpdateOk").val() + $("#pwUpdateOk2").val() == 2) {
-					$("#passwordUpdateForm").submit();
+				if(Number($("#pwUpdateOk").val()) + Number($("#pwUpdateOk2").val()) == 2) {
+					const formData = new FormData($("#passwordUpdateForm")[0]);
+					axios.post('/member/passwordUpdateByUsername', formData)
+		            .then(res => {
+		                if(res.data == "1"){
+			                alert("비밀번호변경을 성공적으로 완료했습니다.");
+			                location.href = '/member/login';
+		                } else {
+		                	alert("비밀번호변경에 실패했습니다. 잠시후 다시 시도해주세요.")
+		                	allClear();
+		                }
+		            })
+		            .catch(function (error) {
+		                // 실패 시 알림 띄우기
+		                alert("비밀번호 업데이트 실패!");
+		                console.error(error); // 오류 로그 출력
+		            });
+				} else {
+					alert('비밀번호를 확인해주세요.');					
 				}
-				alert('비밀번호를 확인해주세요.');
+				return false;
 			})
 			
 		})

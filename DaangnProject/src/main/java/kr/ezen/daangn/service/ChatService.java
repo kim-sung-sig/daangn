@@ -99,6 +99,36 @@ public class ChatService {
     	return list;
     }
     
+    /** 조회 userIdx에 해당하는 안읽은 메시지 갯수 리턴 */
+    public int selectUnReadCountByUserIdx(int userIdx) {
+    	int result = 0;
+    	try {
+    		List<ChatRoomVO> list = daangnChatRoomDAO.selectChatRoomByUserIdx(userIdx);
+			for(ChatRoomVO chatRoomVO: list) {
+				chatRoomVO.setBoard(daangnMainBoardService.selectByIdx(chatRoomVO.getBoardIdx()));
+				chatRoomVO.setMessageList(daangnChatMessageDAO.selectChatByChatRoomIdx(chatRoomVO.getRoomIdx()));
+				
+				if(userIdx == chatRoomVO.getUserIdx()) {
+					chatRoomVO.setMember(daangnMemberService.selectByIdx(chatRoomVO.getBoardUserIdx()));
+					ChatMessageVO ch = new ChatMessageVO();
+					ch.setChatRoom(chatRoomVO.getRoomIdx());
+					ch.setSender(chatRoomVO.getBoardUserIdx());
+					result += daangnChatMessageDAO.unreadCount(ch);
+				} else {
+					chatRoomVO.setMember(daangnMemberService.selectByIdx(chatRoomVO.getUserIdx()));
+					ChatMessageVO ch = new ChatMessageVO();
+					ch.setChatRoom(chatRoomVO.getRoomIdx());
+					ch.setSender(chatRoomVO.getUserIdx());
+					result += daangnChatMessageDAO.unreadCount(ch);
+				}
+			}
+    	} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    	return result;
+    }
+    
+    
     /**
      * ChatRoomIdx에 해당하는 Message들을 리턴하는 메서드
      * @param chatRoomIdx
@@ -161,10 +191,7 @@ public class ChatService {
 		}
     }
     
-    /**
-     * 수정 채팅방의 LastUpdateDate를 업데이트
-     * @param roomIdx
-     */
+    /** 수정 채팅방의 LastUpdateDate를 업데이트 */
     public void updateChatRoomLastUpdateDate(int roomIdx) {
     	try {
 			daangnChatRoomDAO.updateLastUpdateDate(roomIdx);
@@ -173,27 +200,25 @@ public class ChatService {
 		}
     }
     
-    /**
-     * 조회 idx로 ChatMessageVO 조회
-     * @param idx
-     * @return ChatMessageVO
-     */
-    public ChatMessageVO selectMessageByIdx(int idx) {
-    	ChatMessageVO messageVO = null;
-    	try {
-    		messageVO = daangnChatMessageDAO.selectByIdx(idx);
-    		if(messageVO != null) {
-    			DaangnMemberVO dbUserData = daangnMemberService.selectByIdx(messageVO.getSender());
-    			if(dbUserData != null) {
-    				messageVO.setNickName(dbUserData.getNickName());
-    				if(dbUserData.getUserFile() != null) {
-    					messageVO.setUserProfileName(dbUserData.getUserFile().getSaveFileName());    					
-    				}
-    			}  			
-    		}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-    	return messageVO;
-    }
+    
+    /** 조회 idx로 ChatMessageVO 조회 */
+//    public ChatMessageVO selectMessageByIdx(int idx) {
+//    	ChatMessageVO messageVO = null;
+//    	try {
+//    		messageVO = daangnChatMessageDAO.selectByIdx(idx);
+//    		if(messageVO != null) {
+//    			DaangnMemberVO dbUserData = daangnMemberService.selectByIdx(messageVO.getSender());
+//    			if(dbUserData != null) {
+//    				messageVO.setNickName(dbUserData.getNickName());
+//    				if(dbUserData.getUserFile() != null) {
+//    					messageVO.setUserProfileName(dbUserData.getUserFile().getSaveFileName());    					
+//    				}
+//    			}  			
+//    		}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//    	return messageVO;
+//    }
+    
 }

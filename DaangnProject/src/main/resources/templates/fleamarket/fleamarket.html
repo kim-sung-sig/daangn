@@ -84,9 +84,7 @@
 	<footer>
 		<div th:if="${session.user != null}">
 			<div id="chatBtn">
-				<button class="uk-button uk-button-primary">
-					<span uk-icon="comment"></span> 채팅 24
-				</button>			
+				<button class="uk-button uk-button-primary" style="display: flex;align-items: center;justify-content: center;">채팅<th:block th:if="${chatUnreadCount != 0}">&nbsp;<span id="chatCount">[[${chatUnreadCount}]]</span></th:block></button>			
 			</div>
 		</div>
 		<div>

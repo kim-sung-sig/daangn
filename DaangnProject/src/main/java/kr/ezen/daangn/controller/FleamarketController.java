@@ -19,10 +19,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import jakarta.servlet.http.HttpSession;
+import kr.ezen.daangn.service.ChatService;
 import kr.ezen.daangn.service.DaangnBoardFileService;
 import kr.ezen.daangn.service.DaangnLikeService;
 import kr.ezen.daangn.service.DaangnMainBoardService;
+import kr.ezen.daangn.service.DaangnMemberService;
 import kr.ezen.daangn.service.PopularService;
+import kr.ezen.daangn.vo.ChatRoomVO;
 import kr.ezen.daangn.vo.CommonVO;
 import kr.ezen.daangn.vo.DaangnFileVO;
 import kr.ezen.daangn.vo.DaangnLikeVO;
@@ -45,6 +48,10 @@ public class FleamarketController {
 	private DaangnBoardFileService daangnBoardFileService;
 	@Autowired
 	private PopularService popularService;
+	@Autowired
+	private ChatService chatService;
+	@Autowired
+	private DaangnMemberService daangnMemberService;
 	
 	/**
 	 * 중고거래 리스트 보기
@@ -56,23 +63,24 @@ public class FleamarketController {
 	 * @return
 	 */
 	@GetMapping(value = {"/fleamarket","/fleamarket/", "/fleamarket/{region}", "/fleamarket/{region}/{gu}", "/fleamarket/{region}/{gu}/{dong}"})
-	public String list(Model model
-					   , @PathVariable(value = "region", required = false) String region
-					   , @PathVariable(value = "gu", required = false) String gu
-					   , @PathVariable(value = "dong", required = false) String dong
-					   , @RequestParam(value = "search", required = false) String search
-					   , @RequestParam(value = "isOk", required = false) String isOk
-					   ) {
+	public String list(Model model, HttpSession session, @PathVariable(value = "region", required = false) String region, @PathVariable(value = "gu", required = false) String gu, @PathVariable(value = "dong", required = false) String dong, @RequestParam(value = "search", required = false) String search, @RequestParam(value = "isOk", required = false) String isOk) {
 		log.debug("list 실행 region: {}, gu: {}, dong: {}, search: {}, p: {}", region, gu, dong, search);
 		if(isOk != null) {
 			model.addAttribute("isOk", isOk);
 		}
 		CommonVO commonVO = new CommonVO(region, gu, dong, search);
-		commonVO.setS(18);
+		commonVO.setS(20);
 		commonVO.setB(5);
 		PagingVO<DaangnMainBoardVO> pv = daangnMainBoardService.selectList(commonVO);
-		
 		model.addAttribute("pv", pv);
+		
+		if(session.getAttribute("user") != null) {
+			DaangnMemberVO user = (DaangnMemberVO) session.getAttribute("user");
+			DaangnMemberVO dbUserData = daangnMemberService.selectByIdx(user.getIdx());
+			if(dbUserData != null) {
+				model.addAttribute("chatUnreadCount",chatService.selectUnReadCountByUserIdx(dbUserData.getIdx()));				
+			}
+		}
 		
 		// 추가로 지역정보리스트 리턴!
 		model.addAttribute("regionList", daangnMainBoardService.regionList(null,null,null));
