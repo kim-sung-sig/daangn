@@ -4,7 +4,7 @@
 	<!-- 페이징을 위한 List 뿌리기 -->
 	<!-- 1. 방문자 저장 -->
 	<insert id="saveVisitor" parameterType="VisitVO">
-		insert into tb_visitor values (tb_visitor_idx_seq.nextval, #{visitIp}, #{visitAgent}, #{visitReferer}, sysdate)
+		insert into tb_visitor values (tb_visitor_idx_seq.nextval, #{visitIp}, sysdate)
 	</insert>
 	
 	<select id="getVisitorCountByDate" parameterType="string">
@@ -31,7 +31,7 @@
 						select
 							*
 						from
-							jung_board
+							tb_visitor
 						order by
 							idx desc
 					) Q

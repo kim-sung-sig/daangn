@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import kr.ezen.daangn.service.ChatService;
 import kr.ezen.daangn.service.DaangnBoardFileService;
@@ -111,28 +114,73 @@ public class FleamarketController {
 	 * @return
 	 */
 	@GetMapping(value = "/fleamarketDetail/{idx}")
-	public String fleamarketDetail(Model model, HttpSession session, @PathVariable(value = "idx") int idx){
+	public String fleamarketDetail(Model model, HttpSession session, HttpServletRequest request, HttpServletResponse response, @PathVariable(value = "idx") int idx){
 		log.info("fleamarketDetail/idx 실행 => idx : {}", idx);
+		// 조회수 증가로직 세션방식
+		/*
 		String key = "VISITED_"+ idx;
 		Boolean isVisited = (Boolean) session.getAttribute(key);
 		if(isVisited == null || !isVisited) {
 			daangnMainBoardService.updateReadCount(idx);
 			session.setAttribute(key, true);	
 		}
+		*/
 		if(session.getAttribute("user") != null) {
 			DaangnMemberVO memberVO = (DaangnMemberVO) session.getAttribute("user");
 			DaangnLikeVO likeVO = new DaangnLikeVO();
 			likeVO.setUserIdx(memberVO.getIdx());
 			likeVO.setBoardIdx(idx);
 			model.addAttribute("likeCheck", daangnLikeService.select(likeVO)); // 좋아요 했는지 안했는지 체크
-			
-			PopularVO p = new PopularVO();
-			p.setBoardRef(idx);
-			p.setUserRef(memberVO.getIdx());
-			p.setInteraction(1);
-			popularService.insertPopular(p);
+		}
+		// 조회수 증가로직 쿠키 방식
+		Cookie oldCookie = null;
+		Cookie[] cookies = request.getCookies();
+		final String COOKIE_NAME = "fleamarket";
+		final int COOKIE_MAX_AGE = 60;
+
+		if (cookies != null) {
+		    for (Cookie cookie : cookies) {
+		        if (cookie.getName().equals(COOKIE_NAME)) {
+		            oldCookie = cookie;
+		            break;
+		        }
+		    }
+		}
+
+		if (oldCookie != null) {
+		    String cookieValue = oldCookie.getValue();
+		    if (!cookieValue.contains("[" + idx + "]")) {
+		        daangnMainBoardService.updateReadCount(idx);
+		        oldCookie.setValue(cookieValue + "_[" + idx + "]");
+		        oldCookie.setMaxAge(COOKIE_MAX_AGE);
+		        response.addCookie(oldCookie);
+		        if(session.getAttribute("user") != null) {
+		        	DaangnMemberVO memberVO = (DaangnMemberVO) session.getAttribute("user");
+		        	PopularVO p = new PopularVO();
+		        	p.setBoardRef(idx);
+		        	p.setUserRef(memberVO.getIdx());
+		        	p.setInteraction(1);
+		        	popularService.insertPopular(p);
+		        }
+		    }
+		} else {
+		    daangnMainBoardService.updateReadCount(idx);
+		    Cookie newCookie = new Cookie(COOKIE_NAME, "[" + idx + "]");
+		    newCookie.setMaxAge(COOKIE_MAX_AGE);
+		    response.addCookie(newCookie);
+		    if(session.getAttribute("user") != null) {
+	        	DaangnMemberVO memberVO = (DaangnMemberVO) session.getAttribute("user");
+	        	PopularVO p = new PopularVO();
+	        	p.setBoardRef(idx);
+	        	p.setUserRef(memberVO.getIdx());
+	        	p.setInteraction(1);
+	        	popularService.insertPopular(p);
+	        }
 		}
 		DaangnMainBoardVO board = daangnMainBoardService.selectByIdx(idx);
+		if(board == null) {
+			return "redirect:/fleamarket";
+		}
 		model.addAttribute("board", board);
 		return "fleamarket/fleamarketDetail";
 	}
@@ -208,7 +256,7 @@ public class FleamarketController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return "redirect:/fleamarket";
+		return "redirect:/fleamarketDetail/"+boardIdx;
 	}
 	
 	

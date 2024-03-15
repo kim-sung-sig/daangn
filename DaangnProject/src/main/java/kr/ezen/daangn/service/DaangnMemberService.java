@@ -14,7 +14,7 @@ public interface DaangnMemberService extends UserDetailsService{
 	// 유저 서비스
 	//=========================================================
 	// 회원가입
-	void insert(DaangnMemberVO memberVO);
+	int insert(DaangnMemberVO memberVO);
 	
 	// 회원 수정
 	int update(DaangnMemberVO memberVO);
@@ -25,7 +25,7 @@ public interface DaangnMemberService extends UserDetailsService{
 	int deleteByIdx(int idx);
 	
 	// idx에 해당하는 유저가 쓴 글 보여주기!
-	List<DaangnMainBoardVO> selectMainBoardByMemberIdx(int idx);
+	List<DaangnMainBoardVO> selectMainBoardByUserIdx(int userIdx);
 	//=========================================================
 	
 	

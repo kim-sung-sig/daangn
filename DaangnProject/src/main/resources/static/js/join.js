@@ -5,15 +5,18 @@ $(function() {
 		let username = $("#username").val();
 		if(username.search(/[ㄱ-ㅎㅏ-ㅣ가-힣]/g) >= 0){
 			$("#message").html("한글은 입력할 수 없습니다.").css('color', 'red');
+			$("#usernameCk").val(0);
 			return ;
 		}
 		if(username.search(/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi) >= 0){
 			$("#message").html("특수문자는 입력할 수 없습니다.").css('color', 'red');
+			$("#usernameCk").val(0);
 			return ;
 		}
 		if(username.indexOf(" ") != -1){
 			alert("공백은 포함할수 없어요")
-			$("#username").val("")		
+			$("#username").val("");
+			$("#usernameCk").val(0);
 			return ;
 		}
 		if (8 <= username.length && username.length <= 20) {
@@ -26,8 +29,10 @@ $(function() {
 				.then(function(response) {
 					if (response.data * 1 == 0) {
 						$("#message").html("사용가능한 아이디입니다.").css('color', 'blue');
+						$("#usernameCk").val(1);
 					} else {
 						$("#message").html("사용 불가능한 아이디입니다.").css('color', 'red');
+						$("#usernameCk").val(0);
 					}
 				})
 				.catch(function(error) {
@@ -36,6 +41,46 @@ $(function() {
 			}
 		} else {
 			$("#message").html("").css('color', 'black');
+			$("#usernameCk").val(0);
+		}
+	})
+	
+	$("#nickName").keyup(function(){
+		let nickName = $("#nickName").val();
+		if(nickName.search(/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi) >= 0){
+			$("#ninkNameMessage").html("특수문자는 입력할 수 없습니다.").css('color', 'red');
+			$("#nickNameCk").val(0);
+			return ;
+		}
+		if(nickName.indexOf(" ") != -1){
+			alert("공백은 포함할수 없어요")
+			$("#ninkNameMessage").val("");
+			$("#nickNameCk").val(0);		
+			return ;
+		}
+		if (2 <= nickName.length && nickName.length <= 10) {
+			if (nickName.indexOf(" ") != -1) {
+			} else {
+				// Ajax를 호출하여 처리 한다.
+				axios.post('/member/login/usernicknamecheck',{
+					'nickName': nickName
+				})
+				.then(function(response) {
+					if (response.data * 1 == 0) {
+						$("#ninkNameMessage").html("사용가능한 닉네임입니다.").css('color', 'blue');
+						$("#nickNameCk").val(1);
+					} else {
+						$("#ninkNameMessage").html("사용 불가능한 닉네임입니다.").css('color', 'red');
+						$("#nickNameCk").val(0);
+					}
+				})
+				.catch(function(error) {
+					console.log(error);
+				})
+			}
+		} else {
+			$("#ninkNameMessage").html("").css('color', 'black');
+			$("#nickNameCk").val(0);
 		}
 	})
 	
@@ -44,25 +89,31 @@ $(function() {
 		let password = $("#password").val();
 		if(password.indexOf(" ") != -1){
 			$("#pwmessage").html("공백은 포함할 수 없습니다.").css('color', 'red');
+			$("#pwmessageCk").val(0);
 			return ;			
 		}
 		if(password.search(/[ㄱ-ㅎㅏ-ㅣ가-힣]/g) >=0) {
 			$("#pwmessage").html("한글은 사용할 수 없습니다.").css('color', 'red');
+			$("#pwmessageCk").val(0);
 			return ;
 		}
 		if(password.search(/[0-9]/g) < 0){
 			$("#pwmessage").html("숫자를 포함해주세요.").css('color', 'red');
+			$("#pwmessageCk").val(0);
 			return ;
 		}
 		if(password.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi) < 0){
 			$("#pwmessage").html("특수문자를 포함해주세요.").css('color', 'red');
+			$("#pwmessageCk").val(0);
 			return ;
 		}
 		if(password.length < 8 || 20 < password.length ){
 			$("#pwmessage").html("8~20자 이내로 작성해주세요.").css('color', 'red');
+			$("#pwmessageCk").val(0);
 			return ;
 		}
 		$("#pwmessage").html("사용가능한 비밀번호입니다.").css('color', 'blue');
+		$("#pwmessageCk").val(1);
 	})
 	// 비밀번호 이중 체크
 	$("#password2").keyup(function(){
@@ -70,9 +121,11 @@ $(function() {
 		let password2 = $("#password2").val();
 		if(password != password2) {
 			$("#pwmessage2").html("비밀번호가 일치하지 않습니다.").css('color', 'red');
+			$("#pwmessage2Ck").val(0);
 			return ;
 		}
 		$("#pwmessage2").html("비밀번호가 일치합니다.").css('color', 'blue');
+		$("#pwmessage2Ck").val(1);
 	})
 	
 	let emailOk = ""; // 인증번호를 보관할 변수
@@ -131,25 +184,26 @@ $(function() {
 			$("#sendEmail").prop('disabled', true)
 			$("#check").prop('disabled', true)
 			$("#checkMail").prop('disabled', true)
+			$("#emailComplete").val(1);
 		} else {
 			alert("인증 번호를 확인해주세요.")
 		}
 	})
 	
 	$("#joinForm").submit(function(){
-		if($("#message").html() != "사용가능한 아이디입니다."){
+		if($("#usernameCk").val() != 1){
 			alert('아이디를 확인해주세요.');
 			$("#username").val("");
 			$("#username").focus();
 			return false;
 		}
-		if($("#pwmessage").html() != '사용가능한 비밀번호입니다.'){
+		if($("#pwmessageCk").val() != 1){
 			alert('비밀번호를 확인해주세요.');
 			$("#password").val("");
 			$("#password").focus();
 			return false;			
 		}
-		if($("#pwmessage2").html() != '비밀번호가 일치합니다.'){
+		if($("#pwmessage2Ck").val() != 1){
 			alert('비밀번호 재확인을 확인해주세요.');
 			$("#password2").val("");
 			$("#password2").focus();
@@ -161,28 +215,50 @@ $(function() {
 			$("#name").focus();
 			return false;			
 		}
-		if($("#nickName").val().search(/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi) >= 0){
-			alert('닉네임에는 특수문자를 사용할 수 없습니다.');
+		if($("#nickNameCk").val() != 1){
+			alert('닉네임을 확인해 주세요.');
 			$("#nickName").val("");
 			$("#nickName").focus();
 			return false;			
 		}
-		if($("#checkMail").val() != '인증 완료'){
+		if($("#emailComplete").val() != 1){
 			alert("메일인증을 해주세요.");
 			$("#check").val("");
 			$("#check").focus();
 			return false;
 		}
-		if($("#addr1").val() == "" || $("#addr2").val() == "" || $("#addr2").val().search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi) >= 0){
+		if($("#addr1").val() == "" || $("#addr2").val() == "" || $("#addr2").val().trim().length == 0 || $("#addr2").val().search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi) >= 0){
 			alert("주소를 확인해주세요!");
 			$("#addr2").val("");
 			$("#daum").focus();
 			return false;
 		}
 		$("#newEmail").val($("#email").val() + "@" + $("#emailAddress").val());
-		console.log($("#newEmail").val())
-		alert("회원가입 성공")
-		return true;
+		const selectedEmailOkValue = document.querySelector('input[name="emailOk"]:checked').value;
+		axios.post('/member/joinok', {
+		    username: $("#username").val(),
+		    password: $("#password").val(),
+		    name: $("#name").val(),
+		    nickName: $("#nickName").val(),
+		    email: $("#newEmail").val(),
+		    emailOk: selectedEmailOkValue,
+		    stAddress: $("#addr1").val(),
+		    dtAddress: $("#addr2").val(),
+		})
+		.then(res => {
+			const data = res.data;
+			if(data == "1"){
+				alert("회원가입 성공");
+				location.href = "/member/login";
+			} else {
+				alert("회원가입에 실패했습니다. 잠시후 다시 시도해주세요.")
+				location.href = "/member/login";
+			}
+		})
+		.catch(error => {
+		    console.error(error);
+		});
+		return false;
 	})
 })
 

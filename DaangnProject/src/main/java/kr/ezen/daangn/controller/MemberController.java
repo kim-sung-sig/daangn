@@ -78,7 +78,7 @@ public class MemberController {
 		return daangnMemberService.selectCountByUsername(username)+""; // 1 or 0
 	}
 	/** 닉네임 중복체크 확인하는 주소 */
-	@PostMapping(value = "/login/userNickNamecheck", produces = "text/plain;charset=UTF-8")
+	@PostMapping(value = "/login/usernicknamecheck", produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String userNickNameCheck(@RequestBody DaangnMemberVO memberVO) {
 		String nickName = memberVO.getNickName();
@@ -86,7 +86,7 @@ public class MemberController {
 	}
 	
 	// 회원 가입 ok
-	@GetMapping(value = {"/joinok"})
+	@GetMapping(value = "/joinok")
 	public String joinOkGet(HttpSession session) {
 		if(session.getAttribute("user") != null) { // 나쁜사람 방지
 			session.removeAttribute("user");
@@ -96,11 +96,17 @@ public class MemberController {
 	}
 	
 	/**회원가입한 유저를 저장하는 주소*/
-	@PostMapping(value = {"/joinok"})
-	public String joinOkPost(@ModelAttribute(value = "memberVO") DaangnMemberVO memberVO) {
-		log.info("joinOkPost 실행 {}",memberVO);
-		daangnMemberService.insert(memberVO);
-		return "redirect:/member/login";
+	@PostMapping(value = "/joinok")
+	@ResponseBody
+	public String joinOkPost(HttpSession session, @RequestBody DaangnMemberVO memberVO) {
+		if(session.getAttribute("user") != null) { // 나쁜사람 방지
+			session.removeAttribute("user");
+			session.invalidate();
+			return "0";
+		}
+		log.info("joinOkPost 실행 {}", memberVO);
+		int result = daangnMemberService.insert(memberVO);
+		return result + "";
 	}
 	/** 로그아웃 */
 	@GetMapping(value = "/logout")
@@ -190,7 +196,8 @@ public class MemberController {
     	DaangnMemberVO sessionUser = (DaangnMemberVO) session.getAttribute("user");
     	DaangnMemberVO user = daangnMemberService.selectByIdx(sessionUser.getIdx());
     	model.addAttribute("user", user);
-    	model.addAttribute("boardList", daangnMainBoardService.selectByUserIdx(user.getIdx()));
+    	// 여기선 각 항목별 갯수만 리턴해주자.
+    	// model.addAttribute("boardList", daangnMainBoardService.selectByUserIdx(user.getIdx()));
     	return "mypage/myBoard";
     }
     
@@ -209,10 +216,6 @@ public class MemberController {
     	return "mypage/myLike";
     }
     
-    
-    
-    
-    
     /** 현재 로그인한 유저의 비밀번호와 보낸 비밀번호가 일치하는지 확인하는 주소 */
     @PostMapping(value = "/checkPasswordMatch")
     @ResponseBody
@@ -225,6 +228,34 @@ public class MemberController {
     	DaangnMemberVO user = daangnMemberService.selectByIdx(sessionUser.getIdx());
     	String password = memberVO.getPassword();
     	int result = daangnMemberService.checkPasswordMatch(user, password);
+    	return result + "";
+    }
+    
+    /** 회원탈퇴시 약관 */
+    @GetMapping(value = "/leave/terms")
+    public String leaveTerms(HttpSession session, Model model) {
+    	if(session.getAttribute("user") == null) {
+    		return "redirect:/";
+    	}
+    	log.info("myLike 실행");
+    	DaangnMemberVO sessionUser = (DaangnMemberVO) session.getAttribute("user");
+    	DaangnMemberVO user = daangnMemberService.selectByIdx(sessionUser.getIdx());
+    	model.addAttribute("user", user);
+    	return "mypage/leave_terms";
+    }
+    
+    /** 회원탈퇴 */
+    @PostMapping(value = "/leave/termsOk")
+    @ResponseBody
+    public String leaveTermsOk(HttpSession session, @RequestBody DaangnMemberVO memberVO) {
+    	if(session.getAttribute("user") == null) {
+    		return "0";
+    	}
+    	log.info("leaveTermsOk 실행 {}", memberVO);
+    	int result = daangnMemberService.deleteByIdx(memberVO.getIdx());
+    	if(result > 0) {
+    		session.removeAttribute("user"); // 로그아웃   		
+    	}
     	return result + "";
     }
     

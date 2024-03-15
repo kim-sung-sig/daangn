@@ -47,14 +47,17 @@
 					<![CDATA[
 						daangn_board.idx < #{lastItemIdx}
 					]]>
-					<if test="categoryRef != null">
-		                and categoryRef = #{categoryRef}
-		            </if>
+					<if test="userRef != null">
+						and userRef = #{userRef}
+					</if>
 		            <if test="statusRef != null">
 		                and statusRef = #{statusRef}
 		            </if>
 		            <if test="statusRef == null">
 		                AND <![CDATA[statusRef <> 3]]>
+		            </if>
+					<if test="categoryRef != null">
+		                and categoryRef = #{categoryRef}
 		            </if>
 					<if test="search != null">
 		                AND (
@@ -82,6 +85,11 @@
 	
 	
 	<select id="getLastIdx" resultType="int">
-		SELECT MAX(daangn_board.idx) FROM daangn_board
+	    SELECT 
+	        CASE 
+	            WHEN MAX(daangn_board.idx) IS NULL THEN 0
+	            ELSE MAX(daangn_board.idx)
+	        END
+	    FROM daangn_board
 	</select>
 </mapper>

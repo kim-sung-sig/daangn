@@ -135,6 +135,7 @@
 						</li>
 					</ul>
 				</div>
+				<div id="deleteBtn" style="text-align: right; color: red; cursor: pointer; font-weight: 500; font-size: 12px;">회원탈퇴</div>
 			</div>
 		</main>
 	</div>
@@ -144,8 +145,8 @@
 	<div id="nickNameModal" class="modal">
 		<div class="modal-inner">
 			<p class="modal-title"><b>[[${user.nickName}]]</b>님의 회원정보 중 <span class="highlight">닉네임</span>을 수정합니다.</p>
-			<input class="uk-input" id="nickName" name="nickName" placeholder="닉네임을 2~12글자 내외로 입력하세요.">
-			<span id="nickNameCk"></span>
+			<span id="nickNameMessage"></span><input type="hidden" id="nickNameCk" value="0"/>
+			<input class="uk-input" id="nickName" name="nickName" placeholder="닉네임을 2~10글자 내외로 입력하세요.">
 			<div class="modalBtns">
 				<input style="width: 40%;" type="button" class="uk-button cancleBtn" value="취소"/>
 				<input style="width: 60%;" type="submit" class="uk-button" id="nickNameBtn" value="수정하기"/>
@@ -250,7 +251,7 @@
 	
 	<div id="pwCheckModal" class="modal">
 		<div class="modal-inner">
-			<p class="modal-title"><b>[[${user.nickName}]]</b>님의 회원정보를 수정하기 위해 인증절차가 필요합니다.</p>
+			<p class="modal-title"><b>[[${user.nickName}]]</b>님의 회원정보를 수정하기 위해 <span class="highlight">인증절차</span>가 필요합니다.</p>
 			<input type="password" class="uk-input" id="pwCk" placeholder="비밀번호를 입력해주세요."/>		
 			<div class="modalBtns">
 				<input style="width: 40%;" type="button" class="uk-button cancleBtn" value="취소"/>
@@ -305,7 +306,8 @@
 				$("#modalBackground").fadeOut();
 				$("#pwCk").val('');
 				$("#nickName").val('');
-				$("#nickNameCk").html('');
+				$("#nickNameMessage").html('');
+				$("#nickNameCk").val(0);
 				$("#email").val('');
 				$("#email").prop("disabled",false);
 				$("#emailAddress").val(0);
@@ -332,29 +334,36 @@
 				// 원하는대로 리턴이 안되서 이상한거 이용함..
 			    return new Promise((resolve, reject) => {
 			        let nickName = $("#nickName").val();
+			        console.log(nickName);
 			        if (nickName.search(/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi) >= 0) {
-			            $("#nickNameCk").html("특수문자는 입력할 수 없습니다.").css('color', 'red');
+			            $("#nickNameMessage").html("특수문자는 입력할 수 없습니다.").css('color', 'red');
+			            $("#nickNameCk").val(0);
 			            resolve(false);
 			        } else if (nickName.indexOf(" ") != -1) {
-			            $("#nickNameCk").html("공백은 포함할 수 없습니다.").css('color', 'red');
+			            $("#nickNameMessage").html("공백은 포함할 수 없습니다.").css('color', 'red');
+			            $("#nickNameCk").val(0);
 			            resolve(false);
-			        } else if (2 <= nickName.length && nickName.length <= 12) {
-			            axios.post('/member/login/userNickNamecheck', { 'nickName': nickName })
-			                .then(res => {
-			                    if (res.data * 1 == 0) {
-			                        $("#nickNameCk").html("사용가능한 닉네임입니다.").css('color', 'blue');
-			                        resolve(true);
-			                    } else {
-			                        $("#nickNameCk").html("사용 불가능한 닉네임입니다.").css('color', 'red');
-			                        resolve(false);
-			                    }
-			                })
-			                .catch(error => {
-			                    console.log(error);
-			                    reject(error);
-			                });
+			        } else if (2 <= nickName.length && nickName.length <= 10) {
+			            axios.post('/member/login/usernicknamecheck', { 'nickName': nickName })
+		                .then(res => {
+		                    if (res.data * 1 == 0) {
+		                        $("#nickNameMessage").html("사용가능한 닉네임입니다.").css('color', 'blue');
+		                        $("#nickNameCk").val(1);
+		                        resolve(true);
+		                    } else {
+		                        $("#nickNameMessage").html("사용 불가능한 닉네임입니다.").css('color', 'red');
+		                        $("#nickNameCk").val(0);
+		                        resolve(false);
+		                    }
+		                })
+		                .catch(error => {
+		                    console.log(error);
+	                        $("#nickNameCk").val(0);
+		                    reject(error);
+		                });
 			        } else {
-			            $("#nickNameCk").html("2~12글자 내외로 작성해주세요.").css('color', 'black');
+			            $("#nickNameMessage").html("2~12글자 내외로 작성해주세요.").css('color', 'red');
+                        $("#nickNameCk").val(0);
 			            resolve(false);
 			        }
 			    });
@@ -373,7 +382,7 @@
 						const data = res.data;
 						if(data == "1"){
 							alert("수정되었습니다.")
-							location.href='/member/home';
+							location.href='/member/Home';
 						} else {
 							alert("오류가 발생했습니다. 잠시후 다시 시도해 주세요.");
 							allClear();
@@ -465,7 +474,7 @@
 						const data = res.data;
 						if(data == "1"){
 							alert("수정되었습니다.")
-							location.href='/member/home';
+							location.href='/member/Home';
 						} else {
 							alert("오류가 발생했습니다. 잠시후 다시 시도해 주세요.");
 							allClear();
@@ -503,7 +512,7 @@
 						const data = res.data;
 						if(data == "1"){
 							alert("수정되었습니다.")
-							location.href='/member/home';
+							location.href='/member/Home';
 						} else {
 							alert("오류가 발생했습니다. 잠시후 다시 시도해 주세요.");
 							allClear();
@@ -593,7 +602,7 @@
 					const data = res.data;
 					if(data == "1"){
 						alert("수정되었습니다.")
-						location.href='/member/home';
+						location.href='/member/Home';
 					} else {
 						alert("오류가 발생했습니다. 잠시후 다시 시도해 주세요.");
 						allClear();
@@ -613,6 +622,16 @@
 		        }
 		        $("#updateUserProfileForm").submit();
 		    });
+			
+			//======================================================================================
+			// 회원 탈퇴
+			//======================================================================================
+			$("#deleteBtn").click(function(){
+				let result = confirm(`회원탈퇴를 진행하시겠습니까?`);
+				if(result){
+					location.href = "/member/leave/terms";
+				}
+			})
 		})
 		// 다음 우편번호 API를 이용한 우편번호 검색 함수
 		function daumPostcode() {

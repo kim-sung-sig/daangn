@@ -111,7 +111,6 @@ function getItem(){
 		content = "";
 		if(data.length == 0) {
 			window.removeEventListener('scroll', handleScroll);
-			$("#viewBox").append("<div style='text-align:center;font-weight: bold;'>글이 더 이상 존재하지 않습니다.</div>");
 			return ;
 		}
 		data.forEach(vo => {

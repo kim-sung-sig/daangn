@@ -12,4 +12,6 @@ public class ScrollVO {
 	private String gu;
 	private String dong;
 	private int chatRoomIdx;
+	private int userRef;
+	private int statusRef;
 }

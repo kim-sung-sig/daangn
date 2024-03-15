@@ -28,21 +28,21 @@
 			<h2 class="form-heading" style="text-align: center;"><img src="https://i.namu.wiki/i/urKu84c6cV1U3tmZqPiopxkCnQOn96j3gA6Wf730iSTzz41XDOeqypSusjBVPXeHxGe8RJAOjMY11uywzcDqSA.svg" alt="logo" /></h2>
 			<div class="form-group">
 				<div class="uk-margin">
-					<h4>아이디</h4><span id="message"></span>
+					<h4>아이디</h4><span id="message"></span><input type="hidden" id="usernameCk" value="0"/>
 					<div class="uk-inline">
 						<span class="uk-form-icon" uk-icon="icon: user"></span>
 						<input id="username" name="username" type="text" autocomplete="off" class="uk-input uk-form" placeholder="아이디를 8~20자 이내로 작성해주세요." autofocus="autofocus" required="required" maxlength="20"/>
 					</div>
 				</div>
 				<div class="uk-margin">
-					<h4>비밀번호</h4><span id="pwmessage"></span>
+					<h4>비밀번호</h4><span id="pwmessage"></span><input type="hidden" id="pwmessageCk" value="0"/>
 					<div class="uk-inline">
 			            <span class="uk-form-icon" uk-icon="icon: lock"></span>
 			            <input id="password" name="password" type="password" class="uk-input" placeholder="비밀번호를 특수문자,숫자 포함 8~20자 이내로 작성해주세요." required="required" aria-label="Not clickable icon" maxlength="20">
 			        </div>				
 				</div>
 				<div class="uk-margin">
-					<h4>비밀번호 재확인</h4><span id="pwmessage2"></span>
+					<h4>비밀번호 재확인</h4><span id="pwmessage2"></span><input type="hidden" id="pwmessage2Ck" value="0"/>
 					<div class="uk-inline">
 			            <span class="uk-form-icon" uk-icon="icon: lock"></span>
 			            <input id="password2" type="password" class="uk-input" placeholder="비밀번호 재확인" required="required" aria-label="Not clickable icon" maxlength="20">
@@ -51,12 +51,12 @@
 				<div class="uk-margin">
 					<h4>성 명</h4>
 			        <div class="uk-inline">
-						<input id="name" name="name" type="text" class="uk-input " placeholder="이름 입력" required="required" />
+						<input id="name" name="name" type="text" class="uk-input " placeholder="이름을 입력하세요." required="required" />
 			        </div>				
 				</div>
 				<div class="uk-margin">
-					<h4>닉네임</h4>
-					<input id="nickName" name="nickName" type="text" class="uk-input " placeholder="닉네임 입력" required="required" />				
+					<h4>닉네임</h4><span id="ninkNameMessage"></span><input type="hidden" id="nickNameCk" value="0"/>
+					<input id="nickName" name="nickName" type="text" class="uk-input " placeholder="닉네임을 2~10자내외로 입력하세요." required="required" />				
 				</div>
 				<div class="uk-margin">
 					<h4>이메일</h4>
@@ -76,6 +76,7 @@
 					<div class="uk-inlin" id="emailck">
 						<input type="text" id="check" class="uk-input" placeholder="인증번호를 입력해주세요">
 						<input type="button" id="checkMail" class="uk-button uk-button-default" value="인증번호체크">
+						<input type="hidden" id="emailComplete" value="0">
 					</div>
 				</div>
 				<div class="uk-margin">
@@ -93,8 +94,8 @@
 				</div>
 				<h4>이메일 수신동의</h4>
 				<div class="uk-margin" style="border: 1px solid #ccc; padding: 10px 20px;">
-		            <label><input class="uk-radio" type="radio" name="emailOk" value="0"> 이메일 수신에 동의</label><br />
-		            <label><input class="uk-radio" type="radio" name="emailOk" value="1"> 이메일 수신에 동의하지 않음</label>
+		            <input id="r1" class="uk-radio" type="radio" name="emailOk" value="0" checked="checked"> <label for="r1" style="cursor: pointer;">이메일 수신에 동의</label><br />
+		            <input id="r2" class="uk-radio" type="radio" name="emailOk" value="1"> <label for="r2" style="cursor: pointer;">이메일 수신에 동의하지 않음</label>
 		        </div>
 				<div class="uk-margin" style="text-align: right;">
 					<button class="uk-button buttons" type="submit">회 원 가 입</button>

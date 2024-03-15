@@ -2,9 +2,7 @@ package kr.ezen.daangn.service;
 
 import java.util.List;
 
-import kr.ezen.daangn.vo.CommonVO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
-import kr.ezen.daangn.vo.PagingVO;
 import kr.ezen.daangn.vo.ScrollVO;
 
 public interface DaangnMainBoardService {
@@ -31,6 +29,6 @@ public interface DaangnMainBoardService {
 	// 6. 게시글 삭제하기
 	int deleteByIdx(int idx);
 	
-	// 6. 유저가 쓴글 보여주기
-	List<DaangnMainBoardVO> selectByUserIdx(int userIdx);
+	// 6. 유저가 쓴글 보여주기(userRef, statusRef, lastItemIdx, sizeOfPage)
+	List<DaangnMainBoardVO> selectScrollListByUserIdx(ScrollVO sv);
 }

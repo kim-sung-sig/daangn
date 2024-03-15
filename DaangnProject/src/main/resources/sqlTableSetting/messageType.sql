@@ -1,4 +1,5 @@
-
+DROP TABLE MessageType;
+DROP SEQUENCE MessageType_idx_seq;
 CREATE SEQUENCE MessageType_idx_seq;
 CREATE TABLE MessageType (
     idx NUMBER PRIMARY KEY,
@@ -7,6 +8,7 @@ CREATE TABLE MessageType (
 
 INSERT INTO MessageType VALUES (MessageType_idx_seq.nextval, 'ENTER');
 INSERT INTO MessageType VALUES (MessageType_idx_seq.nextval, 'TALK');
+INSERT INTO MessageType VALUES (MessageType_idx_seq.nextval, 'LEAVE');
 INSERT INTO MessageType VALUES (MessageType_idx_seq.nextval, 'RESERVE');
 
 SELECT * FROM MessageType;

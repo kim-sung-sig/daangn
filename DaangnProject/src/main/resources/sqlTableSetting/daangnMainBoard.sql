@@ -15,7 +15,8 @@ CREATE TABLE daangn_board(
 	location varchar2(200) NOT NULL,
 	loc varchar2(200) NOT NULL,
 	readCount NUMBER DEFAULT 0,
-	regDate TIMESTAMP DEFAULT SYSDATE
+	regDate TIMESTAMP DEFAULT SYSDATE,
+	CONSTRAINT fk_daangn_board_ref FOREIGN KEY (userRef) REFERENCES daangn_member(idx) ON DELETE CASCADE
 );
 
 SELECT * FROM daangn_board;

@@ -20,9 +20,7 @@ import kr.ezen.daangn.dao.DaangnChatRoomDAO;
 import kr.ezen.daangn.dao.DaangnLikeDAO;
 import kr.ezen.daangn.dao.DaangnMainBoardDAO;
 import kr.ezen.daangn.dao.DaangnMainBoardScrollDAO;
-import kr.ezen.daangn.vo.CommonVO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
-import kr.ezen.daangn.vo.PagingVO;
 import kr.ezen.daangn.vo.ScrollVO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -116,20 +114,18 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 	}
 	*/
 
-	/**
-	 * 한개 보기
-	 * @param int idx
-	 * @return DaangnMainBoardVO
-	 */
+	/** idx로 한개 얻기 */
 	@Override
 	public DaangnMainBoardVO selectByIdx(int idx) {
 		DaangnMainBoardVO boardVO = null;
 		try {
 			boardVO = daangnMainBoardDAO.selectByIdx(idx);
-			boardVO.setMember(daangnMemberService.selectByIdx(boardVO.getUserRef()));				// 유저정보
-			boardVO.setCountLike(daangnLikeDAO.countLike(boardVO.getIdx()));						// 좋아요수
-			boardVO.setBoardFileList(daangnBoardFileDAO.selectFileByBoardIdx(boardVO.getIdx()));	// 파일
-			boardVO.setChatRoomCount(daangnChatRoomDAO.selectCountByBoardIdx(boardVO.getIdx()));	// 채팅 수
+			if(boardVO != null) {
+				boardVO.setMember(daangnMemberService.selectByIdx(boardVO.getUserRef()));				// 유저정보
+				boardVO.setCountLike(daangnLikeDAO.countLike(boardVO.getIdx()));						// 좋아요수
+				boardVO.setBoardFileList(daangnBoardFileDAO.selectFileByBoardIdx(boardVO.getIdx()));	// 파일
+				boardVO.setChatRoomCount(daangnChatRoomDAO.selectCountByBoardIdx(boardVO.getIdx()));	// 채팅 수				
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -137,24 +133,20 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 	}
 	
 	
-	/**
-	 * 저장하기
-	 * @param DaangnMainBoardVO
-	 */
+	/** 저장하기 */
 	@Override
 	public int saveMainBoard(DaangnMainBoardVO board) {
 		int result = 0;
 		try {
-			result = daangnMainBoardDAO.insert(board);
+			daangnMainBoardDAO.insert(board);
+			result = 1;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return result;
 	}
 	
-	/**
-	 * 조회수 증가
-	 */
+	/** 조회수 증가 */
 	@Override
 	public void updateReadCount(int idx) {
 		try {
@@ -167,9 +159,7 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 		}
 	}
 
-	/**
-	 * 글 수정하기
-	 */
+	/** 글 수정하기 */
 	@Override
 	public int update(DaangnMainBoardVO board) {
 		int result = 0;
@@ -192,9 +182,7 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 		return result;
 	}
 
-	/**
-	 * 글 삭제하기
-	 */
+	/** 글 삭제하기 */
 	@Override
 	public int deleteByIdx(int idx) {
 		int result = 0;
@@ -207,33 +195,14 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 		return result;
 	}
 	
-	/**
-	 * 유저가 쓴 글 주기!
-	 * @param int userIdx
-	 * @return List<DaangnMainBoardVO>
-	 */
-	@Override
-	public List<DaangnMainBoardVO> selectByUserIdx(int userIdx) {
-		List<DaangnMainBoardVO> list = null;
-		try {
-			list = daangnMainBoardDAO.selectByRef(userIdx);
-			for(DaangnMainBoardVO boardVO : list) {
-				boardVO.setMember(daangnMemberService.selectByIdx(boardVO.getUserRef()));				// 유저정보
-				boardVO.setCountLike(daangnLikeDAO.countLike(boardVO.getIdx()));						// 좋아요수
-				boardVO.setBoardFileList(daangnBoardFileDAO.selectFileByBoardIdx(boardVO.getIdx()));	// 파일
-				boardVO.setChatRoomCount(daangnChatRoomDAO.selectCountByBoardIdx(boardVO.getIdx()));	// 채팅 수
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return list;
-	}
-	
-	
 	
 	@Autowired
 	private DaangnMainBoardScrollDAO scrollDAO;
 	
+	/** 
+	 * lastItemIdx와 sizeOfPage 및 나머지 카테고리정보를 받아 리스트 뿌리기
+	 * @param ScrollVO sv
+	 * */
 	@Override
 	public List<DaangnMainBoardVO> selectScrollList(ScrollVO sv) {
 		List<DaangnMainBoardVO> list = null;
@@ -268,5 +237,28 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 			e.printStackTrace();
 		}
 		return result;
+	}
+	
+	/** 유저가 쓴 글 주기! (userRef, statusRef, lastItemIdx, sizeOfPage) */
+	@Override
+	public List<DaangnMainBoardVO> selectScrollListByUserIdx(ScrollVO sv) {
+		List<DaangnMainBoardVO> list = null;
+		try {
+			HashMap<String, Object> map = new HashMap<>();
+			map.put("lastItemIdx", sv.getLastItemIdx());
+			map.put("sizeOfPage", sv.getSizeOfPage());
+			map.put("userRef", sv.getUserRef());
+			map.put("statusRef", sv.getStatusRef());
+			list = scrollDAO.selectScrollList(map);
+			for(DaangnMainBoardVO boardVO : list) {
+				if(boardVO != null) {
+					boardVO.setBoardFileList(daangnBoardFileDAO.selectFileByBoardIdx(boardVO.getIdx()));
+					boardVO.setMember(daangnMemberService.selectByIdx(boardVO.getUserRef()));
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 }

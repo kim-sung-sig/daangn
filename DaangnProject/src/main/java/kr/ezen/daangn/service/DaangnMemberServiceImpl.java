@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional
 public class DaangnMemberServiceImpl implements DaangnMemberService{
-	
+	// 1. 게시글 지우고 게시글 파일 지우고 popular지우고 코멘트 지우고 chatRoom지우고 chatMessage지우고 유저파일 지우고
 	@Autowired
 	private DaangnMemberDAO daangnMemberDAO;
 	@Autowired
@@ -54,17 +54,20 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 	 * 유저 비빌번호를 암호화한 후 저장
 	 */
 	@Override
-	public void insert(DaangnMemberVO memberVO) {
+	public int insert(DaangnMemberVO memberVO) {
+		int result = 0;
 		if(memberVO != null) {
 			try {
 				BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 				memberVO.setPassword(passwordEncoder.encode(memberVO.getPassword()));
 				memberVO.setRole("ROLE_USER");
 				daangnMemberDAO.insert(memberVO);
+				result = 1;
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
+		return result;
 	}
 	
 	/** 유저 정보 수정하기 */
@@ -100,10 +103,11 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 	
 	/** 유저 삭제하기 */
 	@Override
+	@Transactional
 	public int deleteByIdx(int idx) {
 		int result = 0;
 		try {
-			daangnMemberDAO.deleteByIdx(idx);
+			daangnMemberDAO.deleteByIdx(idx); // cascade 걸어놈
 			result = 1;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -112,7 +116,7 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 	}
 	
 	@Override
-	public List<DaangnMainBoardVO> selectMainBoardByMemberIdx(int idx) {
+	public List<DaangnMainBoardVO> selectMainBoardByUserIdx(int userIdx) {
 		return null;
 	}
 	
@@ -147,7 +151,7 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 		return result;
 	}
 	
-	/** 닉네임 중복체크를 위한 메서드 (아직 미사용) */
+	/** 닉네임 중복체크를 위한 메서드 */
 	@Override
 	public int selectCountByNickName(String nickName) {
 		int result = 0;

@@ -46,7 +46,7 @@ public class HomeController {
 	 * 초기 어드민들 패스워드 암호화하는 주소
 	 * @return
 	 */
-	// @GetMapping("/dbinit") // 기존에 등록된 비번을 암호화 해서 변경한다. 1번만 실행하고 지워줘라~~~
+	//@GetMapping("/dbinit") // 기존에 등록된 비번을 암호화 해서 변경한다. 1번만 실행하고 지워줘라~~~
 	public String dbInit() {
 		jdbcTemplate.update("update daangn_member set password=? where username=?", passwordEncoder.encode("123456"),"admin");
 		jdbcTemplate.update("update daangn_member set password=? where username=?", passwordEncoder.encode("123456"),"master");
@@ -55,21 +55,4 @@ public class HomeController {
 		jdbcTemplate.update("update daangn_member set password=? where username=?", passwordEncoder.encode("123456"),"dba");
 		return "redirect:/";
 	}
-	
-	@GetMapping(value = "/asd")
-	public String test() {
-		return "test";
-	}
-	@GetMapping(value = "/qwe")
-	public String test2() {
-		return "test2";
-	}
-	
-	@GetMapping(value = "/chatLeaveTest")
-	@ResponseBody
-	public String chatLeaveTest() {
-		log.info("채팅방을 떠남을 알림");
-		return "1";
-	}
-	
 }

@@ -25,3 +25,13 @@ h2 > img {max-width: 50%;}
 }
 .previewImgBox img{width: 250px; height: auto;}
 .imgCancleBtn{position: absolute; top: 0; right: 0; cursor: pointer; background: #fff;}
+
+#summitBtn{
+	border-radius: 10px;
+	padding: 0 20px;
+	background: #FF8A3D;
+}
+#homeBtn{
+	border-radius: 10px;
+	padding: 0 20px;
+}

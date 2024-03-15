@@ -59,4 +59,7 @@ public interface DaangnChatMessageDAO {
 	// 3. 글 삭제하기
 	void deleteChat(int idx) throws SQLException;
 	
+	
+	/** userIdx로 삭제하기 */
+	void deleteChatMessage(int userIdx) throws SQLException;
 }

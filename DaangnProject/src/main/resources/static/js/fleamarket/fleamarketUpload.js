@@ -90,11 +90,6 @@ $(function() {
     });
     $("#fileInput").change(function(){
 		const files = Array.from($(this)[0].files);
-		if (files.length > 5) {
-		    files.splice(5); // 배열의 첫 5개 요소만 남김
-		}
-		console.log(files);
-		console.log(files.length);
 		insertFiles(files);
 	})
 	// 2. 드래그 앤 드롭 영역 설정
@@ -120,39 +115,30 @@ $(function() {
         const files = e.dataTransfer.files;
         insertFiles(files);
     });
-    /**
-	 * 파일 최대크기에 도달햇는지 확인하는 함수
-	 */
-    function isMaxfileCount(){
-		let result = false;
+    /** 파일 최대크기에 도달햇는지 확인하는 함수 */
+    function getfileCount(){
+		let result = 0;
 		let files = document.querySelectorAll(".inputFile");
-		if(files.length >= 5){
-			result = true;
-			alert("파일은 최대 5개만 올릴 수 있습니다.")
-		}
+		result = files.length;
 		return result;
 	}
-	/**
-	 * file이 사진인지 아닌지 판단하는 함수
-	 */
+	/** file이 사진인지 아닌지 판단하는 함수 */
 	function isImage(file) {
 	    return file.type.startsWith('image/');
 	}
-	/**
-	 * fileBox에 inputfile을 넣어주고 미리보기를 만드는 함수
-	 */
+	/** fileBox에 inputfile을 넣어주고 미리보기를 만드는 함수 */
 	function insertFiles(files){
 		const fileBox = document.querySelector("#fileBox");
 		const previewElement = document.querySelector('#preview');
+		let currentFileCount = getfileCount();
         for (let i = 0; i < files.length; i++) {
-            if(!isMaxfileCount()){
+            if(currentFileCount + i < 5){
 	            let reader = new FileReader();
 	            // 파일의 내용을 읽어 데이터 URL로 변환
 	            reader.readAsDataURL(files[i]);
 	            // 읽기가 완료된 후 실행되는 콜백 함수
 	            reader.onload = function () {
 					if(isImage(files[i])){
-						//input 만들고
 						const newFile = document.createElement('input');
 			            newFile.setAttribute("type", "file");
 			            newFile.setAttribute("name", "file");
@@ -181,9 +167,12 @@ $(function() {
 		                div.appendChild(span);
 		                previewElement.appendChild(div);					
 					} else {
-						alert("사진만 올릴 수 있습니다.");
+						alert("image형식의 파일만 올릴 수 있습니다.");
 					}
 	            };
+			} else {
+				alert('최대 5장까지만 올릴 수 있습니다.');
+				break;
 			}
         };
 	};
@@ -201,6 +190,13 @@ $(function() {
     
     // 폼체크
     $("#uploadForm").submit(function(){
+		const fileBox = document.querySelector('#fileBox');
+		const childCount = fileBox.children.length;
+		if(childCount == 0){
+			alert('파일을 등록해주세요.');
+			$("#fileInput").focus();
+			return false;
+		}
 		let value = $("#subject").val();
 		if(value.trim().length == 0){
 			alert('제목을 입력해주세요.');
@@ -254,7 +250,6 @@ $(function() {
 			$("#detailAddress").focus();
 			return false;
 		}
-		alert('상품을 등록했습니다.')
 		return true;
 	});
 	

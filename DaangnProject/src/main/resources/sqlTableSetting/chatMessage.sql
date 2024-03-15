@@ -9,7 +9,9 @@ CREATE TABLE chatMessage (
 	sender NUMBER NOT NULL,
 	content varchar2(200) NOT NULL,
 	regDate timestamp DEFAULT sysdate,
-	readed NUMBER DEFAULT 1
+	readed NUMBER DEFAULT 1,
+	CONSTRAINT fk_chatMessage_chatRoom_ref FOREIGN KEY (chatRoom) REFERENCES chatRoom(roomIdx) ON DELETE CASCADE,
+	CONSTRAINT fk_chatMessage_sender_ref FOREIGN KEY (sender) REFERENCES daangn_member(idx) ON DELETE CASCADE
 );
 
 SELECT * FROM CHATMESSAGE c ;
