@@ -27,6 +27,7 @@
 		<main>
 			<input type="hidden" id="chatRoomIdx" th:value="${chatRoomIdx}">
 			<input type="hidden" id="sender" th:value="${sender}">
+			<input type="hidden" id="lastItemIdx" th:value="${lastItemIdx + 1}">
 			<div id="info">
 				<div id="boardImg">
 					<img th:src="'/upload/'+${board.boardFileList[0].saveFileName}" alt="" />

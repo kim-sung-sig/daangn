@@ -12,11 +12,6 @@
 	<script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
 	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-	<!-- axios -->
-	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-	<!-- moment.js -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
-	
 	<link rel="stylesheet" href="/css/header.css">
 	<link rel="stylesheet" href="/css/fleamarket/fleamarket.css">
 	<script src="/js/fleamarket/fleamarket.js"></script>
@@ -25,7 +20,6 @@
 	<div id="wrap">
 		<th:block th:insert="~{/header.html}"></th:block>
 		<main>
-			<input type="hidden" id="lastItemIdx" th:value="${lastItemIdx + 1}" />
 			<div class="uk-container">
 				<div class="main-top">
 					<h3>중고 물품 리스트</h3>
@@ -51,16 +45,42 @@
 						<form action="" method="get" id="searchForm">
 							<div class="uk-inline">
 					        	<span class="uk-form-icon" uk-icon="icon: search"></span>
-					        	<input th:if="${search == null}" class="uk-input uk-form-width-long chat" type="text" aria-label="Not clickable icon" placeholder="동네 물품을 검색해주세요!" name="search" id="searchText">
-					        	<input th:if="${search != null}" th:value="${search}" class="uk-input uk-form-width-long chat" type="text" aria-label="Not clickable icon" placeholder="동네 물품을 검색해주세요!" name="search" id="searchText">
+					        	<input class="uk-input uk-form-width-long chat" type="text" aria-label="Not clickable icon" placeholder="동네 물품을 검색해주세요!" name="search" id="searchText">
 					    	</div>
 						</form>
 					</div>
 				</div>
 			</div>
 			
-			<div class="uk-container" id="viewBox">
-				<div id="slide"></div>
+			<div class="uk-container">
+				<div id="slide">
+					<!-- 
+					<th:block th:if="${#lists.isEmpty(pv.list)}">
+						<script type="text/javascript">
+							alert("중고물품이 존재하지 않습니다.");
+							location.href="/fleamarket"
+						</script>
+					</th:block>
+					-->
+					<!-- /*
+					<th:block th:each="vo : ${pv.list}">
+						<article class="uk-card" th:onclick="detail([[${vo.idx}]])">
+							<div class="uk-card-media-top">
+								<th:block th:each="img, sv : ${vo.boardFileList}">
+									<img th:if="${sv.first}" th:src="'./upload/' + ${img.saveFileName}" alt="" />
+								</th:block>
+							</div>
+							<div class="uk-card-body">
+								<h4 class="uk-card-title">[[${vo.subject}]]</h4>
+								<p class="price">[[${#numbers.formatInteger(vo.price, 0, 'COMMA')}]]원</p>
+								<span class="city">[[${vo.loc}]]</span>
+								<p class="like"><span>관심 [[${vo.countLike}]]</span>ㆍ<span>채팅 [[${vo.chatRoomCount}]]</span>ㆍ<span>조회수 [[${vo.readCount}]]</span></p>
+								<p class="regDate">게시일 [[${#dates.format(vo.regDate,'yyyy.MM.dd')}]]</p>
+							</div>
+						</article>
+					</th:block>
+					*/ -->
+				</div>
 			</div>
 		</main>
 	</div>

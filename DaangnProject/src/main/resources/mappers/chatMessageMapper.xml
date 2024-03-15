@@ -2,15 +2,47 @@
 <!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "./mybatis-3-mapper.dtd" >
 <mapper namespace="kr.ezen.daangn.dao.DaangnChatMessageDAO">
 
-	<select id="selectChatByChatRoomIdx" parameterType="int" resultType="ChatMessageVO">
+	<select id="selectChatByChatRoomIdx" parameterType="hashmap" resultType="ChatMessageVO">
 		select
-			*
+			rownum rnum, Q.*
 		from
-			chatMessage
+			(
+				select
+					chatMessage.*
+					, (
+						SELECT
+							nickName
+						FROM
+							daangn_member
+						WHERE
+							daangn_member.idx = chatMessage.sender
+					) AS nickName
+					, (
+						SELECT
+							saveFileName
+						FROM
+							daangn_user_file
+						WHERE
+							daangn_user_file.ref = chatMessage.sender
+					) AS userProfileName
+				from
+					chatMessage
+				where
+					<![CDATA[
+						chatMessage.idx < #{lastItemIdx}
+					]]>
+					and chatRoom = #{chatRoomIdx}
+				order by
+					idx desc
+			) Q
 		where
-			chatRoom = #{chatRoomIdx}
-		order by
-			idx desc
+			<![CDATA[
+				rownum <= #{sizeOfPage}
+			]]>
+	</select>
+	
+	<select id="getLastIdx" resultType="int">
+		SELECT MAX(chatMessage.idx) FROM chatMessage
 	</select>
 	
 	<insert id="insertChat" parameterType="ChatMessageVO">

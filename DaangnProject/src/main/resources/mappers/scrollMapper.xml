@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "./mybatis-3-mapper.dtd" >
+<mapper namespace="kr.ezen.daangn.dao.DaangnMainBoardScrollDAO">
+	<!-- 페이징을 위한 List 뿌리기 -->
+	<select id="selectScrollList" parameterType="hashmap" resultType="DaangnMainBoardVO">
+		select
+			rownum rnum, Q.*
+		from
+			(
+				select
+					daangn_board.*
+					, (
+						SELECT
+							categoryName
+						FROM
+							daangn_category
+						WHERE
+							daangn_category.categoryIdx = daangn_board.categoryRef
+					) AS categoryName
+					, (
+						SELECT
+							statusName
+						FROM
+							daangn_status
+						WHERE
+							daangn_status.statusIdx = daangn_board.statusRef
+					) AS statusName
+					, (
+						SELECT
+							COUNT(*)
+						FROM
+							daangn_like_tb 
+						WHERE
+							daangn_like_tb.boardIdx = daangn_board.idx
+					) AS countLike
+					, (
+						SELECT
+							COUNT(*)
+						FROM
+							chatRoom
+						WHERE
+							chatRoom.boardIdx = daangn_board.idx
+					) AS chatRoomCount
+				from
+					daangn_board
+				where
+					<![CDATA[
+						daangn_board.idx < #{lastItemIdx}
+					]]>
+					<if test="categoryRef != null">
+		                and categoryRef = #{categoryRef}
+		            </if>
+		            <if test="statusRef != null">
+		                and statusRef = #{statusRef}
+		            </if>
+		            <if test="statusRef == null">
+		                AND <![CDATA[statusRef <> 3]]>
+		            </if>
+					<if test="search != null">
+		                AND (
+		                    SUBJECT LIKE '%' || #{search} || '%'
+		                    OR CONTENT LIKE '%' || #{search} || '%'
+		                )
+		            </if>
+		            <if test="region != null">
+		                AND LOC LIKE '%' || #{region} || '%'
+		            </if>
+		            <if test="gu != null">
+		                AND LOC LIKE '%' || #{gu} || '%'
+		            </if>
+		            <if test="dong != null">
+		                AND LOC LIKE '%' || #{dong} || '%'
+		            </if>
+				order by
+					daangn_board.idx DESC
+			) Q
+		where
+			<![CDATA[
+				rownum <= #{sizeOfPage}
+			]]>
+	</select>
+	
+	
+	<select id="getLastIdx" resultType="int">
+		SELECT MAX(daangn_board.idx) FROM daangn_board
+	</select>
+</mapper>

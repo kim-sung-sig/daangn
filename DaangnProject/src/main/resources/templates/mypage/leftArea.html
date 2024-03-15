@@ -1,0 +1,15 @@
+<div id="leftArea">
+	<div style="position: relative;">
+		<div id="userProfileImg">
+			<img th:if="${user.userFile == null}" src="/img/user.png" alt="user" />
+			<img th:if="${user.userFile != null}" th:src="'/upload/' + ${user.userFile.saveFileName}" alt="user" />
+		</div>
+	</div>
+	<p id="userName">[[${user.username}]]</p>
+	<ul class="mypageNav">
+		<li><a href="/member/Home">회원 정보</a></li>
+		<li><a href="/member/myBoard">내가 쓴 글</a></li>
+		<li><a href="/member/myLike">좋아요한 글</a></li>
+		<li><a href="#">최근 방문</a></li>
+	</ul>
+</div>

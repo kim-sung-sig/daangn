@@ -27,7 +27,7 @@ public class SecurityConfig {
 		http.authorizeHttpRequests((authorize) -> {
 			authorize
 					// mainPage
-					.requestMatchers("/","/dbinit").permitAll()
+					.requestMatchers("/", "/dbinit", "/getfleamarketList").permitAll()
 					// 지정 주소에 대한 권한 설정 **은 하위폴더 포함 모두
 					.requestMatchers("/css/**", "/js/**", "/img/**", "/upload/**").permitAll()
 					// 회원가입 폼과 회원가입 완료는 누구나 접근 가능 

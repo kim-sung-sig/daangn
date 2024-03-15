@@ -20,6 +20,7 @@ import kr.ezen.daangn.vo.ChatMessageVO;
 import kr.ezen.daangn.vo.ChatRoomVO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
 import kr.ezen.daangn.vo.DaangnMemberVO;
+import kr.ezen.daangn.vo.ScrollVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -67,16 +68,16 @@ public class ChatRoomController {
 		model.addAttribute("board", boardVO);
 		model.addAttribute("chatRoomIdx", chatRoomIdx);
 		model.addAttribute("sender", memberVO.getIdx());
-		model.addAttribute("list", chatService.selectMessageByChatRoomIdx(chatRoomIdx));
+		model.addAttribute("lastItemIdx", chatService.getChatMessageLastIdx());
+		// model.addAttribute("list", chatService.selectMessageByChatRoomIdx(chatRoomIdx));
 		return "chat/chatRoom";
 	}
 	
 	@PostMapping("/findChatMessages")
 	@ResponseBody
-	public List<ChatMessageVO> findChatMessages(@RequestBody ChatMessageVO chatMessageVO){
-		List<ChatMessageVO> list = null;
-		log.info("findChatMessages 실행 idx={}", chatMessageVO.getChatRoom());
-		list = chatService.selectMessageByChatRoomIdx(chatMessageVO.getChatRoom());
+	public List<ChatMessageVO> findChatMessages(@RequestBody ScrollVO sv){
+		log.info("findChatMessages 실행 {}", sv);
+		List<ChatMessageVO> list = chatService.selectMessageByChatRoomIdx(sv.getChatRoomIdx(), sv.getLastItemIdx(), sv.getSizeOfPage());
 		return list;
 	}
 	

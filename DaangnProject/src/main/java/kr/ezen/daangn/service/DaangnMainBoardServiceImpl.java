@@ -19,9 +19,11 @@ import kr.ezen.daangn.dao.DaangnBoardFileDAO;
 import kr.ezen.daangn.dao.DaangnChatRoomDAO;
 import kr.ezen.daangn.dao.DaangnLikeDAO;
 import kr.ezen.daangn.dao.DaangnMainBoardDAO;
+import kr.ezen.daangn.dao.DaangnMainBoardScrollDAO;
 import kr.ezen.daangn.vo.CommonVO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
 import kr.ezen.daangn.vo.PagingVO;
+import kr.ezen.daangn.vo.ScrollVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Service(value = "daangnMainBoardService")
@@ -80,6 +82,7 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 	 * @param CommonVO
 	 * @return List<DaangnMainBoardVO>
 	 */
+	/*
 	@Override
 	public PagingVO<DaangnMainBoardVO> selectList(CommonVO cv) {
 		PagingVO<DaangnMainBoardVO> pv = null;
@@ -111,6 +114,7 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 		}
 		return pv;
 	}
+	*/
 
 	/**
 	 * 한개 보기
@@ -214,13 +218,55 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 		try {
 			list = daangnMainBoardDAO.selectByRef(userIdx);
 			for(DaangnMainBoardVO boardVO : list) {
-				boardVO.setMember(daangnMemberService.selectByIdx(boardVO.getUserRef()));						// 유저정보
+				boardVO.setMember(daangnMemberService.selectByIdx(boardVO.getUserRef()));				// 유저정보
 				boardVO.setCountLike(daangnLikeDAO.countLike(boardVO.getIdx()));						// 좋아요수
 				boardVO.setBoardFileList(daangnBoardFileDAO.selectFileByBoardIdx(boardVO.getIdx()));	// 파일
+				boardVO.setChatRoomCount(daangnChatRoomDAO.selectCountByBoardIdx(boardVO.getIdx()));	// 채팅 수
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return list;
+	}
+	
+	
+	
+	@Autowired
+	private DaangnMainBoardScrollDAO scrollDAO;
+	
+	@Override
+	public List<DaangnMainBoardVO> selectScrollList(ScrollVO sv) {
+		List<DaangnMainBoardVO> list = null;
+		try {
+			HashMap<String, Object> map = new HashMap<>();
+			map.put("lastItemIdx", sv.getLastItemIdx());
+			map.put("sizeOfPage", sv.getSizeOfPage());
+			map.put("categoryRef", sv.getCategoryRef());
+			map.put("search", sv.getSearch());
+			map.put("region", sv.getRegion());
+			map.put("gu", sv.getGu());
+			map.put("dong", sv.getDong());
+			list = scrollDAO.selectScrollList(map);
+			for(DaangnMainBoardVO boardVO : list) {
+				if(boardVO != null) {
+					boardVO.setBoardFileList(daangnBoardFileDAO.selectFileByBoardIdx(boardVO.getIdx()));
+					boardVO.setMember(daangnMemberService.selectByIdx(boardVO.getUserRef()));
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	@Override
+	public int getLastIdx() {
+		int result = 0;
+		try {
+			result = scrollDAO.getLastIdx();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 }

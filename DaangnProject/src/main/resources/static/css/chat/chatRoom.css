@@ -1,6 +1,7 @@
 @charset 'UTF-8';
 
-body, html {font-family: "Noto Sans KR"; font-weight: 300; }
+*{padding: 0; margin: 0; box-sizing: border-box;}
+body, html {font-family: "Noto Sans KR"; font-weight: 300;}
 body{position: relative; height: 100vh; }
 main{width: 400px; margin: auto; position:absolute;top:50%;left:50%;transform:translate(-50%,-50%); height: 100vh; background: #333; color: #fff;}
 #info{height: 100px; background: #333; display: flex; box-shadow: 0 1px 3px #fff}
@@ -85,7 +86,7 @@ p{margin: 0;}
 
 .ch1 {
 	display: flex;
-	margin-bottom: 2px;
+	margin-bottom: 5px;
 }
 .ch2 {
 	display: flex;
@@ -134,8 +135,8 @@ p{margin: 0;}
 	align-items: center;
 	justify-content: center;
 	border-radius: 20px;
-	width: 90px;
-	height: 90px;
+	width: 100px;
+	height: 100px;
 }
 #boardDetail{
 	padding: 10px 5px;

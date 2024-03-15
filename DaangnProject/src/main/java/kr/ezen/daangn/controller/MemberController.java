@@ -2,7 +2,6 @@ package kr.ezen.daangn.controller;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,6 @@ import kr.ezen.daangn.service.DaangnMemberService;
 import kr.ezen.daangn.service.DaangnUserFileService;
 import kr.ezen.daangn.service.MailService;
 import kr.ezen.daangn.vo.DaangnFileVO;
-import kr.ezen.daangn.vo.DaangnMainBoardVO;
 import kr.ezen.daangn.vo.DaangnMemberVO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -165,9 +163,11 @@ public class MemberController {
     	return result + "";
     }
     
-    
+    //=====================================================================================================
+    // 마이페이지 에서 하는
+    //=====================================================================================================
     /** 마이페이지! */
-    @GetMapping(value = "/home")
+    @GetMapping(value = "/Home")
 	public String home(HttpSession session, Model model) {
     	if(session.getAttribute("user") == null) {
     		return "redirect:/";
@@ -177,8 +177,41 @@ public class MemberController {
     	DaangnMemberVO sessionUser = (DaangnMemberVO) session.getAttribute("user");
     	DaangnMemberVO user = daangnMemberService.selectByIdx(sessionUser.getIdx());
     	model.addAttribute("user", user);
-		return "myHome";
+		return "mypage/myHome";
 	}
+    
+    /** 마이페이지 내가 쓴글 보기 */
+    @GetMapping(value = "/myBoard")
+    public String myboard(HttpSession session, Model model) {
+    	if(session.getAttribute("user") == null) {
+    		return "redirect:/";
+    	}
+    	log.info("myboard 실행");
+    	DaangnMemberVO sessionUser = (DaangnMemberVO) session.getAttribute("user");
+    	DaangnMemberVO user = daangnMemberService.selectByIdx(sessionUser.getIdx());
+    	model.addAttribute("user", user);
+    	model.addAttribute("boardList", daangnMainBoardService.selectByUserIdx(user.getIdx()));
+    	return "mypage/myBoard";
+    }
+    
+    /** 마이페이지 좋아요한 글 보기 */
+    @GetMapping(value = "/myLike")
+    public String myLike(HttpSession session, Model model) {
+    	if(session.getAttribute("user") == null) {
+    		return "redirect:/";
+    	}
+    	log.info("myLike 실행");
+    	DaangnMemberVO sessionUser = (DaangnMemberVO) session.getAttribute("user");
+    	DaangnMemberVO user = daangnMemberService.selectByIdx(sessionUser.getIdx());
+    	model.addAttribute("user", user);
+    	daangnLikeService.selectLikeByUseridx(user.getIdx());
+    	// model.addAttribute("boardList", daangnMainBoardService.selectByUserIdx(user.getIdx()));
+    	return "mypage/myLike";
+    }
+    
+    
+    
+    
     
     /** 현재 로그인한 유저의 비밀번호와 보낸 비밀번호가 일치하는지 확인하는 주소 */
     @PostMapping(value = "/checkPasswordMatch")
@@ -260,43 +293,5 @@ public class MemberController {
 			}
 		}
     	return "redirect:/member/home";
-    }
-    
-    
-    //=====================================================================================
-    // 여기는 아직 보류
-    //=====================================================================================
-    /** 좋아요한 글 보여주는 */
-    @GetMapping(value = "/home/Like")
-    public String homeLike(HttpSession session, Model model) {
-    	if(session.getAttribute("user") == null) {
-    		return "redirect:/";
-    	}
-    	log.info("homeLike 실행");
-    	DaangnMemberVO memberVO = (DaangnMemberVO) session.getAttribute("user");
-    	// 1. 유저가 좋아요한 목록들 (관심목록)
-    	List<DaangnMainBoardVO> boardList = null;
-    	List<Integer> likeList = daangnLikeService.selectLikeByUseridx(memberVO.getIdx());
-    	for(Integer i : likeList) {
-    		DaangnMainBoardVO boardVO = daangnMainBoardService.selectByIdx(i);
-    		if(boardVO != null) {
-    			boardList.add(boardVO);    			
-    		}
-    	}
-    	model.addAttribute("boardList", boardList); // 관심목록 넘겨주기!
-    	return "homeLike";
-    }
-    
-    @GetMapping(value = "/home/sell")
-    public String homeSell(HttpSession session, Model model) {
-    	if(session.getAttribute("user") == null) {
-    		return "redirect:/";
-    	}
-    	log.info("homeSell 실행");
-    	DaangnMemberVO memberVO = (DaangnMemberVO) session.getAttribute("user");
-    	// 2. 유저가 쓴글 (판매내역)
-    	List<DaangnMainBoardVO> boardList = daangnMainBoardService.selectByUserIdx(memberVO.getIdx()); // 사진도 넘겨주나?
-    	model.addAttribute("boardList", boardList); // 관심목록 넘겨주기!
-    	return "homeSell";
     }
 }

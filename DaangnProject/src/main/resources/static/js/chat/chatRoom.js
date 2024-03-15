@@ -1,6 +1,8 @@
 $(function() {
 	const chatRoomIdx = $("#chatRoomIdx").val();
 	const sender = $("#sender").val();
+	const sizeOfPage = 30;
+	let lastItemIdx = $("#lastItemIdx").val();
 	let isJoined = false;
     // WebSocket 및 Stomp 초기화
     var sock = new SockJS("/ws");
@@ -20,8 +22,7 @@ $(function() {
 	
     /** 메시지를 받을때 실행되는 함수 */
     function recvMessage(recv) {
-        let message = {"chatRoom": recv.chatRoom, "typeRef": recv.typeRef, "sender": recv.sender, "nickName": recv.nickName,"userProfileName": recv.userProfileName, "content": recv.content, "regDate": recv.regDate, "readed": recv.readed};
-        console.log("처리전")
+        let message = {"idx": recv.idx,"chatRoom": recv.chatRoom, "typeRef": recv.typeRef, "sender": recv.sender, "nickName": recv.nickName,"userProfileName": recv.userProfileName, "content": recv.content, "regDate": recv.regDate, "readed": recv.readed};
         console.log(message);
         if(isJoined) {
 			message.readed = 0;
@@ -30,10 +31,7 @@ $(function() {
 				message.readed = 1;				
 			}
 		}
-        console.log("처리후")
-		console.log(message);
         updateMessagesUI(message);
-        console.log(isJoined);
     }
 
     // pub/sub 이벤트
@@ -73,22 +71,50 @@ $(function() {
 			}
         }); // subscribe - end
         ws.send("/pub/chat/message", {}, JSON.stringify({'typeRef': 1,'chatRoom': chatRoomIdx, 'sender': sender}));
-        axios.post("/chat/findChatMessages", {
-    		"chatRoom" : chatRoomIdx,
-    	})
-		.then(res => {
-			const data = res.data;
-			reversedData = data.slice().reverse();
-			console.log(reversedData);
-			reversedData.forEach(recv => {
-				recvMessage(recv);
-			})
-		})
-		.catch(e => console.error('이전메시지 불러오기 실패', e));
+        
+        // 메시지 읽어오기
+        readChatMessages();
     }, function(error) {
         alert("error " + error);
     });
+    // 뒤집어야댄다!
     
+    
+    /** 메세지를 불러오기위한 함수 */
+    function readChatMessages(){
+		axios.post("/chat/findChatMessages", {
+    		"chatRoomIdx" : chatRoomIdx,
+    		"lastItemIdx" : lastItemIdx,
+    		"sizeOfPage" : sizeOfPage,
+    	})
+		.then(res => {
+			const data = res.data;
+			if(data.length == 0){
+				document.getElementById("chatMessages").removeEventListener('scroll', handleScroll);
+				return ;
+			}
+			data.forEach(recv => {
+				updateMessagesUIREAD(recv);
+			})
+			findLastItemIdx();
+			if ($("#chatMessages").scrollTop() === 0) {
+	            setTimeout(function() {
+	                var messageList = $("#chatMessages");
+	                messageList.scrollTop(messageList.prop('scrollHeight'));
+	            }, 50);
+	        }
+		})
+		.catch(e => console.error('이전메시지 불러오기 실패', e));
+	}
+	
+	/** lastItemIdx 찾기 */
+	function findLastItemIdx(){
+		let chatMessages = document.querySelectorAll("#chatMessages .chat");
+		let lastItem = chatMessages[0];
+		let idx = lastItem.querySelector(".idx").value;
+		lastItemIdx = idx;
+		console.log('lastItemIdx1 =', lastItemIdx);
+	}
     /**
     * Wed Feb 28 15:26:48 KST 2024 생긴걸
     * PM 3:26으로 바꿔주는 메서드
@@ -111,7 +137,7 @@ $(function() {
         let ck = (sender == message.sender ? '2' : '1');
         const regDate = updateDate(message.regDate);
         const userProfile = message.userProfileName ? "/upload/"+message.userProfileName : '/img/user.png';
-        content = `<div class="chat ch${ck}">`;
+        content = `<div class="chat ch${ck}"><input type="hidden" class="idx" value="${message.idx}">`;
         if(ck==1){
         	content += `<div class="icon"><img src="${userProfile}" alt="user"/></div>`;
         }
@@ -124,12 +150,51 @@ $(function() {
         	content += `<span class="readed">1</span>`;
         }
         content += `${regDate}</span></div></div>`;
-        const messageItem = $('<div>').html(content);
-        messageList.append(messageItem);
+        messageList.append(content);
         setTimeout(function(){
             messageList.scrollTop(messageList.prop('scrollHeight'));
         }, 50);
     }
+    
+    /**읽은 메시지를 뿌려주는 함수 */
+    function updateMessagesUIREAD(message) {
+        const messageList = $('#chatMessages');
+        let ck = (sender == message.sender ? '2' : '1');
+        const regDate = updateDate(message.regDate);
+        const userProfile = message.userProfileName ? "/upload/"+message.userProfileName : '/img/user.png';
+        content = `<div class="chat ch${ck}"><input type="hidden" class="idx" value="${message.idx}">`;
+        if(ck==1){
+        	content += `<div class="icon"><img src="${userProfile}" alt="user"/></div>`;
+        }
+        content += `
+	        	<div class="textbox">
+		    	<p style="word-wrap: break-word;">${message.content}</p>
+				<span class="chat-time">   
+        `;
+        if(message.readed != 0) {
+        	content += `<span class="readed">1</span>`;
+        }
+        content += `${regDate}</span></div></div>`;
+        messageList.prepend(content);
+        /*
+        setTimeout(function(){
+            messageList.scrollTop(messageList.prop('scrollHeight'));
+        }, 50);
+        */
+    }
+    
+    document.getElementById("chatMessages").addEventListener("scroll", handleScroll);
+    /** 스크롤 이벤트 */
+	function handleScroll() {
+	    const chatMessagesDiv = document.getElementById("chatMessages");
+		const scrollTop = chatMessagesDiv.scrollTop;
+    	// console.log('스크롤위치 :', scrollTop);
+	    // 만약 스크롤이 맨 위에 도달했다면
+	    if (scrollTop < 50 ) {
+	        readChatMessages();
+	    }
+	}
+	
 	window.addEventListener('beforeunload', function(event) {
 	    event.preventDefault();
 	    ws.send("/pub/chat/message", {}, JSON.stringify({'typeRef': 3,'chatRoom': chatRoomIdx, 'sender': sender}));
@@ -138,6 +203,8 @@ $(function() {
 		event.preventDefault();
         ws.send("/pub/chat/message", {}, JSON.stringify({'typeRef': 3,'chatRoom': chatRoomIdx, 'sender': sender}));
 	});
+	
+	
 	// 사용자가 확인 대화상자에 대답할 때 호출되는 함수
 	function handleUserResponse() {
 	    const response = confirm('채팅방을 나가시겠습니까?');
@@ -148,9 +215,9 @@ $(function() {
 	    }
 	};
 	
+	
 	//======================================================================
 	// 여기부터 보내는 영역
-	
 	
     function isSendOk(){
     	let result = true;
@@ -187,8 +254,6 @@ $(function() {
         	}
         }
     });
-    
-    
     
     document.getElementById('message').addEventListener('wheel', function(e) {
         const element = e.target;

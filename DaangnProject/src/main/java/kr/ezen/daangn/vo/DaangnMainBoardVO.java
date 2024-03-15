@@ -27,10 +27,11 @@ public class DaangnMainBoardVO {
 		
 	//==================================================
 	// db세팅끝
-	private List<DaangnFileVO> boardFileList;		// 사진등록
-	private DaangnMemberVO member;					// 유저 정보담기
 	private String categoryName;					// 카테고리 이름 1~12 중고마켓, 13 생활꿀팁, 14 QnA
 	private String statusName;						// 상태 이름	1 판매중, 2 예약중, 3 판매완료
 	private int countLike;							// 좋아요 수
 	private int chatRoomCount;						// 체팅 수 읽기?
+	
+	private List<DaangnFileVO> boardFileList;		// 사진등록
+	private DaangnMemberVO member;					// 유저 정보담기
 }

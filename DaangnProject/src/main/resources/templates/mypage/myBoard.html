@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>당근-마이페이지</title>
+<!--제이쿼리 추가-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<!-- UIkit CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css" />
+<!-- UIkit JS -->
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<!-- Ajax처리를 위한 포함 -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<!-- 구글아이콘 사용 -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0" />
+
+<link href="/css/header.css" rel="stylesheet">
+<link href="/css/mypage/home.css" rel="stylesheet">
+<script src="/js/mypage/home.js"></script>
+</head>
+<body>
+	<div id="wrap">
+		<th:block th:insert="~{indexHeader.html}"></th:block>
+		<main>
+			<th:block th:insert="~{mypage/leftArea.html}"></th:block>
+			<div id="rightArea">
+				내가쓴글
+				[[${boardList}]]
+			</div>
+		</main>
+	</div>
+	
+</body>
+</html>

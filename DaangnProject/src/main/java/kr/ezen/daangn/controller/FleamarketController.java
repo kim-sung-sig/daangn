@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -33,6 +35,7 @@ import kr.ezen.daangn.vo.DaangnMainBoardVO;
 import kr.ezen.daangn.vo.DaangnMemberVO;
 import kr.ezen.daangn.vo.PagingVO;
 import kr.ezen.daangn.vo.PopularVO;
+import kr.ezen.daangn.vo.ScrollVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -64,16 +67,10 @@ public class FleamarketController {
 	 */
 	@GetMapping(value = {"/fleamarket","/fleamarket/", "/fleamarket/{region}", "/fleamarket/{region}/{gu}", "/fleamarket/{region}/{gu}/{dong}"})
 	public String list(Model model, HttpSession session, @PathVariable(value = "region", required = false) String region, @PathVariable(value = "gu", required = false) String gu, @PathVariable(value = "dong", required = false) String dong, @RequestParam(value = "search", required = false) String search, @RequestParam(value = "isOk", required = false) String isOk) {
-		log.debug("list 실행 region: {}, gu: {}, dong: {}, search: {}, p: {}", region, gu, dong, search);
+		log.debug("list 실행 region: {}, gu: {}, dong: {}, search: {}", region, gu, dong, search);
 		if(isOk != null) {
 			model.addAttribute("isOk", isOk);
 		}
-		CommonVO commonVO = new CommonVO(region, gu, dong, search);
-		commonVO.setS(20);
-		commonVO.setB(5);
-		PagingVO<DaangnMainBoardVO> pv = daangnMainBoardService.selectList(commonVO);
-		model.addAttribute("pv", pv);
-		
 		if(session.getAttribute("user") != null) {
 			DaangnMemberVO user = (DaangnMemberVO) session.getAttribute("user");
 			DaangnMemberVO dbUserData = daangnMemberService.selectByIdx(user.getIdx());
@@ -81,7 +78,6 @@ public class FleamarketController {
 				model.addAttribute("chatUnreadCount",chatService.selectUnReadCountByUserIdx(dbUserData.getIdx()));				
 			}
 		}
-		
 		// 추가로 지역정보리스트 리턴!
 		model.addAttribute("regionList", daangnMainBoardService.regionList(null,null,null));
 		if (region != null) {
@@ -92,7 +88,19 @@ public class FleamarketController {
 			model.addAttribute("gu", gu);
 			model.addAttribute("dongList", daangnMainBoardService.regionList(region, gu, null));			
 		}
+		if(search != null && search.trim().length() > 0) {
+			model.addAttribute("search", search);
+		}
+		model.addAttribute("lastItemIdx", daangnMainBoardService.getLastIdx());
 		return "fleamarket/fleamarket";
+	}
+	
+	@PostMapping(value = "/getfleamarketList")
+	@ResponseBody
+	public List<DaangnMainBoardVO> getFleamarketList(@RequestBody ScrollVO sv){
+		log.info("getfleamarketList 실행 : {}", sv);
+		List<DaangnMainBoardVO> list = daangnMainBoardService.selectScrollList(sv);
+		return list;
 	}
 	
 	/**

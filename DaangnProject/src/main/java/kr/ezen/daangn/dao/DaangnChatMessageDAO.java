@@ -1,6 +1,7 @@
 package kr.ezen.daangn.dao;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -10,13 +11,14 @@ import kr.ezen.daangn.vo.ChatMessageVO;
 @Mapper
 public interface DaangnChatMessageDAO {
 	
-	/**
-	 * 해당 하는 방의 채팅 가져오기
-	 * @param chatRoomIdx
-	 * @return List<ChatMessageVO>
-	 * @throws SQLException
+	/** 해당 하는 방의 채팅 가져오기
+	 * (chatRoomIdx, lastItemIdx, sizeOfPage)
+	 * 채팅방 번호, 마지막번호, 몇개씩
 	 */
-	List<ChatMessageVO> selectChatByChatRoomIdx(int chatRoomIdx) throws SQLException;
+	List<ChatMessageVO> selectChatByChatRoomIdx(HashMap<String, Integer> map) throws SQLException;
+	
+	/** 가장큰 idx 얻기 */
+	int getLastIdx() throws SQLException;
 	
 	/**
 	 * 글 저장하기
