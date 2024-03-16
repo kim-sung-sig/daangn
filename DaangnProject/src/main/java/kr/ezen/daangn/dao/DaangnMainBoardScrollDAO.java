@@ -19,4 +19,7 @@ public interface DaangnMainBoardScrollDAO {
 	
 	/** 최대 idx를 구하는 메서드 */
 	int getLastIdx() throws SQLException;
+	
+	/** (userRef, statusRef)에 따른 board갯수 얻기 */
+	int getBoardCountByUserIdxAndStatusRef(HashMap<String, Integer> map) throws SQLException;
 }

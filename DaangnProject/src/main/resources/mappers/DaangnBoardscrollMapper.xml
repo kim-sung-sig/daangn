@@ -92,4 +92,13 @@
 	        END
 	    FROM daangn_board
 	</select>
+	
+	<select id="getBoardCountByUserIdxAndStatusRef" parameterType="hashmap" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			daangn_board
+		WHERE
+			userRef = #{userRef} AND statusRef = #{statusRef}
+	</select>
 </mapper>

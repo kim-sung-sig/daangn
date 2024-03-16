@@ -197,7 +197,7 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 	
 	
 	@Autowired
-	private DaangnMainBoardScrollDAO scrollDAO;
+	private DaangnMainBoardScrollDAO daangnMainBoardScrollDAO;
 	
 	/** 
 	 * lastItemIdx와 sizeOfPage 및 나머지 카테고리정보를 받아 리스트 뿌리기
@@ -215,7 +215,13 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 			map.put("region", sv.getRegion());
 			map.put("gu", sv.getGu());
 			map.put("dong", sv.getDong());
-			list = scrollDAO.selectScrollList(map);
+			if(sv.getUserRef() != 0) {
+				map.put("userRef", sv.getUserRef());
+			}
+			if(sv.getStatusRef() != 0) {
+				map.put("statusRef", sv.getStatusRef());
+			}
+			list = daangnMainBoardScrollDAO.selectScrollList(map);
 			for(DaangnMainBoardVO boardVO : list) {
 				if(boardVO != null) {
 					boardVO.setBoardFileList(daangnBoardFileDAO.selectFileByBoardIdx(boardVO.getIdx()));
@@ -232,7 +238,7 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 	public int getLastIdx() {
 		int result = 0;
 		try {
-			result = scrollDAO.getLastIdx();
+			result = daangnMainBoardScrollDAO.getLastIdx();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -249,7 +255,7 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 			map.put("sizeOfPage", sv.getSizeOfPage());
 			map.put("userRef", sv.getUserRef());
 			map.put("statusRef", sv.getStatusRef());
-			list = scrollDAO.selectScrollList(map);
+			list = daangnMainBoardScrollDAO.selectScrollList(map);
 			for(DaangnMainBoardVO boardVO : list) {
 				if(boardVO != null) {
 					boardVO.setBoardFileList(daangnBoardFileDAO.selectFileByBoardIdx(boardVO.getIdx()));
@@ -261,4 +267,20 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 		}
 		return list;
 	}
+	
+	/** (userRef, statusRef)에 따른 board갯수 얻기 */
+	@Override
+	public int getBoardCountByUserIdxAndStatusRef(int userRef, int statusRef) {
+		int result = 0;
+		try {
+			HashMap<String, Integer> map = new HashMap<>();
+			map.put("userRef", userRef);
+			map.put("statusRef", statusRef);
+			result = daangnMainBoardScrollDAO.getBoardCountByUserIdxAndStatusRef(map);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
 }

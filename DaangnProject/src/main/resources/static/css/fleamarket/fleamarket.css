@@ -8,7 +8,8 @@ main{width: 100%; padding: 110px 0;}
 
 #slide{gap:30px;display: grid; grid-template-columns:repeat(4,1fr);}
 
-
+.reserved{border-radius: 5px; background: #4a9975; padding: 3px 6px; font-size: 13px; font-weight: 500; color: #fff;}
+.sold{border-radius: 5px; background: #DEE1E5; padding: 3px 6px; font-size: 13px; font-weight: 600;}
 
 select:focus {outline: none;}
 .uk-card {cursor: pointer; width: 223px; margin-bottom: 56px;}

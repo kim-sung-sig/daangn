@@ -112,7 +112,7 @@
 							<input type="hidden" name="boardIdx" th:value="${board.idx}">						
 							<input th:if="${session.user == null}" type="submit" onclick="alert('로그인 후 이용가능합니다.'); location.href='/member/login'" class="uk-button uk-button-primary" value="채팅하기"/>				
 							<th:block th:if="${session.user != null}">
-								<input th:if="${session.user.idx != board.userRef}" type="submit" class="uk-button uk-button-primary" value="채팅하기"/>				
+								<input th:if="${session.user.idx != board.userRef && board.statusRef != 3}" type="submit" class="uk-button uk-button-primary" value="채팅하기"/>				
 								<input th:if="${session.user.idx == board.userRef}" type="button" class="uk-button uk-button-primary" id="updateBtn" value="수정하기"/>							
 							</th:block>
 						</form>

@@ -7,14 +7,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpSession;
 import kr.ezen.daangn.service.DaangnMemberService;
 import kr.ezen.daangn.vo.DaangnMemberVO;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Controller
 @Configuration
 public class HomeController {

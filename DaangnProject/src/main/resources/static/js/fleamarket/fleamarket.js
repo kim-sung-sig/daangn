@@ -121,7 +121,7 @@ function getItem(){
 						<img src="/upload/${vo.boardFileList[0].saveFileName}" alt="" />
 					</div>
 					<div class="uk-card-body">
-						<h4 class="uk-card-title">${vo.subject}</h4>
+						<h4 class="uk-card-title">${vo.statusRef==1 ? '' : vo.statusRef==2 ? '<span class="reserved">예약중</span>' : '<span class="sold">판매완료</span>'}${vo.subject}</h4>
 						<p class="price">${numberFormatter(vo.price)}</p>
 						<span class="city">${vo.loc}</span>
 						<p class="like"><span>관심 ${vo.countLike}</span>ㆍ<span>채팅 ${vo.chatRoomCount}</span>ㆍ<span>조회수 ${vo.readCount}</span></p>

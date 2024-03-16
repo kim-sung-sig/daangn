@@ -100,20 +100,28 @@
 	<!-- 한개 얻기 -->
 	<select id="selectByIdx" parameterType="int" resultType="DaangnMainBoardVO">
 		SELECT
-		    b.*,
-		    c.categoryName,
-		    s.statusName
+		    daangn_board.*
+		    , (
+		    	SELECT 
+		    		categoryName
+		    	FROM
+		    		DAANGN_CATEGORY
+		    	WHERE
+		    		DAANGN_BOARD.CATEGORYREF = daangn_category.CATEGORYIDX 
+		    ) AS categoryName
+		    , (
+		    	SELECT 
+		    		statusName
+		    	FROM
+		    		DAANGN_STATUS
+		    	WHERE
+		    		DAANGN_BOARD.STATUSREF = DAANGN_STATUS.STATUSIDX
+		    ) AS statusName
 		FROM
-		    daangn_board b
-		JOIN
-		    daangn_category c ON b.categoryRef = c.categoryIdx
-		JOIN
-		    daangn_status s ON b.statusRef = s.statusIdx
+		    daangn_board
 		WHERE
-		    b.idx = #{idx}
+		    daangn_board.idx = #{idx}
 	</select>
-	
-	
 	
 	<insert id="insert" parameterType="DaangnMainBoardVO">
 		<selectKey keyColumn="idx" keyProperty="idx" resultType="int" order="BEFORE">

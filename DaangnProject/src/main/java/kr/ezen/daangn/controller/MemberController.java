@@ -196,8 +196,10 @@ public class MemberController {
     	DaangnMemberVO sessionUser = (DaangnMemberVO) session.getAttribute("user");
     	DaangnMemberVO user = daangnMemberService.selectByIdx(sessionUser.getIdx());
     	model.addAttribute("user", user);
-    	// 여기선 각 항목별 갯수만 리턴해주자.
-    	// model.addAttribute("boardList", daangnMainBoardService.selectByUserIdx(user.getIdx()));
+    	model.addAttribute("lastItemIdx", daangnMainBoardService.getLastIdx());
+    	model.addAttribute("boardStatus1", daangnMainBoardService.getBoardCountByUserIdxAndStatusRef(user.getIdx(), 1));
+    	model.addAttribute("boardStatus2", daangnMainBoardService.getBoardCountByUserIdxAndStatusRef(user.getIdx(), 2));
+    	model.addAttribute("boardStatus3", daangnMainBoardService.getBoardCountByUserIdxAndStatusRef(user.getIdx(), 3));
     	return "mypage/myBoard";
     }
     
