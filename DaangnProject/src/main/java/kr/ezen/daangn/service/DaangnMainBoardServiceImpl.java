@@ -16,8 +16,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.ezen.daangn.dao.DaangnBoardFileDAO;
-import kr.ezen.daangn.dao.DaangnChatRoomDAO;
-import kr.ezen.daangn.dao.DaangnLikeDAO;
 import kr.ezen.daangn.dao.DaangnMainBoardDAO;
 import kr.ezen.daangn.dao.DaangnMainBoardScrollDAO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
@@ -32,13 +30,11 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 	@Autowired
 	private DaangnMainBoardDAO daangnMainBoardDAO;
 	@Autowired
+	private DaangnMainBoardScrollDAO daangnMainBoardScrollDAO;
+	@Autowired
 	private DaangnMemberService daangnMemberService;
 	@Autowired
 	private DaangnBoardFileDAO daangnBoardFileDAO;
-	@Autowired
-	private DaangnLikeDAO daangnLikeDAO;
-	@Autowired
-	private DaangnChatRoomDAO daangnChatRoomDAO;
 	
 	// 0.
 	@Override
@@ -121,10 +117,8 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 		try {
 			boardVO = daangnMainBoardDAO.selectByIdx(idx);
 			if(boardVO != null) {
-				boardVO.setMember(daangnMemberService.selectByIdx(boardVO.getUserRef()));				// 유저정보
-				boardVO.setCountLike(daangnLikeDAO.countLike(boardVO.getIdx()));						// 좋아요수
+				boardVO.setMember(daangnMemberService.selectByIdx(boardVO.getUserRef()));				// 유저정보			
 				boardVO.setBoardFileList(daangnBoardFileDAO.selectFileByBoardIdx(boardVO.getIdx()));	// 파일
-				boardVO.setChatRoomCount(daangnChatRoomDAO.selectCountByBoardIdx(boardVO.getIdx()));	// 채팅 수				
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -196,8 +190,7 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 	}
 	
 	
-	@Autowired
-	private DaangnMainBoardScrollDAO daangnMainBoardScrollDAO;
+	
 	
 	/** 
 	 * lastItemIdx와 sizeOfPage 및 나머지 카테고리정보를 받아 리스트 뿌리기
@@ -255,6 +248,30 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 			map.put("sizeOfPage", sv.getSizeOfPage());
 			map.put("userRef", sv.getUserRef());
 			map.put("statusRef", sv.getStatusRef());
+			list = daangnMainBoardScrollDAO.selectScrollList(map);
+			for(DaangnMainBoardVO boardVO : list) {
+				if(boardVO != null) {
+					boardVO.setBoardFileList(daangnBoardFileDAO.selectFileByBoardIdx(boardVO.getIdx()));
+					boardVO.setMember(daangnMemberService.selectByIdx(boardVO.getUserRef()));
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	/** board에 해당하는 유저가 쓴 글 주기! (userRef, boardRef) */
+	@Override
+	public List<DaangnMainBoardVO> selectListByUserIdxAndNotBoardIdx(int userRef, int boardRef) {
+		List<DaangnMainBoardVO> list = null;
+		try {
+			HashMap<String, Object> map = new HashMap<>();
+			map.put("userRef", userRef);
+			map.put("boardRef", boardRef);
+			map.put("lastItemIdx", daangnMainBoardScrollDAO.getLastIdx() + 1); // 최신순
+			map.put("sizeOfPage", 2); // 2개만
+			map.put("statusRef", 1); // 판매중이 물품만
 			list = daangnMainBoardScrollDAO.selectScrollList(map);
 			for(DaangnMainBoardVO boardVO : list) {
 				if(boardVO != null) {

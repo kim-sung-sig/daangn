@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import kr.ezen.daangn.vo.DaangnLikeVO;
+import kr.ezen.daangn.vo.DaangnMainBoardVO;
 
 @Mapper
 public interface DaangnLikeDAO {
@@ -15,7 +16,7 @@ public interface DaangnLikeDAO {
 	
 	int countLike(int boardIdx) throws SQLException;
 	
-	List<Integer> selectLikeByUseridx(int userIdx) throws SQLException;
+	List<DaangnMainBoardVO> selectLikeByUseridx(int userIdx) throws SQLException;
 	
 	int select(DaangnLikeVO likeVO) throws SQLException;
 	

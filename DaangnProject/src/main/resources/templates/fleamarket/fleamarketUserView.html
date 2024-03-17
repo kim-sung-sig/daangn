@@ -1,96 +1,88 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>당근-마이페이지</title>
-<!--제이쿼리 추가-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<!-- UIkit CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css" />
-<!-- UIkit JS -->
-<script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<!-- Ajax처리를 위한 포함 -->
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<!-- 구글아이콘 사용 -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0" />
-<!-- moment.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
-
-<link href="/css/header.css" rel="stylesheet">
-<link href="/css/mypage/home.css" rel="stylesheet">
-<script src="/js/mypage/home.js"></script>
-
-<style type="text/css">
-	main{padding-bottom: 0;}
-	#boardNav {width: 100%; display: flex; position: relative;}
-	#boardNav li {width: 100%; cursor: pointer; text-align: center; padding: 10px; font-weight: 400;}
-	#boardNav li.active {width: 100%; cursor: pointer; text-align: center; padding: 10px;font-weight: bold;}
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>당근 중고 장터</title>
+	<!--제이쿼리 추가-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<!-- UIkit CSS -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css" />
+	<!-- UIkit JS -->
+	<script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+	<!-- axios -->
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<!-- moment.js -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
 	
-	#boardNav #boardNav-bar{transition:0.2s;cursor:auto;z-index:5;display:block; padding:0; position: absolute; width: calc(100% / 3); height: 2px; background: #333; left: 0; bottom: -1px;}
-	#boardNav #boardNav-barBg{cursor:auto;z-index:4;display:block; padding:0; position: absolute; width: 100%; height: 2px; background: #ccc; left: 0; bottom: -1px;}
-	
-	
-	#contentBox {width: 100%; overflow: hidden; position: relative; height: auto;}
-	#contentBox > div {width: 100%; gap:19px; display: grid; grid-template-columns:repeat(3,1fr);}
-	
-	
-	.uk-card {cursor: pointer; width: 223px; margin-bottom: 20px;}
-	.uk-card-media-top {
-		height: 223px; overflow: hidden; display: flex; align-items: center;
-		border-radius: 12px; background-color: #F8F9FA;
-		box-shadow: 3px 5px 4px rgba(0, 0, 0, 0.15);
-	} 
-	.uk-card-title {font-size:16px;color:#212529; white-space:nowrap;text-overflow:ellipsis; margin: 0 !important}
-	.uk-card-body {display: flex; flex-direction: column; justify-content: center;padding: 0;margin-top: 12px;}
-	.uk-card-body > .price {font-size: 15px; margin: 0;font-weight: 700;}
-	.uk-card-body > .regDate {font-size: 12px;margin: 0;}
-	.uk-card-body > .city {font-size: 13px; margin: 0;}
-	.uk-card-body > .like {font-size: 14px; margin: 0;}
-	.reserved{border-radius: 5px; background: #4a9975; padding: 3px 6px; font-size: 13px; font-weight: 500; color: #fff;}
-	.sold{border-radius: 5px; background: #DEE1E5; padding: 3px 6px; font-size: 13px; font-weight: 600;}
-</style>
+	<link rel="stylesheet" href="/css/header.css">
+	<style>
+		main{padding-bottom: 0;width: 751px; margin: auto; padding: 90px 0;}
+		#boardNav {width: 100%; display: flex; position: relative;}
+		#boardNav li {width: 100%; cursor: pointer; text-align: center; padding: 10px; font-weight: 400;}
+		#boardNav li.active {width: 100%; cursor: pointer; text-align: center; padding: 10px;font-weight: bold;}
+		
+		#boardNav #boardNav-bar{transition:0.2s;cursor:auto;z-index:5;display:block; padding:0; position: absolute; width: calc(100% / 3); height: 2px; background: #333; left: 0; bottom: -1px;}
+		#boardNav #boardNav-barBg{cursor:auto;z-index:4;display:block; padding:0; position: absolute; width: 100%; height: 2px; background: #ccc; left: 0; bottom: -1px;}
+		
+		#contentBox {width: 100%; overflow: hidden; position: relative; height: auto;}
+		#contentBox > div {width: 100%; gap:41px; display: grid; grid-template-columns:repeat(3,1fr);}
+		
+		
+		.uk-card {cursor: pointer; width: 223px; margin-bottom: 20px;}
+		.uk-card-media-top {
+			height: 223px; overflow: hidden; display: flex; align-items: center;
+			border-radius: 12px; background-color: #F8F9FA;
+			box-shadow: 3px 5px 4px rgba(0, 0, 0, 0.15);
+		} 
+		.uk-card-title {font-size:16px;color:#212529; white-space:nowrap;text-overflow:ellipsis; margin: 0 !important}
+		.uk-card-body {display: flex; flex-direction: column; justify-content: center;padding: 0;margin-top: 12px;}
+		.uk-card-body > .price {font-size: 15px; margin: 0;font-weight: 700;}
+		.uk-card-body > .regDate {font-size: 12px;margin: 0;}
+		.uk-card-body > .city {font-size: 13px; margin: 0;}
+		.uk-card-body > .like {font-size: 14px; margin: 0;}
+		.reserved{border-radius: 5px; background: #4a9975; padding: 3px 6px; font-size: 13px; font-weight: 500; color: #fff;}
+		.sold{border-radius: 5px; background: #DEE1E5; padding: 3px 6px; font-size: 13px; font-weight: 600;}
+	</style>
 </head>
 <body>
 	<input type="hidden" id="userRef" th:value="${user.idx}">
 	<input type="hidden" id="lastItemIdx" th:value="${lastItemIdx + 1}">
 	<div id="wrap">
-		<th:block th:insert="~{indexHeader.html}"></th:block>
+		<th:block th:insert="~{/header.html}"></th:block>
 		<main>
-			<th:block th:insert="~{mypage/leftArea.html}"></th:block>
-			<div id="rightArea">
+			<div style="display: flex; justify-content: space-between; align-items: center;">
 				<h3 style="font-weight: 600"><span class="highlight">[[${user.nickName}]]</span>님의 판매내역</h3>
-				<ul id="boardNav">
-					<li class="libtn s1 active">판매중  [[${boardStatus1 != 0 ? boardStatus1 : ''}]]</li>
-					<li class="libtn s2">예약중  [[${boardStatus2 != 0 ? boardStatus2 : ''}]]</li>
-					<li class="libtn s3">판매완료  [[${boardStatus3 != 0 ? boardStatus3 : ''}]]</li>
-					<li id="boardNav-bar"></li>
-					<li id="boardNav-barBg"></li>
-				</ul>
-				<div id="contentBox" style="margin-top: 20px;">
-					<div id="s1">
-						<div th:if="${boardStatus1==0}" class="emtpyBox">등록된 판매내역이 없습니다.</div>
-					</div>
-					<div id="s2" style="display: none;">
-						<div th:if="${boardStatus2==0}" class="emtpyBox">등록된 예약목록이 없습니다.</div>
-					</div>
-					<div id="s3" style="display: none;">
-						<div th:if="${boardStatus3==0}" class="emtpyBox">등록된 판매완료이 없습니다.</div>
-					</div>
+				<div style="width: 100px; height: 100px;overflow: hidden;border-radius: 100%;">
+					<img th:if="${user.userFile == null}" src="/img/user.png" alt="user" />
+					<img th:if="${user.userFile != null}" th:src="'/upload/' + ${user.userFile.saveFileName}" alt="user" />
+				</div>			
+			</div>
+			<ul id="boardNav">
+				<li class="libtn s1 active">판매중  [[${boardStatus1 != 0 ? boardStatus1 : ''}]]</li>
+				<li class="libtn s2">예약중  [[${boardStatus2 != 0 ? boardStatus2 : ''}]]</li>
+				<li class="libtn s3">판매완료  [[${boardStatus3 != 0 ? boardStatus3 : ''}]]</li>
+				<li id="boardNav-bar"></li>
+				<li id="boardNav-barBg"></li>
+			</ul>
+			<div id="contentBox" style="margin-top: 20px;">
+				<div id="s1">
+					<div th:if="${boardStatus1 == 0}" class="emtpyBox">등록된 판매내역이 없습니다.</div>
+				</div>
+				<div id="s2" style="display: none;">
+					<div th:if="${boardStatus2 == 0}" class="emtpyBox">등록된 예약목록이 없습니다.</div>
+				</div>
+				<div id="s3" style="display: none;">
+					<div th:if="${boardStatus3 == 0}" class="emtpyBox">등록된 판매완료이 없습니다.</div>
 				</div>
 			</div>
 		</main>
 	</div>
-	<script type="text/javascript">
+	<script>
 		const scrollHandlers = [];
 		
-		function detail(idx) {
-		    const url = '/fleamarketDetail/' + idx;
-		    window.open(url, "_blank");
-		}
-	
 		$(function(){
 			const userIdx = $("#userRef").val();
 			const sizeOfPage = 9;
@@ -140,7 +132,7 @@
 		    function activateScrollHandler(index) { // i번째 스크롤 핸들러 살리기
 		        window.addEventListener('scroll', scrollHandlers[index]);
 		    }
-
+	
 		    function deactivateScrollHandler() { // 모든 스크롤핸들러 죽이기
 		        window.removeEventListener('scroll', scrollHandlers[0]);
 		        window.removeEventListener('scroll', scrollHandlers[1]);

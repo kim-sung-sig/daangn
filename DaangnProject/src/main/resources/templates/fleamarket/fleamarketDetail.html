@@ -61,7 +61,15 @@
 					    <div class="hr"></div>
 					    
 					    <div class="uk-card-body">
-					    	<h3 class="uk-card-title uk-margin-remove-bottom">
+					    	<input type="hidden" id="boardStatusNum" th:value="${board.statusRef}">
+					    	<th:block th:if="${session.user != null && session.user.idx == board.userRef && board.statusRef == 1}">
+					    		<select class="uk-select" name="" id="statusChange" style="margin-bottom: 15px; width: 25%;">
+					    			<option value="1" th:selected="${board.statusRef == 1}">판매중</option>
+					    			<option value="2" th:selected="${board.statusRef == 2}">예약중</option>
+					    			<option value="3" th:selected="${board.statusRef == 3}">판매완료</option>
+					    		</select>
+					    	</th:block>
+					    	<h3 class="uk-card-title uk-margin-remove-bottom" style="margin: 0;">
 			                	<span th:if="${board.statusRef == 2}" class="reserved">[[${board.statusName}]]</span>
 			                	<span th:if="${board.statusRef == 3}" class="sold">[[${board.statusName}]]</span>
 					    		[[${board.subject}]]
@@ -84,6 +92,43 @@
 					    <div class="uk-card-footer">
 					    	<p class="like"><span id="countLike">관심 [[${board.countLike}]]</span>ㆍ<span>채팅 [[${board.chatRoomCount}]]</span>ㆍ<span>조회수 [[${board.readCount}]]</span></p>
 					    </div>
+					    
+					    <!-- 유저가 쓴 다른 글 -->
+						<div class="extraBox" th:if="${not #lists.isEmpty(userBoard)}">
+							<div class="hr"></div>
+							<div style="display: flex;justify-content: space-between;align-items: center; padding: 20px 0;">
+								<h4 style="margin: 0;font-weight: 500;">[[${board.member.nickName}]]님의 판매물품</h4>
+								<span id="usermore" class="highlight" style="cursor: pointer;" th:onclick="location.href='/user/[[${board.member.idx}]]/board'">더 구경하기</span>
+							</div>
+							<div class="hr"></div>
+							<div style="padding:10px 81px;display: grid;gap:42px; grid-template-columns:repeat(2,1fr);justify-items: space-around;">
+								<article th:each="vo : ${userBoard}" class="uk-card" th:onclick="detail([[${vo.idx}]])">
+									<div class="uk-card-media-top">
+										<img th:src="${'/upload/' + vo.boardFileList[0].saveFileName}" alt="" />
+									</div>
+									<div class="uk-card-body">
+										<h4 class="uk-card-title">[[${vo.subject}]]</h4>
+										<p class="price">[[${#numbers.formatInteger(vo.price, 0, 'COMMA')}]]원</p>
+										<span class="city">[[${vo.loc}]]</span>
+										<p class="like"><span>관심 [[${vo.countLike}]]</span>ㆍ<span>채팅 [[${vo.chatRoomCount}]]</span>ㆍ<span>조회수 [[${vo.readCount}]]</span></p>
+										<p class="regDate">게시일 [[${#dates.format(vo.regDate,'yyyy-MM-dd')}]]</p>
+									</div>
+								</article>
+							</div>
+						</div>
+						
+						<!-- 인기상품 -->
+						<div class="extraBox">
+							<div class="hr"></div>
+							<div style="display: flex;justify-content: space-between;align-items: center; padding: 20px 0;">
+								<h4 style="margin: 0;font-weight: 500;">당근 인기중고</h4>
+								<a href="#"><span class="highlight">더 구경하기</span></a>
+							</div>
+							<div class="hr"></div>
+							<div style="display: grid; grid-template-columns:repeat(2,1fr);">
+								
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -113,7 +158,7 @@
 							<input th:if="${session.user == null}" type="submit" onclick="alert('로그인 후 이용가능합니다.'); location.href='/member/login'" class="uk-button uk-button-primary" value="채팅하기"/>				
 							<th:block th:if="${session.user != null}">
 								<input th:if="${session.user.idx != board.userRef && board.statusRef != 3}" type="submit" class="uk-button uk-button-primary" value="채팅하기"/>				
-								<input th:if="${session.user.idx == board.userRef}" type="button" class="uk-button uk-button-primary" id="updateBtn" value="수정하기"/>							
+								<input th:if="${session.user.idx == board.userRef}" type="button" class="uk-button uk-button-primary" id="updateBtn" value="수정하기" th:disabled="${board.statusRef == 3}"/>							
 							</th:block>
 						</form>
 					</div>
@@ -121,5 +166,8 @@
 			</div>
 		</footer>
 	</div>
+	<script type="text/javascript">
+		
+	</script>
 </body>
 </html>

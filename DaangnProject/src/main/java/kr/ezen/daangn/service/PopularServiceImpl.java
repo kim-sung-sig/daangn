@@ -8,13 +8,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import kr.ezen.daangn.dao.DaangnBoardFileDAO;
 import kr.ezen.daangn.dao.PopularDAO;
 import kr.ezen.daangn.vo.CommonVO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
 import kr.ezen.daangn.vo.PagingVO;
 import kr.ezen.daangn.vo.PopularVO;
+import lombok.extern.slf4j.Slf4j;
 
 @Service(value = "popularService")
+@Slf4j
 public class PopularServiceImpl implements PopularService{
 	
 	@Autowired
@@ -23,6 +26,8 @@ public class PopularServiceImpl implements PopularService{
 	private DaangnMainBoardService daangnMainBoardService;
 	@Autowired
 	private DaangnMemberService daangnMemberService;
+	@Autowired
+	private DaangnBoardFileDAO daangnBoardFileDAO;
 	
 	/**
 	 * 저장하기
@@ -62,7 +67,8 @@ public class PopularServiceImpl implements PopularService{
 		}
 		return pv;
 	}
-
+	
+	/** 인기게시물 얻기 (나중에 스크롤 페이징 예정.....) */
 	@Override
 	public List<DaangnMainBoardVO> findPopularBoard() {
 		List<DaangnMainBoardVO> list = null;
@@ -71,11 +77,43 @@ public class PopularServiceImpl implements PopularService{
 			list = new ArrayList<>();
 			for(Integer boardRef : popularList) {
 				DaangnMainBoardVO board = daangnMainBoardService.selectByIdx(boardRef);
-				list.add(board);
+				if(board != null) {
+					list.add(board);					
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return list;
+	}
+	
+	
+	/** 유저의 최근 방문 목록 페이징 처리 
+	 * @param int userRef, int currentPage
+	 * */
+	@Override
+	public PagingVO<DaangnMainBoardVO> getRecentVisitsBoardByUserIdx(CommonVO cv) {
+		PagingVO<DaangnMainBoardVO> pv = null;
+		try {
+			cv.setS(5);
+			cv.setB(5);
+			log.info("getRecentVisitsBoardByUserIdx 실행 userRef = {}, currentPage = {}", cv);
+			int totalCount = popularDAO.getRecentVisitsBoardTotalCountByUserIdx(cv.getUserRef());
+			pv = new PagingVO<>(totalCount, cv.getCurrentPage(), cv.getSizeOfPage(), cv.getSizeOfBlock());
+			HashMap<String, Integer> map = new HashMap<>();
+			map.put("userRef", cv.getUserRef());
+			map.put("startNo", pv.getStartNo());
+			map.put("endNo", pv.getEndNo());
+			List<DaangnMainBoardVO> list = popularDAO.getRecentVisitsBoardByUserIdx(map);
+			for(DaangnMainBoardVO boardVO : list) {
+				boardVO.setMember(daangnMemberService.selectByIdx(boardVO.getUserRef()));				// 유저정보
+				boardVO.setBoardFileList(daangnBoardFileDAO.selectFileByBoardIdx(boardVO.getIdx()));	// 파일
+			}
+			pv.setList(list);
+			log.info("pv : {}", pv);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return pv;
 	}
 }

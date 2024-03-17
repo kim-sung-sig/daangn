@@ -1,5 +1,5 @@
 let lastItemIdx = 0;
-const sizeOfPage = 8;
+const sizeOfPage = 16;
 let categoryRef = undefined;
 let search = undefined;
 let region = undefined;

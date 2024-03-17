@@ -16,10 +16,13 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <!-- 구글아이콘 사용 -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0" />
+<!-- moment.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
 
 <link href="/css/header.css" rel="stylesheet">
 <link href="/css/mypage/home.css" rel="stylesheet">
 <script src="/js/mypage/home.js"></script>
+
 <style type="text/css">
 	.itemLi {position:relative ;border-bottom: 1px solid #ccc; display: flex; width: 100%; height: 120px; padding: 10px 0;}
 	.itemImg{box-shadow:1px 1px 2px 4px #eee;width: 100px; height: 100px; overflow: hidden; border-radius: 20px; display: flex; justify-content: center;align-items: center;}
@@ -28,12 +31,8 @@
 	.itemLoc{font-size: 12px; color: #ccc;}
 	.itemPrice{margin: 0; font-weight: 500;}
 	
-	.heartBtnBox{position: absolute; top: 10px; right: 1px; cursor: pointer;}
 	.heartCount{display:flex;align-items:center;justify-content:center;position: absolute; right: 1px; bottom: 10px;height: 15px;}
 	.heartCount span {display: flex; flex-direction: row; align-items: center;}
-	
-	.heartBtnBox span.active svg path{fill: red}
-	
 </style>
 </head>
 <body>
@@ -42,13 +41,13 @@
 		<main>
 			<th:block th:insert="~{mypage/leftArea.html}"></th:block>
 			<div id="rightArea">
-				<h3 style="font-weight: 600"><span class="highlight">[[${user.nickName}]]</span>님의 관심목록</h3>
-				<th:block th:if="${#lists.isEmpty(likeList)}">
-					<p>등록된 관심목록이 없습니다.</p>
+				<h3 style="font-weight: 600"><span class="highlight">[[${user.nickName}]]</span>님의 최근방문기록</h3>
+				<th:block th:if="${#lists.isEmpty(pv.list)}">
+					<p>등록된 방문기록이 없습니다.</p>
 				</th:block>
-				<th:block th:if="${not #lists.isEmpty(likeList)}">
+				<th:block th:if="${not #lists.isEmpty(pv.list)}">
 					<ul id="boardNav">
-						<li th:each="board : ${likeList}" class="itemLi">
+						<li th:each="board : ${pv.list}" class="itemLi">
 							<div class="itemImg">
 								<img th:src="'/upload/' + ${board.boardFileList[0].saveFileName}" alt="상품사진" />
 							</div>
@@ -59,62 +58,17 @@
 									<p class="itemPrice">[[${#numbers.formatInteger(board.price, 0, 'COMMA')}]]원</p>
 								</div>
 							</div>
-							<div class="heartBtnBox">
-								<input type="hidden" class="heartVal" th:value="${board.idx}">
-								<span uk-icon="heart" class="active"></span>
-							</div>
 							<div class="heartCount" style="">
 								<span uk-icon="heart"><span>[[${board.countLike}]]&nbsp;</span></span>
 							</div>
 						</li>
 					</ul>
+					<div style="display: flex; justify-content: center; margin-top: 30px;">
+						[(${pv.pageList})]
+					</div>
 				</th:block>
 			</div>
 		</main>
 	</div>
-	
-	<script type="text/javascript">
-		$(function(){
-			
-			// 좋아요 버튼을 클릭시 발생이벤트
-			$(".heartBtnBox").click(function(){
-				let boardIdx = $(this).find(".heartVal").val()
-				
-				if($(this).find("span").hasClass("active")){
-					axios.delete("/api/like",{
-						data: {
-							'boardIdx' : boardIdx
-						}
-					})
-					.then(res => {
-						const data = res.data;
-						if(data == 1){
-							$(this).find("span").removeClass("active")
-						} else {
-							alert("오류가 발생했습니다. 잠시후 다시 시도해주세요.")
-						}
-					})
-					.catch(e => {
-						console.log(e);
-					})
-				} else {
-					axios.post("/api/like",{
-						'boardIdx' : boardIdx
-					})
-					.then(res => {
-						const data = res.data;
-						if(data == 1){
-							$(this).find("span").addClass("active")
-						} else {
-							alert("오류가 발생했습니다. 잠시후 다시 시도해주세요.")
-						}
-					})
-					.catch(e => {
-						console.log(e);
-					})
-				}
-			})
-		})
-	</script>
 </body>
 </html>

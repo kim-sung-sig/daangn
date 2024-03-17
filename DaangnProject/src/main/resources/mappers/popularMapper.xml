@@ -79,4 +79,95 @@
 		</where> 
 	</select>
 	
+	
+	
+	<!-- 유저의 최근 방문목록을 구하기 위한 쿼리 (버튼 페이징으로 하자... ) -->
+	<select id="getRecentVisitsBoardByUserIdx" parameterType="hashmap" resultType="DaangnMainBoardVO">
+		select
+			R.*
+		from
+			(
+				select
+					rownum rnum, Q.*
+				from
+					(
+						SELECT
+						    db.*
+						    , dc.categoryName AS categoryName
+						    , ds.statusName AS statusName
+						    , (
+								SELECT
+									COUNT(*)
+								FROM
+									daangn_like_tb 
+								WHERE
+									daangn_like_tb.boardIdx = db.idx
+							) AS countLike
+							, (
+								SELECT
+									COUNT(*)
+								FROM
+									chatRoom
+								WHERE
+									chatRoom.boardIdx = db.idx
+							) AS chatRoomCount
+						FROM
+						    daangn_board db
+						JOIN
+						    (
+						        SELECT
+						            MAX(tp.idx) AS idx,
+						            tp.boardRef
+						        FROM
+						            TB_POPULAR tp
+						        WHERE
+						            tp.USERREF = #{userRef} AND tp.INTERACTION = 1
+						        GROUP BY
+						            tp.boardRef, tp.userRef
+						    ) popular ON popular.boardRef = db.idx
+						JOIN
+							daangn_category dc ON dc.categoryIdx = db.categoryRef
+						JOIN
+							daangn_status ds ON ds.statusIdx = db.statusRef
+						WHERE
+							<![CDATA[
+								db.userRef <> #{userRef}
+							]]>
+						ORDER BY
+						    popular.idx DESC
+					) Q
+				where
+					<![CDATA[
+						rownum <= #{endNo}
+					]]>
+			) R
+		where
+			<![CDATA[
+				rnum >= #{startNo}
+			]]>
+	</select>
+	
+	<!-- 유저 최근방목 목록의 전체 크기를 얻는 쿼리 -->
+	<select id="getRecentVisitsBoardTotalCountByUserIdx" parameterType="int" resultType="int">
+		SELECT
+		    COUNT(*) AS result_count
+		FROM
+		    daangn_board db
+		JOIN
+		    (
+		        SELECT
+		            MAX(tp.idx) AS idx,
+		            tp.boardRef
+		        FROM
+		            TB_POPULAR tp
+		        WHERE
+		            tp.USERREF = #{userRef} AND tp.INTERACTION = 1
+		        GROUP BY
+		            tp.boardRef, tp.userRef
+		    ) popular ON popular.boardRef = db.idx
+		WHERE
+		    <![CDATA[
+				db.userRef <> #{userRef}
+			]]>
+	</select>
 </mapper>

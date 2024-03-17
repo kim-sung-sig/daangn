@@ -42,7 +42,12 @@
 	</select>
 	
 	<select id="getLastIdx" resultType="int">
-		SELECT MAX(chatMessage.idx) FROM chatMessage
+		SELECT 
+	        CASE 
+	            WHEN MAX(chatMessage.idx) IS NULL THEN 0
+	            ELSE MAX(chatMessage.idx)
+	        END
+	    FROM chatMessage
 	</select>
 	
 	<insert id="insertChat" parameterType="ChatMessageVO">

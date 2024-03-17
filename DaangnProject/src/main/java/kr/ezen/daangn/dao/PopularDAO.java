@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.ezen.daangn.vo.DaangnMainBoardVO;
 import kr.ezen.daangn.vo.PopularVO;
 
 @Mapper
@@ -23,4 +24,10 @@ public interface PopularDAO {
 	List<PopularVO> getUserTrendAnalysis(HashMap<String, Integer> map) throws SQLException;
 	
 	int totalCountPopular(HashMap<String, Integer> map) throws SQLException;
+
+	/** 유저의 최근 방문목록을 구하기 위한 쿼리 ( userRef, startNo, endNo )*/
+	List<DaangnMainBoardVO> getRecentVisitsBoardByUserIdx(HashMap<String, Integer> map) throws SQLException;
+	/** 유저의 최근 방문목록의 전체 갯수를 얻기 위한 쿼리 (userRef) */
+	int getRecentVisitsBoardTotalCountByUserIdx(int userRef) throws SQLException;
+	
 }

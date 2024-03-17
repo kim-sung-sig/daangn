@@ -74,6 +74,9 @@
 		            <if test="dong != null">
 		                AND LOC LIKE '%' || #{dong} || '%'
 		            </if>
+		            <if test="boardRef != null">
+		            	AND <![CDATA[daangn_board.idx <> #{boardRef}]]>
+		            </if>
 				order by
 					daangn_board.idx DESC
 			) Q

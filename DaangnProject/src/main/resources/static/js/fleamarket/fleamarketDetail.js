@@ -1,5 +1,10 @@
+function detail(idx){
+    window.open('/fleamarketDetail/' + idx, '_blank');
+}
+
 $(function(){
-	
+	let statusNum = $("#boardStatusNum").val();
+	console.log(statusNum);
 	// 카카오 지도 뿌리기
 	var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
 	    mapOption = { 
@@ -115,6 +120,17 @@ $(function(){
 	$("#updateBtn").click(function(){
 		const idx = $("#boardIdx").val();
 		location.href = `/fleamarketUpdate/${idx}`;
+	})
+	
+	
+	$("#statusChange").change(function(){
+		const value = $("#statusChange").val();
+		const result = confirm('상품상태를 변경하시겠습니까?');
+		if(result) {
+			// 게시글에 해당하는 채팅의 유저 이름 가져오기!
+			
+		}
+		alert(value);
 	})
 })
 

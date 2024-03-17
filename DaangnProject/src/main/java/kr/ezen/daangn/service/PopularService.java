@@ -15,4 +15,8 @@ public interface PopularService {
 	
 	// 인기게시물 가져오기 (20개 한정임)
 	List<DaangnMainBoardVO> findPopularBoard();
+	
+	
+	// 최근 방문 목록 가져오기!
+	PagingVO<DaangnMainBoardVO> getRecentVisitsBoardByUserIdx(CommonVO cv);
 }

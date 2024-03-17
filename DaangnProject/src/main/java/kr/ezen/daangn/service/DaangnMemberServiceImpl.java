@@ -1,7 +1,6 @@
 package kr.ezen.daangn.service;
 
 import java.sql.SQLException;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,7 +12,6 @@ import kr.ezen.daangn.dao.DaangnCommentDAO;
 import kr.ezen.daangn.dao.DaangnMemberDAO;
 import kr.ezen.daangn.dao.DaangnUserFileDAO;
 import kr.ezen.daangn.vo.CommonVO;
-import kr.ezen.daangn.vo.DaangnMainBoardVO;
 import kr.ezen.daangn.vo.DaangnMemberVO;
 import kr.ezen.daangn.vo.PagingVO;
 import lombok.extern.slf4j.Slf4j;
@@ -114,12 +112,6 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 		}
 		return result;
 	}
-	
-	@Override
-	public List<DaangnMainBoardVO> selectMainBoardByUserIdx(int userIdx) {
-		return null;
-	}
-	
 	
 	//=========================================================
 	// 유효성검사? 유틸

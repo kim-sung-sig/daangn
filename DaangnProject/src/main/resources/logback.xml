@@ -6,7 +6,9 @@
 			<pattern>[%-5level][%d{yy-MM-dd(E) HH:mm:ss}] %logger{100}%n      %msg%n</pattern>
 		</encoder>
 	</appender>
+	<!-- 
 	<logger name="kr.ezen.daangn" level="DEBUG"/>
+	-->
 	<!-- 언제 출력할 것인지를 지정한다. -->
 	<root level="info">
 		<appender-ref ref="STDOUT" />

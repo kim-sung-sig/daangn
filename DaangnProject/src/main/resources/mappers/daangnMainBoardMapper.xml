@@ -117,6 +117,22 @@
 		    	WHERE
 		    		DAANGN_BOARD.STATUSREF = DAANGN_STATUS.STATUSIDX
 		    ) AS statusName
+		    , (
+				SELECT
+					COUNT(*)
+				FROM
+					daangn_like_tb 
+				WHERE
+					daangn_like_tb.boardIdx = daangn_board.idx
+			) AS countLike
+			, (
+				SELECT
+					COUNT(*)
+				FROM
+					chatRoom
+				WHERE
+					chatRoom.boardIdx = daangn_board.idx
+			) AS chatRoomCount
 		FROM
 		    daangn_board
 		WHERE

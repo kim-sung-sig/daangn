@@ -100,6 +100,7 @@ public class FleamarketController {
 	public List<DaangnMainBoardVO> getFleamarketList(@RequestBody ScrollVO sv){
 		log.info("getfleamarketList 실행 : {}", sv);
 		List<DaangnMainBoardVO> list = daangnMainBoardService.selectScrollList(sv);
+		log.info("getfleamarketList 리턴 : {}개", list.size());
 		return list;
 	}
 	
@@ -179,6 +180,8 @@ public class FleamarketController {
 			return "redirect:/fleamarket";
 		}
 		model.addAttribute("board", board);
+		// 이 글의 유저가 쓴 다른 글들!;
+		model.addAttribute("userBoard", daangnMainBoardService.selectListByUserIdxAndNotBoardIdx(board.getUserRef(), board.getIdx()));
 		return "fleamarket/fleamarketDetail";
 	}
 	
@@ -340,5 +343,21 @@ public class FleamarketController {
 		daangnBoardFileService.deleteByBoardIdx(boardVO.getIdx());
 		daangnMainBoardService.deleteByIdx(boardVO.getIdx());
 		return "redirect:/fleamarket?isOk=ok";
+	}
+	
+	
+	@PostMapping(value = "/fleamarketStatusUpdate")
+	public String fleamarketStatusUpdate(HttpSession session, @ModelAttribute DaangnMainBoardVO boardVO) {
+		// 1. 게시글의 번호와 statusRef를 받는다.
+		// 2. 게시글 번호에 해당하는 채팅방을 조회한다.
+		// 3. 채팅방에 해당하는 유저를 찾는다.
+		return "";
+	}
+	
+	@PostMapping(value = "/fleamarketStatusUpdateOk")
+	public String fleamarketStatusUpdateOk(HttpSession session, @ModelAttribute DaangnMainBoardVO boardVO) {
+		// 1. 게시글 번호와 statusRef와 다른 유저 idx를 받는다.
+		// 2. statusRef가 2이면!
+		return "";
 	}
 }

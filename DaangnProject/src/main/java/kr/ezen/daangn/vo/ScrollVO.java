@@ -14,4 +14,5 @@ public class ScrollVO {
 	private int chatRoomIdx;
 	private int userRef;
 	private int statusRef;
+	private int boardRef;
 }

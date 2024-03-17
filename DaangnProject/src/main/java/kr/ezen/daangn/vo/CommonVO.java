@@ -78,4 +78,7 @@ public class CommonVO {
 	public void setStatusNum(Integer statusNum) {
 		this.statusNum = statusNum;
 	}
+	public void setUserRef(Integer userRef) {
+		this.userRef = userRef;
+	}
 }

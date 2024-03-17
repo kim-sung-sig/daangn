@@ -31,7 +31,8 @@ public interface DaangnMainBoardService {
 	
 	// 6. 유저가 쓴글 보여주기(userRef, statusRef, lastItemIdx, sizeOfPage)
 	List<DaangnMainBoardVO> selectScrollListByUserIdx(ScrollVO sv);
-	
+	// 게시글에 해당하는 유저의 다른 게시물목록가져오기 (userRef, boardRef)
+	List<DaangnMainBoardVO> selectListByUserIdxAndNotBoardIdx(int userRef, int boardRef);
 	// 7. (userRef, statusRef)에 따른 board갯수 얻기
 	int getBoardCountByUserIdxAndStatusRef(int userRef, int statusRef);
 }

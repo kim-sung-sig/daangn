@@ -18,8 +18,32 @@
 	</select>
 	
 	<!-- 유저가 누른 좋아요 목록 가져오기 -->
-	<select id="selectLikeByUseridx" parameterType="int" resultType="int">
-		select boardRef from daangn_like_tb where userIdx = #{userIdx}
+	<select id="selectLikeByUseridx" parameterType="int" resultType="DaangnMainBoardVO">
+		SELECT 
+			dlt.IDX AS likeIdx,
+			db.*,
+			dc.categoryName,
+			ds.statusName,
+			COUNT(dlt.IDX) AS countLike,
+			COUNT(cr.boardIdx) AS chatRoomCount
+		FROM
+			DAANGN_LIKE_TB dlt
+		JOIN
+			DAANGN_BOARD db ON dlt.BOARDIDX = db.idx
+		LEFT JOIN
+			daangn_category dc ON db.categoryRef = dc.categoryIdx
+		LEFT JOIN
+			daangn_status ds ON db.statusRef = ds.statusIdx
+		LEFT JOIN
+			chatRoom cr ON cr.boardIdx = db.idx
+		WHERE 
+			dlt.USERIDX = #{userIdx}
+		GROUP BY 
+			dlt.IDX, db.idx, db.userRef, db.categoryRef, db.statusRef, db.subject, db.content, db.price,
+			db.latitude, db.longitude, db.location, db.loc, db.readCount, db.regDate,
+			dc.categoryName, ds.statusName, dc.categoryName, ds.statusName
+		ORDER BY 
+    		dlt.IDX DESC
 	</select>
 	
 	<!-- 하트 중복확인 0,1 리턴-->
