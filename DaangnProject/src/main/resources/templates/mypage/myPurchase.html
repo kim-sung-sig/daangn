@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>당근-마이페이지</title>
+<!--제이쿼리 추가-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<!-- UIkit CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css" />
+<!-- UIkit JS -->
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<!-- Ajax처리를 위한 포함 -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<!-- 구글아이콘 사용 -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0" />
+<!-- moment.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
+
+<link href="/css/header.css" rel="stylesheet">
+<link href="/css/mypage/home.css" rel="stylesheet">
+<script src="/js/mypage/home.js"></script>
+
+<style type="text/css">
+	.itemLi {position:relative ;border-bottom: 1px solid #ccc; display: flex; width: 100%; height: 120px; padding: 10px 0;}
+	.itemImg{box-shadow:1px 1px 2px 4px #eee;width: 100px; height: 100px; overflow: hidden; border-radius: 20px; display: flex; justify-content: center;align-items: center;}
+	.itemInfo{padding: 0px 15px;}
+	.itemTitle{margin-bottom: 5px;}
+	.itemLoc{font-size: 12px; color: #ccc;}
+	.itemPrice{margin: 0; font-weight: 500;}
+	
+	.heartCount{display:flex;align-items:center;justify-content:center;position: absolute; right: 1px; bottom: 10px;height: 15px;}
+	.heartCount span {display: flex; flex-direction: row; align-items: center;}
+</style>
+</head>
+<body>
+	<div id="wrap">
+		<th:block th:insert="~{indexHeader.html}"></th:block>
+		<main>
+			<th:block th:insert="~{mypage/leftArea.html}"></th:block>
+			<div id="rightArea">
+				<h3 style="font-weight: 600"><span class="highlight">[[${user.nickName}]]</span>님의 구매내역</h3>
+				<th:block th:if="${#lists.isEmpty(pv.list)}">
+					<p>등록된 구매내역이 없습니다.</p>
+				</th:block>
+				<th:block th:if="${not #lists.isEmpty(pv.list)}">
+					<ul id="boardNav">
+						<li th:each="board : ${pv.list}" class="itemLi">
+							<div class="itemImg">
+								<img th:src="'/upload/' + ${board.boardFileList[0].saveFileName}" alt="상품사진" />
+							</div>
+							<div>
+								<div class="itemInfo">
+									<h4 class="itemTitle">[[${board.subject}]]</h4>
+									<span class="itemLoc">[[${board.loc}]]</span>
+									<p class="itemPrice">[[${#numbers.formatInteger(board.price, 0, 'COMMA')}]]원</p>
+								</div>
+							</div>
+							<div class="heartCount" style="">
+								<span uk-icon="heart"><span>[[${board.countLike}]]&nbsp;</span></span>
+							</div>
+						</li>
+					</ul>
+					<div style="display: flex; justify-content: center; margin-top: 30px;">
+						[(${pv.pageList})]
+					</div>
+				</th:block>
+			</div>
+		</main>
+	</div>
+</body>
+</html>

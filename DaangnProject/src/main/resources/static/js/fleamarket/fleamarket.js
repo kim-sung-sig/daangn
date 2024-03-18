@@ -1,5 +1,5 @@
 let lastItemIdx = 0;
-const sizeOfPage = 16;
+const sizeOfPage = 12;
 let categoryRef = undefined;
 let search = undefined;
 let region = undefined;
@@ -48,7 +48,7 @@ $(function(){
 	})
 	
 	$("#chatBtn").click(function(){
-		const url = `http://localhost/chat/rooms`;
+		const url = `/chat/rooms`;
 		const popupWidth = 400;
         const popupHeight = 705;
         const leftPosition = (window.screen.width - popupWidth) / 2;
@@ -96,6 +96,7 @@ function findLastItemIdx(){
 }
 
 function getItem(){
+	window.removeEventListener('scroll', handleScroll);
 	axios.post('/getfleamarketList',{
 		'lastItemIdx' : lastItemIdx,
 		'sizeOfPage' : sizeOfPage,
@@ -132,6 +133,7 @@ function getItem(){
 		})
 		$("#slide").append(content);
 		findLastItemIdx();
+		window.addEventListener('scroll', handleScroll);
 	})
 }
 

@@ -34,6 +34,14 @@ public interface DaangnChatRoomDAO {
     List<ChatRoomVO> selectChatRoomByUserIdx(int userIdx) throws SQLException;
     
     /**
+     * boardIdx에 해당하는 채팅방 리스트 얻기
+     * @param boardIdx
+     * @return List<ChatRoomVO>
+     * @throws SQLException
+     */
+    List<ChatRoomVO> selectChatRoomByBoardIdx(int boardIdx) throws SQLException;
+    
+    /**
      * 게시글에 해당하는 채팅수 얻기
      * @param boardIdx
      * @return 게시글에 해당하는 채팅수

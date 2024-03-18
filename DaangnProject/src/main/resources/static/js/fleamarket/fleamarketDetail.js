@@ -99,7 +99,7 @@ $(function(){
 			data = res.data;
 			console.log(data);
 			if(data!=0){
-				const url = `http://localhost/chat/room/${data}`;
+				const url = `/chat/room/${data}`;
 				const popupWidth = 400;
 	            const popupHeight = 705;
 	            const leftPosition = (window.screen.width - popupWidth) / 2;
@@ -124,13 +124,12 @@ $(function(){
 	
 	
 	$("#statusChange").change(function(){
-		const value = $("#statusChange").val();
-		const result = confirm('상품상태를 변경하시겠습니까?');
+		const statusRef = $("#statusChange").val();
+		const boardIdx = $("#boardIdx").val();
+		const result = confirm('상품 상태를 변경하시겠습니까?');
 		if(result) {
-			// 게시글에 해당하는 채팅의 유저 이름 가져오기!
-			
+			location.href = `/fleamarketStatusUpdate/${boardIdx}/${statusRef}`
 		}
-		alert(value);
 	})
 })
 

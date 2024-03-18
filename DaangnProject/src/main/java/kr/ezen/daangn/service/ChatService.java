@@ -4,6 +4,7 @@ import java.util.List;
 
 import kr.ezen.daangn.vo.ChatMessageVO;
 import kr.ezen.daangn.vo.ChatRoomVO;
+import kr.ezen.daangn.vo.DaangnMemberVO;
 
 public interface ChatService {
 	// 키로 찾기
@@ -12,6 +13,8 @@ public interface ChatService {
 	int creatChatRoom(ChatRoomVO chatRoomVO);
 	// 유저가 속한 채팅방 리턴
 	List<ChatRoomVO> selectChatRoomByUserIdx(int userIdx);
+	// 게시글에 해당하는 채팅방 유저 리턴
+	List<DaangnMemberVO> selectChatRoomByBoardIdx(int boardIdx);
 	// userIdx에 해당하는 안읽은 메시지 갯수 리턴
 	int selectUnReadCountByUserIdx(int userIdx);
 	// ChatRoomIdx에 해당하는 Message페이징 리턴하는 메서드

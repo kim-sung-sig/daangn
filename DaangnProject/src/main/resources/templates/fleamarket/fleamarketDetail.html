@@ -22,6 +22,7 @@
 <script src="/js/fleamarket/fleamarketDetail.js"></script>
 </head>
 <body>
+	<input type="hidden" id="boardIdx" th:value="${board.idx}">
 	<div id="wrap">
 		<th:block th:insert="~{/header.html}"></th:block>
 		<main>
@@ -78,7 +79,6 @@
 					        <p class="text-card">[[${board.content}]]</p>
 					        <div id="mapBox">
 					        	<div id="mapInfo" style="display: none;">
-					        		<input type="hidden" id="boardIdx" th:value="${board.idx}">
 					        		<input type="hidden" id="latitude" th:value="${board.latitude}"/>
 					        		<input type="hidden" id="longitude" th:value="${board.longitude}"/>
 					        	</div>

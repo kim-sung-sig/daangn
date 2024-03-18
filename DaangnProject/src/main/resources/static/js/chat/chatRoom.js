@@ -82,6 +82,7 @@ $(function() {
     
     /** 메세지를 불러오기위한 함수 */
     function readChatMessages(){
+		document.getElementById("chatMessages").removeEventListener('scroll', handleScroll);
 		axios.post("/chat/findChatMessages", {
     		"chatRoomIdx" : chatRoomIdx,
     		"lastItemIdx" : lastItemIdx,
@@ -97,6 +98,7 @@ $(function() {
 				updateMessagesUIREAD(recv);
 			})
 			findLastItemIdx();
+			document.getElementById("chatMessages").addEventListener("scroll", handleScroll);
 			if ($("#chatMessages").scrollTop() === 0) {
 	            setTimeout(function() {
 	                var messageList = $("#chatMessages");

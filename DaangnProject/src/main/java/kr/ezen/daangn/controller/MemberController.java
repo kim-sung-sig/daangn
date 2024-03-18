@@ -29,6 +29,7 @@ import kr.ezen.daangn.service.DaangnMemberService;
 import kr.ezen.daangn.service.DaangnUserFileService;
 import kr.ezen.daangn.service.MailService;
 import kr.ezen.daangn.service.PopularService;
+import kr.ezen.daangn.service.ReserveService;
 import kr.ezen.daangn.vo.CommonVO;
 import kr.ezen.daangn.vo.DaangnFileVO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
@@ -53,6 +54,8 @@ public class MemberController {
 	private DaangnUserFileService daangnUserFileService;
 	@Autowired
 	private PopularService popularService;
+	@Autowired
+	private ReserveService reserveService;
 	
 	
 	/** 로그인 주소 */
@@ -193,7 +196,7 @@ public class MemberController {
 		return "mypage/myHome";
 	}
     
-    /** 마이페이지 내가 쓴글 보기 */
+    /** 마이페이지 판매내역 보기 */
     @GetMapping(value = "/myBoard")
     public String myboard(HttpSession session, Model model) {
     	if(session.getAttribute("user") == null) {
@@ -210,7 +213,24 @@ public class MemberController {
     	return "mypage/myBoard";
     }
     
-    /** 마이페이지 좋아요한 글 보기 */
+    /** 마이페이지 구매 내역 보기 */
+    @GetMapping(value = "/myPurchase")
+    public String myPurchase(HttpSession session, Model model, @ModelAttribute CommonVO cv) {
+    	if(session.getAttribute("user") == null) {
+    		return "redirect:/";
+    	}
+    	DaangnMemberVO sessionUser = (DaangnMemberVO) session.getAttribute("user");
+    	DaangnMemberVO user = daangnMemberService.selectByIdx(sessionUser.getIdx());
+    	model.addAttribute("user", user);
+    	cv.setUserRef(user.getIdx());
+    	log.info("myPurchase 실행 cv => {}", cv);
+    	PagingVO<DaangnMainBoardVO> pv = reserveService.selectPurchaseListByUserIdx(cv);
+    	log.info("myPurchase 리턴 p => {}, size => {}", pv.getCurrentPage(), pv.getList().size());
+    	model.addAttribute("pv", pv);
+    	return "mypage/myPurchase";
+    }
+    
+    /** 마이페이지 관심목록 글 보기 */
     @GetMapping(value = "/myLike")
     public String myLike(HttpSession session, Model model) {
     	log.info("myLike 실행");
@@ -223,6 +243,7 @@ public class MemberController {
     	return "mypage/myLike";
     }
     
+    /** 마이페이지 최근 방문 */
     @GetMapping(value = "/history")
     public String myHistory(HttpSession session, Model model, @ModelAttribute CommonVO cv) {
     	DaangnMemberVO sessionUser = (DaangnMemberVO) session.getAttribute("user");
@@ -350,6 +371,6 @@ public class MemberController {
 				e.printStackTrace();
 			}
 		}
-    	return "redirect:/member/home";
+    	return "redirect:/member/Home";
     }
 }

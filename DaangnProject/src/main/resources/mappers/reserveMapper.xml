@@ -2,5 +2,82 @@
 <!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "./mybatis-3-mapper.dtd" >
 <mapper namespace="kr.ezen.daangn.dao.ReserveDAO">
 	<!-- 저장하기! -->
+	<insert id="insertReserve" parameterType="ReserveVO">
+		insert into tb_reserve values (tb_reserve_idx_seq.nextval, #{boardRef}, #{userRef}, #{interaction})
+	</insert>
 	
+	<!-- 수정을 하면 조회가 애매하므로 삭제로만 하겠다. -->
+	<!-- 삭제하기 -->
+	<delete id="deleteReserveByIdx" parameterType="int">
+		delete from tb_reserve where idx = #{idx}
+	</delete>
+	
+	<!--
+		구매목록 보기 (이것도 우선 버튼 페이징으로 하겠다.)
+	-->
+	<select id="selectPurchaseListByUserIdx" parameterType="hashmap" resultType="DaangnMainBoardVO">
+		select
+			R.*
+		from
+			(
+				select
+					rownum rnum, Q.*
+				from
+					(
+						SELECT 
+							db.*
+							, dc.categoryName AS categoryName
+							, '판매완료' AS statusName
+							, (
+								SELECT 
+									count(*)
+								FROM
+									DAANGN_LIKE_TB dlt 
+								WHERE 
+									dlt.boardIdx = db.idx
+							) AS countLike
+							, (
+								SELECT
+									COUNT(*)
+								FROM
+									chatRoom cr
+								WHERE
+									cr.boardIdx = db.idx
+							) AS chatRoomCount
+						FROM 
+							DAANGN_BOARD db
+						JOIN
+							daangn_category dc ON dc.categoryIdx = db.categoryRef
+						JOIN
+							(
+								SELECT
+								    tr.idx AS idx,
+								    tr.boardRef
+								FROM
+								    tb_reserve tr
+								WHERE
+								    tr.USERREF = #{userRef} AND tr.INTERACTION = 1
+							) reserve ON reserve.boardRef = db.idx
+						ORDER BY
+							reserve.idx desc
+					) Q
+				where
+					<![CDATA[
+						rownum <= #{endNo}
+					]]>
+			) R
+		where
+			<![CDATA[
+				rnum >= #{startNo}
+			]]>
+	</select>
+	
+	<select id="getPurchaseListTotalCountByUserIdx" parameterType="int" resultType="int">
+		SELECT
+			count(*)
+		FROM
+		    tb_reserve tr
+		WHERE
+		    tr.USERREF = #{userRef} AND tr.INTERACTION = 1
+	</select>
 </mapper>

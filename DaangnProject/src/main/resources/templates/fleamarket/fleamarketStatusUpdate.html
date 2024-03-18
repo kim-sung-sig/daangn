@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>상품상세보기</title>
+<!--제이쿼리 추가-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<!-- UIkit CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css" />
+<!-- UIkit JS -->
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap">
+<!-- 카카오맵 api -->
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fa04a00338cccad468f169754f5e7cc6&libraries=services"></script>
+<!-- axios -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<link rel="stylesheet" href="/css/header.css">
+<style type="text/css">
+	main {margin:auto; padding:76px 0 0 0;width: 400px; position: relative;}
+	
+	.highlight{color: #FF8A3D; font-size: 24px; font-weight: 500;}
+	#footer{
+		position: fixed; left: 0; bottom: 0;
+		width: 100%; height: 76px;
+	}
+	#footerInner{
+		width: 400px; height: 76px; margin: auto;
+		display: flex; justify-content: right; align-items: center;
+	}
+	#footerInner input {padding: 0 20px; border-radius: 10px; font-weight: 500; color: #fff;}
+	#reserveBtn{background: #5abd90}
+	#reserveBtn:hover {background: #4a9975}
+</style>
+</head>
+<body>
+	<input type="hidden" id="boardIdx" th:value="${board.idx}">
+	<input type="hidden" id="statusRef" th:value="${statusRef}">
+	<div id="wrap">
+		<th:block th:insert="~{/header.html}"></th:block>
+		<th:block th:if="${#lists.isEmpty(chatUsers)}">
+			<main>
+					<p style="padding-top: 20px; font-weight: 400;"><span class="highlight">어떤 유저</span>와 <span class="highlight">예약</span>을 하셨나요?</p>
+					<p style="font-weight: 400;">유저 닉네임</p>
+					<select id="userRef" name="userRef" class="uk-select">
+						<option value="0">유저를 선택해주세요.</option>
+						<option th:each="user : ${chatUsers}" th:value="${user.idx}">[[${user.nickName}]]</option>
+					</select>
+					<p>
+						즐거운 거래가 되길 기원합니다.!!
+						<br /> -당근마켓-
+					</p>
+			</main>
+			<div id="footer">
+				<div id="footerInner">
+					<input type="submit" value="예약하기" class="uk-button" id="reserveBtn">
+				</div>
+			</div>
+		</th:block>
+		
+		<th:block th:if="${not #lists.isEmpty(chatUsers)}">
+			<th:block th:if="${statusRef == 1}">
+				<form action="" method="post">
+					<main>
+						예약을 취소하겠습니까?
+					</main>
+					<div id="footer">
+						<div id="footerInner">
+							<input type="submit" value="예약취소" class="uk-button" id="reserveBtn">
+						</div>
+					</div>
+				</form>
+			</th:block>
+			<th:block th:if="${statusRef == 2}">
+				<main>
+					<p style="padding-top: 20px; font-weight: 400;"><span class="highlight">어떤 유저</span>와 <span class="highlight">예약</span>을 하셨나요?</p>
+					<p style="font-weight: 400;">유저 닉네임</p>
+					<select id="userRef" name="userRef" class="uk-select">
+						<option value="0">유저를 선택해주세요.</option>
+						<option th:each="user : ${chatUsers}" th:value="${user.idx}">[[${user.nickName}]]</option>
+					</select>
+					<p>
+						즐거운 거래가 되길 기원합니다.!!
+						<br /> -당근마켓-
+					</p>
+				</main>
+				<div id="footer">
+					<div id="footerInner">
+						<input type="submit" value="예약하기" class="uk-button" id="reserveBtn">
+					</div>
+				</div>
+			</th:block>
+			<th:block th:if="${statusRef == 3}">
+				<main>
+					<p style="padding-top: 20px; font-weight: 400;"><span class="highlight">어떤 유저</span>와 <span class="highlight">거래</span>를 하셨나요?</p>
+					<p style="font-weight: 400;">유저 닉네임</p>
+					<select id="userRef" name="userRef" class="uk-select">
+						<option value="0">유저를 선택해주세요.</option>
+						<option th:each="user : ${chatUsers}" th:value="${user.idx}">[[${user.nickName}]]</option>
+					</select>
+					<p>
+						즐거운 거래가 되셨나요??
+						유저에게 유저평을 남겨주세요!
+						<br /> -당근마켓-
+					</p>
+					<textarea rows="" cols="" class="uk-textarea" style="resize: none;width: 100%; height: 200px;"></textarea>
+				</main>
+				<div id="footer">
+					<div id="footerInner">
+						<input type="submit" value="거래완료" class="uk-button" id="reserveBtn">
+					</div>
+				</div>
+			</th:block>
+		</th:block>
+	</div>
+</body>
+</html>

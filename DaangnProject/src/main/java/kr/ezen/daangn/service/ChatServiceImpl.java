@@ -1,6 +1,7 @@
 package kr.ezen.daangn.service;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import kr.ezen.daangn.dao.DaangnChatMessageDAO;
 import kr.ezen.daangn.dao.DaangnChatRoomDAO;
 import kr.ezen.daangn.vo.ChatMessageVO;
 import kr.ezen.daangn.vo.ChatRoomVO;
+import kr.ezen.daangn.vo.DaangnMemberVO;
 
 @Service(value = "chatService")
 public class ChatServiceImpl implements ChatService{
@@ -98,6 +100,31 @@ public class ChatServiceImpl implements ChatService{
 					ch.setChatRoom(chatRoomVO.getRoomIdx());
 					ch.setSender(chatRoomVO.getUserIdx());
 					chatRoomVO.setUnreadCount(daangnChatMessageDAO.unreadCount(ch));
+				}
+			}
+    	} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    	return list;
+    }
+    
+    /**
+     * 조회 게시글idx를 사용해 채팅을 한 유저 목록을 가져오는 메서드
+     * @param userIdx
+     * @return
+     */
+    @Override
+    public List<DaangnMemberVO> selectChatRoomByBoardIdx(int boardIdx){
+    	List<DaangnMemberVO> list = null;
+    	try {
+			List<ChatRoomVO> chatListByBoard = daangnChatRoomDAO.selectChatRoomByBoardIdx(boardIdx);
+			if(chatListByBoard != null) {
+				list = new ArrayList<>();
+				for(ChatRoomVO chatRoomVO : chatListByBoard) {
+					DaangnMemberVO memberVO = daangnMemberService.selectByIdx(chatRoomVO.getUserIdx());
+					if(memberVO != null) {
+						list.add(memberVO);
+					}
 				}
 			}
     	} catch (SQLException e) {

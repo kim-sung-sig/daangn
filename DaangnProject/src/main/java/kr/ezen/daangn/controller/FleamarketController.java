@@ -345,19 +345,24 @@ public class FleamarketController {
 		return "redirect:/fleamarket?isOk=ok";
 	}
 	
-	
-	@PostMapping(value = "/fleamarketStatusUpdate")
-	public String fleamarketStatusUpdate(HttpSession session, @ModelAttribute DaangnMainBoardVO boardVO) {
-		// 1. 게시글의 번호와 statusRef를 받는다.
-		// 2. 게시글 번호에 해당하는 채팅방을 조회한다.
-		// 3. 채팅방에 해당하는 유저를 찾는다.
-		return "";
-	}
-	
-	@PostMapping(value = "/fleamarketStatusUpdateOk")
-	public String fleamarketStatusUpdateOk(HttpSession session, @ModelAttribute DaangnMainBoardVO boardVO) {
-		// 1. 게시글 번호와 statusRef와 다른 유저 idx를 받는다.
-		// 2. statusRef가 2이면!
-		return "";
+	@GetMapping(value = "/fleamarketStatusUpdate/{boardIdx}/{statusRef}")
+	public String fleamarketStatusUpdate(@PathVariable(value = "boardIdx") int boardIdx, @PathVariable(value = "statusRef") int statusRef, Model model, HttpSession session) {
+		if(session.getAttribute("user") == null) {
+			return "redirect:/";
+		}
+		DaangnMainBoardVO boardVO = daangnMainBoardService.selectByIdx(boardIdx);
+		DaangnMemberVO user = (DaangnMemberVO) session.getAttribute("user");
+		if(boardVO.getUserRef() != user.getIdx()) {
+			return "redirect:/";
+		}
+		log.info("fleamarketStatusUpdate 실행 boardIdx => {}, statusRef => {}", boardIdx, statusRef);
+		model.addAttribute("board", boardVO);
+		// 1. 게시글에 해당하는 채팅유저를 가져온다.
+		List<DaangnMemberVO> chatUsers = chatService.selectChatRoomByBoardIdx(boardIdx);
+		log.info("fleamarketStatusUpdate 리턴 chatUsers => {}개 , {}", chatUsers.size(), chatUsers);
+		model.addAttribute("chatUsers", chatUsers);
+		model.addAttribute("statusRef", statusRef);
+		// 2. 예약 목록이 잇는지 확인해서 예약인 번호를 넘겨준다.!
+		return "fleamarket/fleamarketStatusUpdate";
 	}
 }
