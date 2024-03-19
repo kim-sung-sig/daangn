@@ -386,11 +386,49 @@ public class FleamarketController {
 	}
 	
 	@PostMapping(value = "/fleamarketStatusUpdateOk")
+	@Transactional
 	public String fleamarketStatusUpdateOk(@RequestParam(value = "boardRef") int boardRef, 
 										   @RequestParam(value = "statusRef") int statusRef,
-										   @RequestParam(value = "userIdx", required = false) int userIdx, // 여기부터 commentVOfh 받자
-										   @RequestParam(value = "score", required = false) int score,
-										   @RequestParam(value = "content", required = false) String content) {
-		return "";
+										   @RequestParam(value = "userIdx", required = false) Integer userIdx, // 여기부터 commentVOfh 받자
+										   @RequestParam(value = "score", required = false) Integer score,
+										   @RequestParam(value = "content", required = false) String content,
+										   HttpSession session) {
+		if(session.getAttribute("user") == null) {
+			return "redirect:/";
+		}
+		DaangnMainBoardVO boardVO = daangnMainBoardService.selectByIdx(boardRef);
+		DaangnMemberVO user = (DaangnMemberVO) session.getAttribute("user");
+		
+		if(boardVO.getUserRef() != user.getIdx()) {
+			return "redirect:/";
+		}
+		log.info("fleamarketStatusUpdateOk 실행 boardRef => {}, statusRef => {}, comment => {}",boardRef, statusRef, content);
+		if(statusRef == 1) {			// 예약 취소인 경우!
+			reserveSerivce.deleteReserveByBoardIdx(boardRef); // 예약테이블 삭제
+			boardVO.setStatusRef(1); // 판매중으로 변환
+			daangnMainBoardService.updateStatus(boardVO);
+		} else if(statusRef == 2) {		// 예약인 경우!
+			ReserveVO rv = new ReserveVO();
+			rv.setBoardRef(boardRef);
+			rv.setUserRef(userIdx);
+			rv.setInteraction(0);
+			log.info("rv => {}", rv);
+			reserveSerivce.insertReserve(rv); // 예약으로 테이블 저장
+			boardVO.setStatusRef(2); // 예약중으로 변환
+			daangnMainBoardService.updateStatus(boardVO);	
+		} else {						// 판매완료인경우
+			// 댓글 입력해주고
+			ReserveVO rv = new ReserveVO();
+			rv.setBoardRef(boardRef);
+			rv.setUserRef(userIdx);
+			rv.setInteraction(1);
+			reserveSerivce.deleteReserveByBoardIdx(boardRef); // 예약테이블 삭제
+			reserveSerivce.insertReserve(rv); // 판매완료로 테이블 저장
+			boardVO.setStatusRef(3); // 판매완료로 변환
+			daangnMainBoardService.updateStatus(boardVO);
+			// 코맨트 서비스를 만들어야되네?ㅠㅠ
+		}
+		log.info("fleamarketStatusUpdateOk 성공");
+		return "redirect:/";
 	}
 }

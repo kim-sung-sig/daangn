@@ -8,8 +8,8 @@
 	
 	<!-- 수정을 하면 조회가 애매하므로 삭제로만 하겠다. -->
 	<!-- 삭제하기 -->
-	<delete id="deleteReserveByIdx" parameterType="int">
-		delete from tb_reserve where idx = #{idx}
+	<delete id="deleteReserveByboardRef" parameterType="int">
+		delete from tb_reserve where boardRef = #{boardRef}
 	</delete>
 	
 	<!--

@@ -63,7 +63,7 @@
 					    
 					    <div class="uk-card-body">
 					    	<input type="hidden" id="boardStatusNum" th:value="${board.statusRef}">
-					    	<th:block th:if="${session.user != null && session.user.idx == board.userRef && board.statusRef == 1}">
+					    	<th:block th:if="${session.user != null && session.user.idx == board.userRef && board.statusRef != 3}">
 					    		<select class="uk-select" name="" id="statusChange" style="margin-bottom: 15px; width: 25%;">
 					    			<option value="1" th:selected="${board.statusRef == 1}">판매중</option>
 					    			<option value="2" th:selected="${board.statusRef == 2}">예약중</option>

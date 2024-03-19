@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import kr.ezen.daangn.dao.DaangnBoardFileDAO;
 import kr.ezen.daangn.dao.ReserveDAO;
@@ -28,19 +27,26 @@ public class ReserveServiceImpl implements ReserveService{
 	private DaangnBoardFileDAO daangnBoardFileDAO;
 	
 	
-	/** 저장하기 => (삭제후 저장)*/
+	/** 예약/판매완료 저장하기 */
 	@Override
-	@Transactional
 	public int insertReserve(ReserveVO rv) {
 		int result = 0;
 		try {
-			if(rv != null) {
-				if(rv.getIdx() != 0) {
-					reserveDAO.deleteReserveByIdx(rv.getIdx());
-				}
-				reserveDAO.insertReserve();
-				result = 1;				
-			}
+			reserveDAO.insertReserve(rv);
+			result = 1;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	/** 예약 취소하기 */
+	@Override
+	public int deleteReserveByBoardIdx(int boardIdx) {
+		int result = 0;
+		try {
+			reserveDAO.deleteReserveByboardRef(boardIdx);
+			result = 1;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

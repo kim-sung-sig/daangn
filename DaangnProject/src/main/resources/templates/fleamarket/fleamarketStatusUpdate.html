@@ -116,7 +116,7 @@
 								유저에게 유저평을 남겨주세요!
 								<br /> -당근마켓-
 							</p>
-							<textarea name="content" class="uk-textarea" style="resize: none; width: 100%; height: 200px;" placeholder="유저평을 남겨주세요!"></textarea>
+							<textarea id="content" name="content" class="uk-textarea" style="resize: none; width: 100%; height: 200px;" placeholder="유저평을 남겨주세요!"></textarea>
 						</main>
 						<div id="footer">
 							<div id="footerInner">
@@ -144,7 +144,7 @@
 								유저에게 유저평을 남겨주세요!
 								<br /> -당근마켓-
 							</p>
-							<textarea name="content" class="uk-textarea" style="resize: none; width: 100%; height: 200px;" placeholder="유저평을 남겨주세요!"></textarea>
+							<textarea id="content" name="content" class="uk-textarea" style="resize: none; width: 100%; height: 200px;" placeholder="유저평을 남겨주세요!"></textarea>
 						</main>
 						<div id="footer">
 							<div id="footerInner">
@@ -161,12 +161,24 @@
 	<script type="text/javascript">
 		$(function(){
 			$("#submitForm").submit(function(){
-				alert(1);
-				return false;
+				if($("#userIdx").val() == 0){
+					alert('유저를 선택해주세요.');
+					return false;
+				}
+				return true;
 			})
 			
 			$("#submitForm2").submit(function(){
-				alert(1);
+				if($("#userIdx").val() == 0){
+					alert('유저를 선택해주세요.');
+					return false;
+				}
+				// 유저 점수도!
+				let value = $("#content").val();
+				if(value.trim().length == 0){
+					alert('유저평을 남겨주세요.')
+					return false;
+				}
 				return false;
 			})
 		})

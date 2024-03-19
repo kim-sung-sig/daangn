@@ -152,6 +152,19 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 			e.printStackTrace();
 		}
 	}
+	
+	/** 상태변경 (idx, statusRef)*/
+	@Override
+	public void updateStatus(DaangnMainBoardVO board) {
+		try {
+			HashMap<String, Object> map = new HashMap<>();
+			map.put("idx", board.getIdx());
+			map.put("statusRef", board.getStatusRef());
+			daangnMainBoardDAO.update(map);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 	/** 글 수정하기 */
 	@Override
