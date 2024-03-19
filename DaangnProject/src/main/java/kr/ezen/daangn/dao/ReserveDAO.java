@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
+import kr.ezen.daangn.vo.ReserveVO;
 
 @Mapper
 public interface ReserveDAO {
@@ -17,4 +18,6 @@ public interface ReserveDAO {
 	List<DaangnMainBoardVO> selectPurchaseListByUserIdx(HashMap<String, Integer> map) throws SQLException;
 
 	int getPurchaseListTotalCountByUserIdx(int userRef) throws SQLException;
+
+	ReserveVO getTBReserveByBoardRef(int boardIdx) throws SQLException;
 }

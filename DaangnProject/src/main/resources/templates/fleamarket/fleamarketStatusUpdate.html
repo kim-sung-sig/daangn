@@ -40,80 +40,136 @@
 	<input type="hidden" id="statusRef" th:value="${statusRef}">
 	<div id="wrap">
 		<th:block th:insert="~{/header.html}"></th:block>
+		
+		<!-- 채팅한 유저가 없는경우 -->
 		<th:block th:if="${#lists.isEmpty(chatUsers)}">
 			<main>
-					<p style="padding-top: 20px; font-weight: 400;"><span class="highlight">어떤 유저</span>와 <span class="highlight">예약</span>을 하셨나요?</p>
-					<p style="font-weight: 400;">유저 닉네임</p>
-					<select id="userRef" name="userRef" class="uk-select">
-						<option value="0">유저를 선택해주세요.</option>
-						<option th:each="user : ${chatUsers}" th:value="${user.idx}">[[${user.nickName}]]</option>
-					</select>
-					<p>
-						즐거운 거래가 되길 기원합니다.!!
-						<br /> -당근마켓-
-					</p>
+				채팅목록이없습니다.
 			</main>
 			<div id="footer">
 				<div id="footerInner">
-					<input type="submit" value="예약하기" class="uk-button" id="reserveBtn">
+					<input type="button" value="돌아가기" class="uk-button" id="cancleBtn">
 				</div>
 			</div>
 		</th:block>
 		
 		<th:block th:if="${not #lists.isEmpty(chatUsers)}">
+			<!-- 예약취소를 하려하는 경우 -->
 			<th:block th:if="${statusRef == 1}">
-				<form action="" method="post">
+				<form action="/fleamarketStatusUpdateOk" method="post" id="submitForm">
 					<main>
+						<input type="hidden" name="boardRef" th:value="${board.idx}">
+						<input type="hidden" name="statusRef" value="1">
 						예약을 취소하겠습니까?
 					</main>
 					<div id="footer">
 						<div id="footerInner">
+							<input type="button" value="돌아가기" class="uk-button" id="cancleBtn" style="margin-right: 10px;">
 							<input type="submit" value="예약취소" class="uk-button" id="reserveBtn">
 						</div>
 					</div>
 				</form>
 			</th:block>
+			
+			<!-- 예약하는 경우 -->
 			<th:block th:if="${statusRef == 2}">
-				<main>
-					<p style="padding-top: 20px; font-weight: 400;"><span class="highlight">어떤 유저</span>와 <span class="highlight">예약</span>을 하셨나요?</p>
-					<p style="font-weight: 400;">유저 닉네임</p>
-					<select id="userRef" name="userRef" class="uk-select">
-						<option value="0">유저를 선택해주세요.</option>
-						<option th:each="user : ${chatUsers}" th:value="${user.idx}">[[${user.nickName}]]</option>
-					</select>
-					<p>
-						즐거운 거래가 되길 기원합니다.!!
-						<br /> -당근마켓-
-					</p>
-				</main>
-				<div id="footer">
-					<div id="footerInner">
-						<input type="submit" value="예약하기" class="uk-button" id="reserveBtn">
+				<form action="/fleamarketStatusUpdateOk" method="post" id="submitForm">
+					<main>
+						<input type="hidden" name="boardRef" th:value="${board.idx}">
+						<input type="hidden" name="statusRef" value="2">
+						<p style="padding-top: 20px; font-weight: 400;"><span class="highlight">어떤 유저</span>와 <span class="highlight">예약</span>을 하셨나요?</p>
+						<p style="font-weight: 400; margin-bottom:5px;">유저 닉네임</p>
+						<select id="userIdx" name="userIdx" class="uk-select">
+							<option value="0">유저를 선택해주세요.</option>
+							<option th:each="user : ${chatUsers}" th:value="${user.idx}">[[${user.nickName}]]</option>
+						</select>
+						<p>
+							즐거운 거래가 되길 기원합니다.!!
+							<br /> -당근마켓-
+						</p>
+					</main>
+					<div id="footer">
+						<div id="footerInner">
+							<input type="button" value="돌아가기" class="uk-button" id="cancleBtn" style="margin-right: 10px;">
+							<input type="submit" value="예약하기" class="uk-button" id="reserveBtn">
+						</div>
 					</div>
-				</div>
+				</form>
 			</th:block>
+			
+			<!-- 거래완료 -->
 			<th:block th:if="${statusRef == 3}">
-				<main>
-					<p style="padding-top: 20px; font-weight: 400;"><span class="highlight">어떤 유저</span>와 <span class="highlight">거래</span>를 하셨나요?</p>
-					<p style="font-weight: 400;">유저 닉네임</p>
-					<select id="userRef" name="userRef" class="uk-select">
-						<option value="0">유저를 선택해주세요.</option>
-						<option th:each="user : ${chatUsers}" th:value="${user.idx}">[[${user.nickName}]]</option>
-					</select>
-					<p>
-						즐거운 거래가 되셨나요??
-						유저에게 유저평을 남겨주세요!
-						<br /> -당근마켓-
-					</p>
-					<textarea rows="" cols="" class="uk-textarea" style="resize: none;width: 100%; height: 200px;"></textarea>
-				</main>
-				<div id="footer">
-					<div id="footerInner">
-						<input type="submit" value="거래완료" class="uk-button" id="reserveBtn">
-					</div>
-				</div>
+				<!-- 예약자가 없던 경우 -->
+				<th:block th:if="${rv == null}">
+					<form action="/fleamarketStatusUpdateOk" method="post" id="submitForm2">
+						<main>
+							<input type="hidden" name="boardRef" th:value="${board.idx}">
+							<input type="hidden" name="statusRef" value="3">
+							<p style="padding-top: 20px; font-weight: 400;"><span class="highlight">어떤 유저</span>와 <span class="highlight">거래</span>를 하셨나요?</p>
+							<p style="font-weight: 400;">유저 닉네임</p>
+							<select id="userIdx" name="userIdx" class="uk-select">
+								<option value="0">유저를 선택해주세요.</option>
+								<option th:each="user : ${chatUsers}" th:value="${user.idx}">[[${user.nickName}]]</option>
+							</select>
+							<p>
+								즐거운 거래가 되셨나요??
+								유저에게 유저평을 남겨주세요!
+								<br /> -당근마켓-
+							</p>
+							<textarea name="content" class="uk-textarea" style="resize: none; width: 100%; height: 200px;" placeholder="유저평을 남겨주세요!"></textarea>
+						</main>
+						<div id="footer">
+							<div id="footerInner">
+								<input type="button" value="돌아가기" class="uk-button" id="cancleBtn" style="margin-right: 10px;">
+								<input type="submit" value="거래완료" class="uk-button" id="reserveBtn">
+							</div>
+						</div>
+					</form>
+				</th:block>
+				
+				<!-- 예약자가 있던 경우 -->
+				<th:block th:if="${rv != null}">
+					<form action="/fleamarketStatusUpdateOk" method="post" id="submitForm2">
+						<main>
+							<input type="hidden" name="boardRef" th:value="${board.idx}">
+							<input type="hidden" name="statusRef" value="3">
+							<p style="padding-top: 20px; font-weight: 400;"><span class="highlight">어떤 유저</span>와 <span class="highlight">거래</span>를 하셨나요?</p>
+							<p style="font-weight: 400;">유저 닉네임</p>
+							<select id="userIdx" name="userIdx" class="uk-select">
+								<option value="0">유저를 선택해주세요.</option>
+								<option th:each="user : ${chatUsers}" th:value="${user.idx}" th:selected="${user.idx == rv.userRef}">[[${user.nickName}]]</option>
+							</select>
+							<p>
+								즐거운 거래가 되셨나요??
+								유저에게 유저평을 남겨주세요!
+								<br /> -당근마켓-
+							</p>
+							<textarea name="content" class="uk-textarea" style="resize: none; width: 100%; height: 200px;" placeholder="유저평을 남겨주세요!"></textarea>
+						</main>
+						<div id="footer">
+							<div id="footerInner">
+								<input type="button" value="돌아가기" class="uk-button" id="cancleBtn" style="margin-right: 10px;">
+								<input type="submit" value="거래완료" class="uk-button" id="reserveBtn">
+							</div>
+						</div>
+					</form>
+				</th:block>
 			</th:block>
 		</th:block>
 	</div>
+	
+	<script type="text/javascript">
+		$(function(){
+			$("#submitForm").submit(function(){
+				alert(1);
+				return false;
+			})
+			
+			$("#submitForm2").submit(function(){
+				alert(1);
+				return false;
+			})
+		})
+	</script>
 </body>
 </html>

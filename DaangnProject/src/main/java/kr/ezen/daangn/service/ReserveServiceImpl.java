@@ -72,6 +72,17 @@ public class ReserveServiceImpl implements ReserveService{
 		}
 		return pv;
 	}
+
+	/** boardIdx에 해당하는 Reserve얻기 (예약자가 잇는지 확인하기) */
+	@Override
+	public ReserveVO getTBReserveByBoardRef(int boardIdx) {
+		ReserveVO rv = null;
+		try {
+			rv = reserveDAO.getTBReserveByBoardRef(boardIdx);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return rv;
+	}
 	
-	/** 예약자가 잇는지 확인하기 */
 }

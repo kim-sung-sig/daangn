@@ -11,4 +11,6 @@ public interface ReserveService {
 	int insertReserve(ReserveVO rv);
 	
 	PagingVO<DaangnMainBoardVO> selectPurchaseListByUserIdx(CommonVO cv);
+
+	ReserveVO getTBReserveByBoardRef(int boardIdx);
 }

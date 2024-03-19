@@ -128,7 +128,13 @@ $(function(){
 		const boardIdx = $("#boardIdx").val();
 		const result = confirm('상품 상태를 변경하시겠습니까?');
 		if(result) {
-			location.href = `/fleamarketStatusUpdate/${boardIdx}/${statusRef}`
+			const form = $('<form>');
+		    form.attr('method', 'post');
+		    form.attr('action', `/fleamarketStatusUpdate`);
+		    form.append($('<input>').attr('type', 'hidden').attr('name', 'boardIdx').val(boardIdx));
+		    form.append($('<input>').attr('type', 'hidden').attr('name', 'statusRef').val(statusRef));
+		    $('body').append(form);
+		    form.submit();
 		}
 	})
 })

@@ -80,4 +80,8 @@
 		WHERE
 		    tr.USERREF = #{userRef} AND tr.INTERACTION = 1
 	</select>
+	
+	<select id="getTBReserveByBoardRef" parameterType="int" resultType="ReserveVO">
+		select * from tb_reserve where boardRef = #{boardRef}
+	</select>
 </mapper>

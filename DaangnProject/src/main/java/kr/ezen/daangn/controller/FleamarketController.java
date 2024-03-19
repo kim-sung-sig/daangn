@@ -30,11 +30,13 @@ import kr.ezen.daangn.service.DaangnLikeService;
 import kr.ezen.daangn.service.DaangnMainBoardService;
 import kr.ezen.daangn.service.DaangnMemberService;
 import kr.ezen.daangn.service.PopularService;
+import kr.ezen.daangn.service.ReserveService;
 import kr.ezen.daangn.vo.DaangnFileVO;
 import kr.ezen.daangn.vo.DaangnLikeVO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
 import kr.ezen.daangn.vo.DaangnMemberVO;
 import kr.ezen.daangn.vo.PopularVO;
+import kr.ezen.daangn.vo.ReserveVO;
 import kr.ezen.daangn.vo.ScrollVO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -55,6 +57,8 @@ public class FleamarketController {
 	private ChatService chatService;
 	@Autowired
 	private DaangnMemberService daangnMemberService;
+	@Autowired
+	private ReserveService reserveSerivce;
 	
 	/**
 	 * 중고거래 리스트 보기
@@ -345,8 +349,8 @@ public class FleamarketController {
 		return "redirect:/fleamarket?isOk=ok";
 	}
 	
-	@GetMapping(value = "/fleamarketStatusUpdate/{boardIdx}/{statusRef}")
-	public String fleamarketStatusUpdate(@PathVariable(value = "boardIdx") int boardIdx, @PathVariable(value = "statusRef") int statusRef, Model model, HttpSession session) {
+	@PostMapping(value = "/fleamarketStatusUpdate")
+	public String fleamarketStatusUpdate(@RequestParam(value = "boardIdx") int boardIdx, @RequestParam(value = "statusRef") int statusRef, Model model, HttpSession session) {
 		if(session.getAttribute("user") == null) {
 			return "redirect:/";
 		}
@@ -356,6 +360,21 @@ public class FleamarketController {
 			return "redirect:/";
 		}
 		log.info("fleamarketStatusUpdate 실행 boardIdx => {}, statusRef => {}", boardIdx, statusRef);
+		// 1. 예약목록이 있는지 확인한다!
+		ReserveVO rv = reserveSerivce.getTBReserveByBoardRef(boardIdx);
+		if(rv == null) {
+			// 예약목록이 없으면 1번 금지!
+			if(statusRef == 1) {
+				return "redirect:/";
+			}
+		} else {
+			// interaction=1 이면 1번으로 금지! 리다이렉트
+			if(rv.getInteraction() ==1 && statusRef == 1) {
+				return "redirect:/";
+			}
+		}
+		model.addAttribute("rv", rv);
+		// 예약목록이 있고 interaction = 0 이면 2빼고 1,2,3 셋 다가능
 		model.addAttribute("board", boardVO);
 		// 1. 게시글에 해당하는 채팅유저를 가져온다.
 		List<DaangnMemberVO> chatUsers = chatService.selectChatRoomByBoardIdx(boardIdx);
@@ -364,5 +383,14 @@ public class FleamarketController {
 		model.addAttribute("statusRef", statusRef);
 		// 2. 예약 목록이 잇는지 확인해서 예약인 번호를 넘겨준다.!
 		return "fleamarket/fleamarketStatusUpdate";
+	}
+	
+	@PostMapping(value = "/fleamarketStatusUpdateOk")
+	public String fleamarketStatusUpdateOk(@RequestParam(value = "boardRef") int boardRef, 
+										   @RequestParam(value = "statusRef") int statusRef,
+										   @RequestParam(value = "userIdx", required = false) int userIdx, // 여기부터 commentVOfh 받자
+										   @RequestParam(value = "score", required = false) int score,
+										   @RequestParam(value = "content", required = false) String content) {
+		return "";
 	}
 }
