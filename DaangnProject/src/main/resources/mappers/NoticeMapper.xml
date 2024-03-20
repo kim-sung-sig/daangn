@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "./mybatis-3-mapper.dtd" >
+<mapper namespace="kr.ezen.daangn.dao.DaangnNoticesDAO">
+	<select id="selectList" parameterType="hashmap" resultType="NoticesVO">
+		select
+			R.*
+		from
+			(
+				select
+					rownum rnum, Q.*
+				from
+					(
+						select
+							*
+						from
+							notices
+						order by
+							idx
+					) Q
+				where
+					<![CDATA[
+						rownum <= #{endNo}
+					]]> 
+			) R
+		where
+			<![CDATA[
+				rnum >= #{startNo}
+			]]>
+	</select>
+	
+	<select id="selectCount" resultType="int">
+		select count(*) from notices
+	</select>
+	
+	<select id="selectByIdx" parameterType="int" resultType="NoticesVO">
+		select * from notices where idx = #{idx}
+	</select>
+	
+	
+	<insert id="insert" parameterType="NoticesVO">
+    	insert into notices values(notices_idx_seq.nextval, #{title}, #{content}, sysdate, 0)
+	</insert>
+	
+	<update id="update" parameterType="hashmap">
+		UPDATE
+			notices
+		SET
+			<if test="title != null">
+				title = #{title}, content = #{content}
+			</if>
+			<if test="highlight != null">
+				highlight = #{highlight}	
+			</if>
+		where idx = #{idx}			
+	</update>
+	
+	<select id="selectByHighlight" resultType="NoticesVO">
+		select * from notices where highlight = 1 order by idx desc
+	</select>
+	
+	<delete id="deleteByIdx" parameterType="int">
+		delete from notices where idx = #{idx}
+	</delete>
+</mapper>
