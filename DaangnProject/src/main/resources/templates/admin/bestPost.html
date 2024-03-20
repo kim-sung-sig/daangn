@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <title>관리자-인기게시물</title>
+    <!-- font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <!-- UIkit CSS -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css"/>
+
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
+	<link rel="stylesheet" href="/css/admin/header.css">
+    <style type="text/css">
+		.subtitle {
+			font-size: 24px;
+		}
+		.xBox{
+			margin-bottom: 70px;
+		}
+		.btn-right{text-align: right;}
+		.uk-table td{padding: 8px 10px;}
+		.uk-table th{border: 1px solid #ccc; padding: 10px; font-weight: 700; text-align: center; vertical-align: middle;}
+		.uk-table td{text-align: center;vertical-align: middle;}
+		.uk-table .content{
+			text-align: left;
+			-webkit-line-clamp: 4; /* 라인수 */
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+		.uk-table .title{ max-width: 500px;text-align: left;overflow: hidden;text-overflow: ellipsis;}
+    </style>
+</head>
+<body>
+<div id="wrap">
+    <div id="content">
+    	<!-- header -->
+    	<th:block th:insert="~{/admin/header.html}"></th:block>
+    	
+	    <div style="padding-top: 50px;">
+	    	<!-- leftArea -->
+	    	<th:block th:insert="~{/admin/leftArea.html}"></th:block>
+	    	
+	        <div id="right-area">
+	        	<p><b>최근 12시간</b> 이내의 <b>조회, 댓글, 좋아요, 좋아요취소</b>가 발생한 게시물에 대해 점수를 메겨 인기게시물로 산정</p>
+	        	<table class="uk-table uk-table-striped">
+				    <thead>
+				        <tr>
+				            <th width="100px">순위</th>
+				            <th width="100px">글번호</th>
+				            <th width="100px">카테고리</th>
+				            <th width="500px">제목</th>
+				            <th width="200px">게시일</th>
+				            <th width="200px">조회 / 댓글 / 좋아요</th>
+				        </tr>
+				        <tr>
+				            <th>작성자</th>
+				            <th colspan="5">내용</th>
+				        </tr>
+				    </thead>
+				    <tbody>
+				    	<th:block th:each="board, c : ${list}">
+				    		<tr height="50px">
+					            <td>[[${c.count}]]</td>
+					            <td width="100px">[[${board.idx}]]</td>
+					            <td>[[${board.categoryName}]]</td>
+					            <td class="title"><a href="#" style="color: #333;">[[${board.title}]]</a></td>
+					            <td>[[${#dates.format(board.regDate,'yy-MM-dd hh:mm:ss')}]]</td>
+					            <td>[[${board.readCount}]] / [[${board.commentCount}]] / [[${board.countHeart}]]</td>
+					        </tr>
+					        <tr height="110px">
+							    <td style="overflow: hidden;text-overflow: ellipsis; white-space: nowrap;">[[${board.member.nickName}]]</td>
+							    <td class="content" colspan="5" height="110px">
+							        [[${#strings.length(board.content) > 700 ? (board.content?.substring(0, 700) + "...") : board.content}]]
+							    </td>
+							</tr>
+				    	</th:block>
+				    </tbody>
+				</table>
+				<!-- 
+	        	<div class="xBox" style="width: 200px">
+					<p style="word-wrap: break-word;">dddddddddd stsdas ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd</p>
+	        	</div>
+				 -->
+	        	
+	        	<div class="xBox">
+					
+	        	</div>
+	        </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <title>관리자 메일보내기</title>
+    <!-- font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- UIkit CSS -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css"/>
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
+    <!-- axios 추가 -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<link rel="stylesheet" href="/css/admin/header.css">
+    <style type="text/css">
+    	.btn-right{text-align: right;}
+    	.uk-table td {padding: 5px 10px;}
+    	#page span {cursor: pointer;}
+    	#page .active { font-weight: 600;}
+    </style>
+</head>
+<body>
+<div id="wrap">
+    <div id="content">
+    	<!-- header -->
+    	<th:block th:insert="~{/admin/header.html}"></th:block>
+    	
+	    <div style="padding-top: 50px;">
+	        <!-- leftArea -->
+	    	<th:block th:insert="~{/admin/leftArea.html}"></th:block>
+	    	
+	        <div id="right-area">
+	        	<h3>회원메일보내기</h3>
+	        	<div style="display: flex; justify-content: end; align-items: center;">
+					<label style="margin-right:10px;">검색</label>
+					<div class="uk-inline">
+			            <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: search"></span>
+			            <input id="search" name="search" class="uk-input" type="text" autocomplete='off' aria-label="Not clickable icon" placeholder="검색어를 입력해주세요">
+			        </div>
+	        	</div>
+		        	<table class="uk-table uk-table-striped">
+					    <thead>
+					        <tr>
+					        	<th><input type="checkbox" id="AllCheck"/></th>
+					            <th>No</th>
+					            <th>아이디</th>
+					            <th>이메일</th>
+					            <th>이름</th>
+					            <th>닉네임</th>
+					            <th>주소</th>
+					            <th>권한</th>
+					            <th>생일</th>
+					            <th>휴대폰번호</th>
+					            <th>성별</th>
+					            <th>게시글수</th>
+					        </tr>
+					    </thead>
+					    <tbody>
+					    </tbody>
+					</table>
+					<div class="btn-right">
+						<button id="sendMail" type="submit" class="uk-button uk-button-small uk-button-primary">메일 발송하러가기</button>
+					</div>
+					
+				<div id="page" style="display:flex; align-items: center; justify-content: center;"></div>
+	        </div>
+        </div>
+    </div>
+</div>
+<script>
+	let checkedUser = [];
+	let totalCount = 0;
+	let search = "";
+	$(function(){
+		init();
+		$("#AllCheck").change(function() {
+		    var isChecked = $(this).prop("checked");
+		    $("input[name='checking']").prop("checked", isChecked);
+		    if (isChecked) {
+		        $("input[name='checking']").each(function() {
+		            checkedUser.push($(this).val());
+		        });
+		    } else {
+		        $("input[name='checking']").each(function() {
+		            var idx = $(this).val();
+		            const index = checkedUser.indexOf(idx);
+		            if (index !== -1) {
+		                checkedUser.splice(index, 1);
+		            }
+		        });
+		    }
+		});
+		
+		// 검색이 될때 실행할 함수
+		$(document).on("keyup", "#search", function(event) {
+		    if (event.which === 13) {
+		    	let value = $("#search").val();
+		    	axios.post('/adm/getTotalCount', {
+					'search': value,
+				})
+				.then(function (res) {
+					totalCount = res.data;
+					search = value;
+					updatePage(totalCount,1);
+				})
+				.catch(function (e){
+					console.log(e);
+				});
+		    }
+		});
+		
+		$(document).on("DOMNodeInserted", "tbody", function() {
+		    // 모든 체크박스가 선택되어 있는지 확인
+		    var allChecked = true;
+		    $("input[name='checking']").each(function() {
+		        if (!$(this).prop("checked")) {
+		            allChecked = false;
+		            return false; // 모든 체크박스가 선택되어 있지 않은 경우 반복문 탈출
+		        }
+		    });
+		    // 모든 체크박스가 선택되어 있지 않은 경우, AllCheck 체크박스도 체크 해제
+		    if (!allChecked) {
+		        $("#AllCheck").prop("checked", false);
+		    }
+		});
+		
+		
+		$("#sendMail").click(function(){
+		    if (!checkedUser.length) { // 배열이 비어있다면
+		        alert('메일을 보낼 유저를 선택해주세요.');
+		        return ;
+		    }
+		    const url = '/adm/sendToUser';
+		    const form = document.createElement('form');
+		    form.setAttribute('method', 'POST');
+		    form.setAttribute('action', url);
+
+		    // 폼에 데이터를 추가 (예: 리스트)
+		    const data = checkedUser;
+		    data.forEach(item => {
+		        const input = document.createElement('input');
+		        input.setAttribute('type', 'hidden'); // 숨겨진 input 필드 생성
+		        input.setAttribute('name', 'mailList'); // 데이터를 전송할 이름 설정
+		        input.setAttribute('value', item); // 데이터 값 설정
+		        form.appendChild(input); // 폼에 input 필드 추가
+		    });
+		    document.body.appendChild(form);
+		    form.submit(); // 폼 제출
+		    return false;
+		});	
+	})
+	function init(){
+		axios.post('/adm/getTotalCount', {
+			'search': "",
+		})
+		.then(function (res) {
+			totalCount = res.data;
+			updatePage(totalCount, 1);
+			updateTable(1);
+		})
+		.catch(function (e){
+			console.log(e);
+		});
+	}
+	
+	function handleCheckboxChange(checkbox) {
+	    const userIdx = checkbox.value; // 체크박스에 해당하는 사용자의 idx 값
+	    if (checkbox.checked) {
+	        checkedUser.push(userIdx);
+	    } else {
+	        const index = checkedUser.indexOf(userIdx);
+	        if (index !== -1) {
+	            checkedUser.splice(index, 1);
+	        }
+	    }
+	}
+	
+	
+	function updateTable(currentPage){
+		$(".uk-table tbody").empty();
+		
+		axios.post('/adm/pagedUsers', {
+			'currentPage': currentPage,
+			'search': search,
+		})
+		.then(function (res) {
+			const data = res.data;
+			console.log(data.length);
+			if(data.length == 0){
+				alert("등록된 유저가 없습니다.");
+				$(".uk-table tbody").html(`<td colspan="11" style="text-align: center;">등록된 유저가 없습니다.</td>`);
+				return;
+			}
+			content=``;
+			data.forEach(x=>{
+				const date = new Date(x.birthDate);
+				const formattedDate = new Intl.DateTimeFormat('ko-KR', {
+				    year: 'numeric',
+				    month: '2-digit',
+				    day: '2-digit'
+				}).format(date);
+				if (checkedUser.includes(''+x.idx)) {
+					content +=`
+						<tr>
+		                    <td><input type="checkbox" name="checking" value="${x.idx}" checked/></td>`
+				} else {
+					content +=`
+						<tr>
+		                    <td><input type="checkbox" name="checking" value="${x.idx}"/></td>`
+				}
+				content +=`
+	                    <td>${x.idx}</td>
+	                    <td>${x.username}</td>
+	                    <td>${x.email}</td>
+	                    <td>${x.name}</td>
+	                    <td>${x.nickName}</td>
+	                    <td>${x.stAddress}, ${x.dtAddress}</td>
+	                    <td>${x.role}</td>
+	                    <td>${formattedDate}</td>
+	                    <td>${x.phone}</td>
+	                    <td>${x.gender == 1 ? '남' : '여'}</td>
+	                    <td>${x.boardCount}</td>
+	                </tr>
+				`
+			})
+			$(".uk-table tbody").html(content);
+			var allChecked = true;
+	        $("input[name='checking']").each(function() {
+	            if (!$(this).prop("checked")) {
+	                allChecked = false;
+	                return false;
+	            }
+	        });
+	        $("#AllCheck").prop("checked", allChecked);
+			$("input[name='checking']").change(function() {
+		        handleCheckboxChange(this); // 배열에 값넣기
+		        var allChecked = true;
+		        $("input[name='checking']").each(function() {
+		            if (!$(this).prop("checked")) {
+		                allChecked = false;
+		                return false;
+		            }
+		        });
+		        $("#AllCheck").prop("checked", allChecked);
+		    });
+		})
+		.catch(function (error) {
+			console.log(error);
+		});
+	}
+	
+	function updatePage(totalCount, currentPage) {
+		const sizeOfPage = 20;
+		const sizeOfBlock = 5;
+		page = ``;
+		if(totalCount>0){
+			let totalPage = Math.floor((totalCount - 1) / sizeOfPage) + 1;
+			if (currentPage > totalPage) currentPage = 1;
+			let startPage = Math.floor((currentPage - 1) / sizeOfBlock) * sizeOfBlock + 1;
+			let endPage = startPage + sizeOfBlock - 1;
+			if (endPage > totalPage) endPage = totalPage;
+			
+			page = `<ul class='uk-pagination' uk-margin>`
+			if(startPage>1){
+				page += `<li><span uk-pagination-previous onclick='updatePage(${totalCount},${startPage - 1})'></span></li>`
+			}
+			for(let i = startPage; i<= endPage; i++){
+				if(i==currentPage){
+					page += `<li><span class="active">${i}</span></li>`
+				} else {
+					page += `<li><span onclick='updatePage(${totalCount},${i})'>${i}</span></li>`
+				}
+			}
+			if(endPage < totalPage) {
+				page += `<li><span uk-pagination-next onclick='updatePage(${totalCount},${endPage+1})'></span></li>`
+			}
+		}
+		$("#page").html(page);
+		updateTable(currentPage);
+	}
+</script>
+</body>
+</html>

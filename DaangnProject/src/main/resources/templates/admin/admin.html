@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <title>관리자 메인페이지</title>
+    <!-- font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- ChartJs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css"/>
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<link rel="stylesheet" href="/css/admin/header.css">
+    <style type="text/css">
+		.subtitle {
+			font-size: 24px;
+		}
+		.hr{
+			width: 100%; height: 1px; background: #E5E5E5; border-radius: 50%; margin: 12px 0;
+		}
+		.xBox{
+			margin-bottom: 70px;
+		}
+		.btn-right{text-align: right;}
+		#chartArea{
+			display: flex;
+			width: 100%;
+		}
+		#chartArea>div{
+			width: 100%;
+			min-width: 500px;
+		}
+    </style>
+</head>
+<body>
+<div id="wrap">
+    <div id="content">
+    	<!-- header -->
+    	<th:block th:insert="~{/admin/header.html}"></th:block>
+    	
+	    <div style="padding-top: 50px;">
+	    	<!-- leftArea -->
+	    	<th:block th:insert="~{/admin/leftArea.html}"></th:block>
+	    
+	        <div id="right-area">
+        		<label class="subtitle" id="chartLabel">접속자 통계</label>
+        		<div class="hr"></div>
+	        	<div class="xBox" id="chartArea">
+	        		<div id="total" style="display: flex;align-items: center; justify-content: center;">
+		        		
+	        		</div>
+	        		<div style="min-width: 500px;">
+	        			<canvas id="lineExample"></canvas>
+	        		</div>
+	        	</div>
+				<label class="subtitle">최근 가입한 회원</label>
+	        	<div class="hr"></div>
+	        	<div class="xBox">
+	        		<table class="uk-table uk-table-striped">
+					    <thead>
+					        <tr>
+					            <th>No</th>
+					            <th>아이디</th>
+					            <th>이메일</th>
+					            <th>이름</th>
+					            <th>닉네임</th>
+					            <th>권한</th>
+					            <th>생일</th>
+					            <th>휴대폰번호</th>
+					            <th>성별</th>
+					        </tr>
+					    </thead>
+					    <tbody>
+					    	<tr th:each="user : ${users}">
+					    		<td>[[${user.idx}]]번째로 가입한 회원</td>
+					    		<td>[[${user.username}]]</td>
+					    		<td>[[${user.email}]]</td>
+					    		<td>[[${user.name}]]</td>
+					    		<td>[[${user.nickName}]]</td>
+					    		<td>[[${user.role}]]</td>
+					    		<td>[[${#dates.format(user.birthDate, 'yyyy-MM-dd HH:mm')}]]</td>
+					    		<td>[[${user.phone}]]</td>
+					    		<td>[[${user.gender==1 ? '남' : '여'}]]</td>
+					    	</tr>
+					    </tbody>
+					</table>
+					<div class="btn-right">
+						<a href="/adm/userManagement" class="uk-button uk-button-small uk-button-primary">회원관리하기</a>
+					</div>
+	        	</div>
+	        	
+				<label class="subtitle">최근 게시글물(10개)</label>
+	        	<div class="hr"></div>
+	        	<div class="xBox">
+	        		<table class="uk-table uk-table-striped">
+					    <thead>
+					        <tr>
+					            <th>No</th>
+					            <th>카테고리</th>
+					            <th>제목</th>
+					            <th>닉네임</th>
+					            <th>조회수</th>
+					            <th>좋아요</th>
+					            <th>게시일</th>
+					        </tr>
+					    </thead>
+					    <tbody>
+					    	<tr th:each="board : ${boards}">
+					    		<td>[[${board.idx}]]</td>
+					    		<td>[[${board.categoryName}]]</td>
+					    		<td style="max-width: 500px;text-align: left;overflow: hidden;text-overflow: ellipsis;">[[${board.title}]]</td>
+					    		<td>[[${board.member.nickName}]]</td>
+					    		<td>[[${board.readCount}]]</td>
+					    		<td>[[${board.commentCount}]]</td>
+					    		<td>[[${#dates.format(board.regDate, 'yyyy-MM-dd HH:mm')}]]</td>
+					    	</tr>
+					    </tbody>
+					</table>
+					<div class="btn-right">
+						<a href="" class="uk-button uk-button-small uk-button-primary">게시글 관리하기</a>
+					</div>
+	        	</div>
+	        </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+	$(function(){
+		axios.post('/adm/visitorData')
+		.then(res => {
+			const data = res.data;
+			const lineExample = document.querySelector('#lineExample').getContext('2d');
+			const currentDate = new Date();
+			const weekday = ['일', '월', '화', '수', '목', '금', '토']
+			const weekNum = currentDate.getDay();
+			const lineExampleChart = new Chart(lineExample, {
+			    type: 'line',
+			    data: {
+			        labels: [weekday[mod(weekNum-6, 7)], weekday[mod(weekNum-5, 7)], weekday[mod(weekNum-4, 7)], weekday[mod(weekNum-3, 7)], weekday[mod(weekNum-2, 7)], weekday[mod(weekNum-1, 7)], weekday[mod(weekNum, 7)]],
+			        datasets: [{
+			            label: '접속자 수',
+			            data: data.countList,
+			            borderColor: 'rgba(75, 192, 192, 1)',
+			            borderWidth: 1,
+			            fill: false
+			        }]
+			    },
+			    options: {
+			        scales: {
+			            x: {
+			                beginAtZero: true
+			            },
+			            y: {
+			                beginAtZero: true
+			            }
+			        }
+			    }
+			});
+			
+			$("#total").html(`현재 접속자 수 : ${data.activeSession}<br>총 접속자 수 : ${data.totalCount}`);
+		})
+		.catch(error => {
+		  console.log(error);
+		});
+	})
+	function mod(n, m) {
+	    return ((n % m) + m) % m;
+	}
+</script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <title>관리자 메인페이지</title>
+    <!-- font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- ChartJs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css"/>
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<link rel="stylesheet" href="/css/admin/header.css">
+    <style type="text/css">
+		#right-area {
+			#title{margin:0;}
+			p{margin: 0;}
+			.title-info{font-size: 14px; font-weight: 500;}
+			.hr{ margin:5px 0;}
+			.hr2 {
+			    width: 100%;
+			    height: 1px;
+			    background: #ababab;
+			    border-radius: 50%;
+			    margin: 12px 0;
+			}
+			label{
+				position: relative;
+				font-weight: 500;
+			}
+			label::before{
+				content: attr(data-icon);
+  				font-size: 1.25em;
+			}
+			#page a.active {font-weight: 500; font-size: 16px; color: #333;}
+			
+			.tr1{ width: 100%; display: flex;}
+	    	.tr2{width: 100%; display: flex;}
+	    	
+	    	.td1 {width: 50px; text-align: center;display: flex;align-items: center; justify-content: center; padding: 3px;}
+	    	.td2 {width: calc(100% - 350px); padding: 3px;}
+	    	.td3 {width: 200px;display: flex;align-items: center; justify-content: center; padding: 3px;}
+	    	.td4 {width: 100px;display: flex;align-items: center; justify-content: center; padding: 3px;}
+	    	.td5 {width: calc(100% - 50px); padding: 3px;}
+	    	#thead div{border: 1px solid #ccc; background: #3F51B5; color: #fff; font-weight: 500;}
+	    	#thead .tr2{border-top: none;}
+	    	#thead .tr2 p{margin: 0; padding: 5px;}
+	    	#thead .td2 {display: flex;align-items: center; justify-content: center;}
+	    	
+	    	#thead li { margin:0}
+	    	#tbody .tr1 {border-bottom: 1px solid #ccc;}
+	    	#tbody li { border-bottom: 1px solid #aaa; margin: 0px;}
+	    	
+	    	#submitBtn input{
+	    		transition: 0.3s;
+	    	}
+	    	#submitBtn input:hover{
+	    		background: #3F51B5;
+	    		color: #fff;
+	    	}
+	    	#reply{
+	    		resize: none;
+	    		height: 200px;
+	    	}
+		}
+    </style>
+</head>
+<body>
+<div id="wrap">
+    <div id="content">
+    	<!-- header -->
+    	<th:block th:insert="~{/admin/header.html}"></th:block>
+    	
+	    <div style="padding-top: 50px;">
+	    	<!-- leftArea -->
+	    	<th:block th:insert="~{/admin/leftArea.html}"></th:block>
+	        <div id="right-area">
+	        	<div style="border: 1px solid #eee; padding: 20px; width: 100%;">
+	        		<label data-icon="😎">제목 (등록자)</label>
+		        	<h3 id="title">[[${board.title}]] ([[${board.member.nickName}]])</h3>
+		        	<div class="hr2"></div>
+	        		<label data-icon="😎">사진</label>
+	        		<th:block th:if="${#lists.isEmpty(board.fileboardVO)}">
+	        			<p>등록된 사진이 없습니다.</p>
+	        		</th:block>
+	        		<th:block th:if="${not #lists.isEmpty(board.fileboardVO)}">
+			        	<div id="image" th:each="fileboard : ${board.fileboardVO}">
+			    			<img style="margin-bottom: 10px;" th:src="@{'/upload/' + ${fileboard.filepath}}" alt="Image" />
+						</div>
+	        		</th:block>
+					<div class="hr2"></div>
+	        		<label data-icon="😎">내용</label>
+					<div>
+						<p style="word-wrap: break-word;">[[${board.content}]]</p>
+					</div>
+					<div class="hr2"></div>
+					<th:block th:if="${board.commentCount ==0}">
+						<label data-icon="😎">답변여부: X</label>
+						<form id="commentSumitForm" method="post" action="/adm/commentupload">
+							<input type="hidden" th:value="${board.idx}" name="boardidx">
+							<textarea id="reply" class="uk-textarea" placeholder="답변을 입력하세요." name="reply"></textarea>
+							<div id="submitBtn" style="text-align: right; margin-top: 20px;">
+								<input type="submit" class="uk-button" value="답변하기"/>	           
+							</div>
+						</form>
+					</th:block>
+					<th:block th:if="${board.commentCount != 0}">
+						<label data-icon="😎">답변여부: O, 답변일: [[${#dates.format(board.commentList[0].regDate, 'yyyy-MM-dd hh:mm:ss')}]]</label>
+						<form id="commentSumitForm" method="post" action="/adm/commentupdate">
+							<input type="hidden" name="idx" th:value="${board.commentList[0].idx}"/>
+							<input type="hidden" th:value="${board.idx}" name="boardidx">
+							<textarea id="reply" class="uk-textarea" placeholder="답변을 입력하세요." name="reply">[[${board.commentList[0].reply}]]</textarea>
+							<div id="submitBtn" style="text-align: right; margin-top: 20px;">
+								<input type="submit" class="uk-button" value="수정하기"/>	           
+							</div>
+						</form>
+					</th:block>
+	        	</div>
+	        </div>
+    	</div>
+    </div>
+</div>
+<script>
+	$(function(){
+		$("#commentSumitForm").submit(function(){
+			let value = $("#reply").val();
+			if(value.trim().length == 0){
+				alert('내용을 입력해주세요.');
+				return false;
+			}
+			return true;
+		})
+	})
+</script>
+</body>
+</html>

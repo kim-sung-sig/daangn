@@ -18,7 +18,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.ezen.daangn.dao.DaangnBoardFileDAO;
 import kr.ezen.daangn.dao.DaangnMainBoardDAO;
 import kr.ezen.daangn.dao.DaangnMainBoardScrollDAO;
+import kr.ezen.daangn.vo.CommonVO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
+import kr.ezen.daangn.vo.PagingVO;
 import kr.ezen.daangn.vo.ScrollVO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -76,39 +78,34 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 	 * @param CommonVO
 	 * @return List<DaangnMainBoardVO>
 	 */
-	/*
 	@Override
 	public PagingVO<DaangnMainBoardVO> selectList(CommonVO cv) {
 		PagingVO<DaangnMainBoardVO> pv = null;
 		try {
-			HashMap<String, Object> map = new HashMap<>();
+			HashMap<String, String> map = new HashMap<>();
 			map.put("region", cv.getRegion());
 			map.put("gu", cv.getGu());
 			map.put("dong", cv.getDong());
 			map.put("search", cv.getSearch());
-			map.put("categoryNum", cv.getCategoryNum());
-			map.put("statusNum", cv.getStatusNum());
+			map.put("categoryNum", cv.getCategoryNum() + "");
+			map.put("statusNum", cv.getStatusNum() + "");
 			log.info("selectList 실행 : map : {}", map);
 			int totalCount = daangnMainBoardDAO.selectCount(map);
 			pv = new PagingVO<>(totalCount, cv.getCurrentPage(), cv.getSizeOfPage(), cv.getSizeOfBlock());
 			
-			map.put("startNo", pv.getStartNo());
-			map.put("endNo", pv.getEndNo());
+			map.put("startNo", pv.getStartNo() + "");
+			map.put("endNo", pv.getEndNo() + "");
 			List<DaangnMainBoardVO> list = daangnMainBoardDAO.selectList(map);
 			for(DaangnMainBoardVO boardVO : list) {
-				boardVO.setMember(daangnMemberService.selectByIdx(boardVO.getUserRef()));					// 유저정보
-				boardVO.setCountLike(daangnLikeDAO.countLike(boardVO.getIdx()));						// 좋아요수
+				boardVO.setMember(daangnMemberService.selectByIdx(boardVO.getUserRef()));				// 유저정보
 				boardVO.setBoardFileList(daangnBoardFileDAO.selectFileByBoardIdx(boardVO.getIdx()));	// 파일
-				boardVO.setChatRoomCount(daangnChatRoomDAO.selectCountByBoardIdx(boardVO.getIdx()));	// 채팅방 갯수
 			}
 			pv.setList(list);
-			log.info("pv : {}", pv);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return pv;
 	}
-	*/
 
 	/** idx로 한개 얻기 */
 	@Override

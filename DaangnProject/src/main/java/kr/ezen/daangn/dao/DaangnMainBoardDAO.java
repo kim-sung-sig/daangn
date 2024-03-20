@@ -2,6 +2,7 @@ package kr.ezen.daangn.dao;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -18,4 +19,8 @@ public interface DaangnMainBoardDAO {
 	void update(HashMap<String, Object> map) throws SQLException;
 	/** 삭제*/
 	void deleteByIdx(int idx) throws SQLException;
+	
+	
+	List<DaangnMainBoardVO> selectList(HashMap<String, String> map) throws SQLException;
+	int selectCount(HashMap<String, String> map) throws SQLException;
 }

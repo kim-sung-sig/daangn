@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <title>관리자 유저관리</title>
+    <!-- font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <!-- UIkit CSS -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css"/>
+
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
+	<link rel="stylesheet" href="/css/admin/header.css">
+    <style type="text/css">
+    	#page a.active {font-weight: 500; font-size: 16px; color: #333;}
+    </style>
+</head>
+<body>
+<div id="wrap">
+    <input type="hidden" id="currentPage" th:value="${pv.currentPage}">
+	<input type="hidden" id="search" th:value="${cv.userRef}">
+    <div id="content">
+    	<!-- header -->
+    	<th:block th:insert="~{/admin/header.html}"></th:block>
+    	
+	    <div style="padding-top: 50px;">
+	        <!-- leftArea -->
+	    	<th:block th:insert="~{/admin/leftArea.html}"></th:block>
+	    	
+	        <div id="right-area">
+	        	<h3>회원상태보기</h3>
+	        	<div style="display: flex; justify-content: end; align-items: center;">
+        			<label for="" style="margin-right:10px;">정렬기준</label>
+	        		<div class="uk-inline" style="margin-right:40px;">
+	        			<select id="sort" class="uk-select">
+	        				<option value="">최신순</option>
+	        				<option value="">이름순</option>
+	        			</select>
+	        		</div>
+					<label style="margin-right:10px;">검색</label>
+					<form action="" method="get">
+						<div class="uk-inline">
+				            <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: search"></span>
+				            <input name="search" class="uk-input" type="text" autocomplete='off' aria-label="Not clickable icon" placeholder="검색어를 입력해주세요">
+				        </div>
+					</form>
+	        	</div>
+	        	
+	        	<table class="uk-table uk-table-striped">
+				    <thead>
+				        <tr>
+				            <th>No</th>
+				            <th>아이디</th>
+				            <th>이메일</th>
+				            <th>이름</th>
+				            <th>닉네임</th>
+				            <th>주소</th>
+				            <th>권한</th>
+				            <th>생일</th>
+				            <th>휴대폰번호</th>
+				            <th>성별</th>
+				            <th>게시글수</th>
+				        </tr>
+				    </thead>
+				    <tbody>
+				    	<tr th:if="${#lists.isEmpty(pv.list)}">
+				    		<td colspan="10" style="text-align: center;">등록된 유저기록이 없습니다.</td>
+				    	</tr>
+				    	<tr th:each="user, vs : ${pv.list}">
+				    		<td>[[${pv.totalCount - (pv.currentPage-1)*pv.sizeOfPage - vs.index}]]</td>
+				    		<td>[[${user.username}]]</td>
+				    		<td>[[${user.email}]]</td>
+				    		<td>[[${user.name}]]</td>
+				    		<td>[[${user.nickName}]]</td>
+				    		<td>[[${user.stAddress}]] , [[${user.dtAddress}]]</td>
+				    		<td>[[${user.role}]]</td>
+				    		<td>[[${#dates.format(user.birthDate, 'yyyy-MM-dd')}]]</td>
+				    		<td>[[${user.phone}]]</td>
+				    		<td style="text-align: center;">[[${user.gender==1 ? '남' : '여'}]]</td>
+				    		<td style="text-align: center;">[[${user.boardCount}]]</td>
+				    	</tr>
+				    </tbody>
+				</table>
+				<div id="page" style="display:flex; align-items: center; justify-content: center;">
+					[(${pv.pageList})]				
+				</div>
+	        </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+	$(function(){
+		let search = "";
+		const pageBtn = document.querySelectorAll("#page a")
+		
+		pageBtn.forEach(button => {
+			button.addEventListener('click', function(e){
+				e.preventDefault();
+				const p = button.innerText;
+				console.log(p);
+				search = document.querySelector("#search").value;
+				console.log(search);
+				console.log(button);
+				location.href = `?p=${p}&userRef=${search}`
+			})
+		})
+	})
+</script>
+</body>
+</html>

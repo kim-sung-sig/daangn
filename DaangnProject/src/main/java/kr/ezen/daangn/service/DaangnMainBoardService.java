@@ -2,12 +2,16 @@ package kr.ezen.daangn.service;
 
 import java.util.List;
 
+import kr.ezen.daangn.vo.CommonVO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
+import kr.ezen.daangn.vo.PagingVO;
 import kr.ezen.daangn.vo.ScrollVO;
 
 public interface DaangnMainBoardService {
 	// 0. 지역리스트 뿌리기
 	List<String> regionList(String region, String gu, String dong);
+	
+	PagingVO<DaangnMainBoardVO> selectList(CommonVO cv);
 	
 	// 스크롤처럼 리스트 리턴
 	List<DaangnMainBoardVO> selectScrollList(ScrollVO sv);

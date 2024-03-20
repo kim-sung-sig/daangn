@@ -1,6 +1,10 @@
 package kr.ezen.daangn.service;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +12,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import jakarta.mail.MessagingException;
+import kr.ezen.daangn.vo.DaangnMemberVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Service(value = "mailService")
@@ -60,5 +65,46 @@ public class MailServiceImpl implements MailService{
 		// 생성된 인증번호 반환
 		return code.toString();
 	}
-
+	
+	@Autowired
+	private DaangnMemberService daangnMemberService;
+	
+	@Override
+	public Map<String, List<DaangnMemberVO>> adminMailSend(List<Integer> userIdxList, String title, String subject) {
+		Map<String, List<DaangnMemberVO>> map = new HashMap<>();
+		List<DaangnMemberVO> successList = new ArrayList<>();
+	    List<DaangnMemberVO> failureList = new ArrayList<>();
+		MailHandler mailHandler = null;
+		for (Integer userIdx : userIdxList) {
+	        String email = null; // 이메일 변수를 선언하고 초기화
+	        try {
+	            mailHandler = new MailHandler(javaMailSender);
+	            
+	            email = daangnMemberService.selectByIdx(userIdx).getEmail();
+	            mailHandler.setFrom("tjdtlr12349@naver.com", "jungBlogCompany");
+	            mailHandler.setTo(email);
+	            mailHandler.setSubject(subject);
+	            mailHandler.setText(subject);
+	            log.info("메일 전송 중...");
+	            mailHandler.send();
+	            log.info("메일 전송 성공!!!!!!");
+	            DaangnMemberVO memberVO = new DaangnMemberVO();
+	            memberVO.setIdx(userIdx);
+	            memberVO.setUsername(email);
+	            successList.add(memberVO); // 성공한 경우에는 성공 리스트에 추가
+	        } catch (MessagingException | UnsupportedEncodingException e) {
+	            log.info("메일 전송 실패!!!!!!");
+	            e.printStackTrace();
+	            if (email != null) {
+	            	DaangnMemberVO memberVO = new DaangnMemberVO();
+		            memberVO.setIdx(userIdx);
+		            memberVO.setUsername(email);
+	                failureList.add(memberVO); // 실패한 경우에는 실패 리스트에 추가
+	            }
+	        }
+	    }
+		map.put("성공", successList);
+		map.put("실패", failureList);
+		return map;
+	}
 }

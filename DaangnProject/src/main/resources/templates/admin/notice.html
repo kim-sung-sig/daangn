@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8" />
+	<title>관리자-공지사항</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- ChartJs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css"/>
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<link rel="stylesheet" href="/css/admin/header.css">
+    <style type="text/css">
+    	#updateBtn{
+    		transition: 0.3s;
+    	}
+    	#updateBtn:hover{
+    		background: #3F51B5;
+    		color: #fff;
+    	}
+    	.flexBox{display: flex;}
+    	#title {
+    		font-weight: 700; font-size: 20px;
+    	}
+    	#image img{
+    		max-width: 300px;
+    	}
+    </style>
+</head>
+<body>
+<div id="wrap">
+	<input type="hidden" id="boardIdx" th:value="${board.idx}" />
+    <div id="content">
+    	<!-- header -->
+    	<th:block th:insert="~{/admin/header.html}"></th:block>
+    	
+	    <div style="padding-top: 50px;">
+	    	<!-- leftArea -->
+	    	<th:block th:insert="~{/admin/leftArea.html}"></th:block>
+	    
+	        <div id="right-area">
+	        	<div style="border: 1px solid #eee; padding: 20px; width: 100%;">
+		        	<h3 id="title">[공지] [[${board.title}]]</h3>
+		        	<div class="hr"></div>
+		        	<div id="image" th:each="fileboard : ${board.fileboardVO}">
+		    			<img style="margin-bottom: 10px;" th:src="@{'/upload/' + ${fileboard.filepath}}" alt="Image" />
+					</div>
+					<div>
+						<p style="word-wrap: break-word;">[[${board.content}]]</p>
+					</div>
+					<div class="hr"></div>
+		        	<th:block th:if="${session.user != null}">
+		        		<th:block th:if="${session.user.role == 'ROLE_ADMIN'}">
+				        	<div th:if="${session.user.idx == board.ref}" style="width: 100%; display: flex; justify-content: end; gap:20px;">
+						        <input type="button" class="uk-button" id="updateBtn" th:onclick="updateBtn([[${board.idx}]])" value="수정하기"/>			        
+					        </div>	        		        		
+		        		</th:block>
+		        	</th:block>
+	        	</div>
+	        </div>
+        </div>
+    </div>
+</div>
+	<script type="text/javascript">
+		$(function(){
+			
+		})
+		function updateBtn(idx){
+			const result = confirm('게시글을 수정하시겠습니까?');
+			if(result){
+				location.href = '/adm/noticeUpdate/'+idx;				
+			}
+		}
+	</script>
+</body>
+</html>

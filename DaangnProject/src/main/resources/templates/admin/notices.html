@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8" />
+	<title>관리자-공지사항</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- ChartJs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css"/>
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<link rel="stylesheet" href="/css/admin/header.css">
+    <style type="text/css">
+    	
+		.highLight{font-weight: 700; color: #333;}
+		#writeBtn{
+			background: #ccc; color: #fff; border-radius: 15px;
+			transition:0.3s;
+		}
+		#writeBtn:hover {
+			background: #2F409F;
+		}
+		#page a {cursor: pointer;}
+    	#page .active { font-weight: 500; color: #333;}
+    	
+    	.tr1{ width: 100%; display: flex;}
+    	.tr2{width: 100%; display: flex;}
+    	
+    	.td1 {width: 50px; text-align: center;display: flex;align-items: center; justify-content: center; padding: 3px;}
+    	.td2 {width: calc(100% - 350px); padding: 3px;}
+    	.td3 {width: 200px;display: flex;align-items: center; justify-content: center; padding: 3px;}
+    	.td4 {width: 100px;display: flex;align-items: center; justify-content: center; padding: 3px;}
+    	.td5 {width: calc(100% - 50px); padding: 3px;}
+    	#thead div{border: 1px solid #ccc; background: #3F51B5; color: #fff; font-weight: 500;}
+    	#thead .tr2{border-top: none;}
+    	#thead .tr2 p{margin: 0; padding: 5px;}
+    	#thead .td2 {display: flex;align-items: center; justify-content: center;}
+    	
+    	#thead li { margin:0}
+    	#tbody .tr1 {border-bottom: 1px solid #ccc;}
+    	#tbody li { border-bottom: 1px solid #aaa; margin: 0px;}
+    	#tbody p {margin: 0px;}
+    </style>
+</head>
+<body>
+<div th:if="${error != null}">
+    <div th:if="${error == 'notFound'}">
+        <script>
+            alert("해당글을 찾을 수 없습니다.");
+        </script>
+    </div>
+</div>
+<div style="position: fixed; right: 20px; bottom: 20px;">
+	<a class="uk-button" id="writeBtn" href="/adm/noticeUpload">공지사항쓰기</a>
+</div>
+<div id="wrap">
+    <div id="content">
+    	<!-- header -->
+    	<th:block th:insert="~{/admin/header.html}"></th:block>
+    	
+	    <div style="padding-top: 50px;">
+	    	<!-- leftArea -->
+	    	<th:block th:insert="~{/admin/leftArea.html}"></th:block>
+	    
+	        <div id="right-area">
+	        	<div style="width: calc(100% - 190px);">
+		        	<h2>공지사항목록보기</h2>
+		        	<th:block th:if="${#lists.isEmpty(pv.list)}">
+		        		<div>등록된 공지사항이 존재하지 않습니다.</div>
+		        	</th:block>
+		        	<th:block th:if="${not #lists.isEmpty(pv.list)}">
+	        			<ul id="thead">
+	        				<li>
+	        					<div class="tr1">
+	        						<div class="td1">No</div>
+	        						<div class="td2">제목</div>
+	        						<div class="td3">게시일</div>
+	        						<div class="td4">조회수</div>
+	        					</div>
+	        					<div class="tr2">
+	        						<p style="word-wrap: break-word;">내용</p>
+	        					</div>
+	        				</li>
+	        			</ul>
+	        			<ul id="tbody">
+	        				<li th:each="board, vs: ${pv.list}">
+	        					<div class="tr1">
+	        						<div class="td1">[[${pv.totalCount - (pv.currentPage-1)*pv.sizeOfPage - vs.index}]]</div>
+	        						<div class="td2" style="text-align: left; padding-left: 5px;"><a th:onclick="view([[${board.idx}]])">[공지] [[${board.title}]]</a></div>
+	        						<div class="td3">[[${#dates.format(board.regDate,'yyyy-MM-dd HH:mm:ss')}]]</div>
+	        						<div class="td4">[[${board.readCount}]]</div>
+	        					</div>
+	        					<div class="tr2">
+	        						<div class="td1" style="display: flex; align-items: flex-start; justify-content: center;">내용</div>
+	        						<div class="td5"><p style="word-wrap: break-word;"><a th:onclick="view([[${board.idx}]])">[[${board.content}]]</a></p></div>
+	        					</div>
+	        				</li>
+	        			</ul>
+		        	</th:block>
+		        	<div id="page" style="display: flex; align-items: center;justify-content: center;">
+						[(${pv.pageList})]
+					</div>
+	        	</div>
+	        </div>
+        </div>
+    </div>
+</div>
+	<script type="text/javascript">
+		$(function(){
+			
+		})
+		function view(idx){
+			location.href = '/adm/notice/'+idx;
+		}
+	</script>
+</body>
+</html>

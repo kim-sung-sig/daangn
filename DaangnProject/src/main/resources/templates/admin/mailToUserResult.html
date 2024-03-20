@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <title>관리자 메일전송확인</title>
+    <!-- font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <!-- UIkit CSS -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css"/>
+
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
+	<link rel="stylesheet" href="/css/admin/header.css">
+	<style>
+		.btn-right{text-align: right;}
+    	.hr{
+			width: 100%; height: 1px; background: #E5E5E5; border-radius: 50%; margin: 12px 0;
+		}
+		#right-area .label{
+			font-weight: 400;
+			font-size: 24px;
+		}
+		.userEmailList{
+			display: grid; grid-template-columns: repeat(5,1fr); gap: 15px;
+		}
+		#subject{resize: none; width: 100%; height: 400px;}
+		img{max-width: 100%;}
+		.emailContainer{border: 1px solid #ccc; padding: 5px 10px; border-radius: 10px; position: relative;}
+		.cancleBtn{width: 21px; height: 21px; position: absolute; top: 0; right: 0; cursor: pointer;}
+	</style>
+</head>
+<body>
+	<div id="wrap">
+	    <div id="content">
+	    	<!-- header -->
+    		<th:block th:insert="~{/admin/header.html}"></th:block>
+    	
+		    <div style="padding-top: 50px;">
+		        <!-- leftArea -->
+	    		<th:block th:insert="~{/admin/leftArea.html}"></th:block>
+		    
+		        <div id="right-area">
+		        	<h3>메일 발송 확인</h3>
+		        	<p class="label">메일발송 성공유저 (전체 : [[${#lists.size(mailResultMap['성공']) + #lists.size(mailResultMap['실패'])}]]명, 성공 : [[${#lists.size(mailResultMap['성공'])}]]명, 실패: [[${#lists.size(mailResultMap['실패'])}]]명)</p>
+		        	<div id="succeseList" class="userEmailList">
+		        		<div th:each="user : ${mailResultMap['성공']}" class="emailContainer">
+		        			[[${user.username}]]
+		        		</div>
+		        	</div>
+		        	<div class="hr"></div>
+		        	<p class="label">제목</p>
+		        	<input id="title" name="title" th:value="${title}" class="uk-input" required="required" disabled="disabled" placeholder="제목을 입력해주세요.">
+		        	<div class="hr"></div>
+		        	<p class="label">내용</p>
+			        <textarea id="subject" name="subject" class="uk-textarea" required="required" placeholder="내용을 입력해주세요." disabled="disabled">[[${subject}]]</textarea>
+					<div class="hr"></div>
+					
+					<th:block th:if="${#lists.size(mailResultMap['실패']) != 0}">
+						<p class="label">메일발송 실패유저</p>
+						<form action="/adm/sendToUser" method="post">
+							<div id="failureList" class="userEmailList">
+				        		<div th:each="user : ${mailResultMap['실패']}" class="emailContainer">
+				        			[[${user.username}]]
+				        			<input type="hidden" name="mailList" th:value="${user.idx}">
+				        		</div>
+				        	</div>
+				        	<div class="btn-right">
+								<button id="sendMail" type="submit" class="uk-button uk-button-small uk-button-primary">메일 다시보내기</button>
+							</div>
+						</form>
+					</th:block>
+		        </div>
+	        </div>
+	    </div>
+	</div>
+</body>
+</html>
