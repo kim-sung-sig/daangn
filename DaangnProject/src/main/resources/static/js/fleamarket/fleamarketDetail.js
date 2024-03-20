@@ -119,7 +119,18 @@ $(function(){
 	
 	$("#updateBtn").click(function(){
 		const idx = $("#boardIdx").val();
-		location.href = `/fleamarketUpdate/${idx}`;
+		const form = $('<form>').attr({
+		    action: '/fleamarketUpdate',
+		    method: 'post'
+		});
+		const input = $('<input>').attr({
+		    type: 'hidden',
+		    name: 'idx',
+		    value: idx
+		});
+		form.append(input);
+		$('body').append(form);
+		form.submit();
 	})
 	
 	

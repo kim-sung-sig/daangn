@@ -3,7 +3,7 @@
 <mapper namespace="kr.ezen.daangn.dao.DaangnCommentDAO">
 	<!-- 저장 -->
 	<insert id="insertComment" parameterType="DaangnCommentVO">
-		insert into Daangn_comment values (Daangn_comment_idx_seq.nextval, #{userIdx}, #{writerIdx}, #{eval}, #{content}, sysdate)
+		insert into Daangn_comment values (Daangn_comment_idx_seq.nextval, #{userIdx}, #{writerIdx}, #{score}, #{content}, sysdate)
 	</insert>
 	
 	<!-- 댓글 평점 합계 계산하기 -->
