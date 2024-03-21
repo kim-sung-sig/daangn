@@ -7,10 +7,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import jakarta.servlet.http.HttpSession;
 import kr.ezen.daangn.service.DaangnMemberService;
+import kr.ezen.daangn.service.DaangnNoticesService;
+import kr.ezen.daangn.vo.CommonVO;
 import kr.ezen.daangn.vo.DaangnMemberVO;
+import kr.ezen.daangn.vo.NoticesVO;
+import kr.ezen.daangn.vo.PagingVO;
 
 @Controller
 @Configuration
@@ -18,6 +23,8 @@ public class HomeController {
 	
 	@Autowired
 	private DaangnMemberService daangnMemberService;
+	@Autowired
+	private DaangnNoticesService noticesService;
 	
 	@GetMapping(value = { "/", "/main", "/index" })
 	public String home(HttpSession session, Model model) {
@@ -31,6 +38,21 @@ public class HomeController {
 		}
 		return "index";
 	}
+	
+	//===========================================================================================
+	// 공지사항 목록
+	//===========================================================================================
+	/** 공지사항 목록보기 페이지 */
+	@GetMapping(value = "/notice")
+	public String notice(Model model, @ModelAttribute CommonVO cv) {
+	    cv.setS(10);
+	    cv.setB(5);
+	    PagingVO<NoticesVO> noticeList = noticesService.getPagingList(cv);
+	    model.addAttribute("pv", noticeList);
+	    return "notices";
+	}
+	
+	
 	//===========================================================================================
 	
 	// 딱! 한번만 실행해야한다!

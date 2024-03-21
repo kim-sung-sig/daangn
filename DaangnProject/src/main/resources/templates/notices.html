@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8" />
+	<title>공지사항 - 당근마켓</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- ChartJs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css"/>
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<link rel="stylesheet" href="/css/header.css">
+    <style type="text/css">
+    	body {font-family: "Noto Sans KR"; font-weight: 300;}
+		main {padding: 76px 0; margin: 0 auto;}
+		.tbody li {display: flex;}
+		.tbody li div{padding: 15px 0;}
+		.uk-container{width: 960px; font-weight: 400;}
+		.notice-type{width: 108px;}
+		.notice-title{width: 664px;}
+		.notice-regDate{width: 188px;}
+    </style>
+</head>
+<body>
+	<div style="position: fixed; right: 20px; bottom: 20px;">
+		<a class="uk-button" id="writeBtn" href="/adm/noticeUpload">공지사항쓰기</a>
+	</div>
+	<div id="wrap">
+	    <th:block th:insert="~{/indexHeader.html}"></th:block>
+		<main>
+			<div class="uk-container">
+				<h2 style="font-weight: 700; font-size: 30px; margin-top: 40px;">공지사항</h2>
+				<th:block th:if="${#lists.isEmpty(pv.list)}">
+					<div>등록된 공지사항이 존재하지 않습니다.</div>
+				</th:block>
+				<th:block th:if="${not #lists.isEmpty(pv.list)}">
+					<ul class="tbody">
+						<li th:each="board, vs: ${pv.list}">
+							<div class="notice-type">[[${pv.totalCount - (pv.currentPage-1)*pv.sizeOfPage - vs.index}]]</div>
+							<div class="notice-title" style="text-align: left; padding-left: 5px;"><a th:onclick="view([[${board.idx}]])">[공지] [[${board.title}]]</a></div>
+							<div class="notice-regDate">[[${#dates.format(board.regDate,'yyyy.MM.dd')}]]</div>
+						</li>
+					</ul>
+					<div id="page" style="display: flex; align-items: center;justify-content: center;">
+						[(${pv.pageList})]
+					</div>
+				</th:block>
+			</div>
+		</main>
+    </div>
+	<script type="text/javascript">
+		$(function(){
+			
+		})
+		function view(idx){
+			location.href = '/notice/detatil/'+idx;
+		}
+	</script>
+</body>
+</html>

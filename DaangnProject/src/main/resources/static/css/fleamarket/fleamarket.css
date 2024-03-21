@@ -3,7 +3,7 @@ main{width: 100%; padding: 110px 0;}
 .uk-select{width: 180px}
 .uk-container{width: 982px; padding: 0;}
 /*.main-top > .region > select {padding: 10px 50px 10px 0; border-radius: 5px;}*/
-.navBox{width: 100%;display: flex; justify-content: space-between; margin-bottom: 15px;}
+.navBox{width: 100%;display: flex; justify-content: end; margin-bottom: 15px;}
 .region {display: flex; gap: 5px;}
 
 #slide{gap:30px;display: grid; grid-template-columns:repeat(4,1fr);}

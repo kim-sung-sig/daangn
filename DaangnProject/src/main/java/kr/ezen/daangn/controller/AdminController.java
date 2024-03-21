@@ -311,29 +311,6 @@ public class AdminController {
 	//=====================================================================================================================
 	// 공지사항 관리
 	//=====================================================================================================================
-	/** 공지사항 목록보기 페이지 home이나 어디로 이관예정*/
-	/*
-	@GetMapping(value = "/notices")
-	public String notice(HttpSession session, Model model, @ModelAttribute CommonVO cv, @RequestParam(value = "error", required = false) String error) {
-		if(session.getAttribute("user") == null) {
-	        return "redirect:/";
-	    }
-		DaangnMemberVO memberVO = (DaangnMemberVO) session.getAttribute("user");
-	    if(!memberVO.getRole().equals("ROLE_ADMIN")) {
-	        return "redirect:/";
-	    }
-	    model.addAttribute("name", memberVO.getName());
-	    if(error != null) {
-	    	model.addAttribute("error", error);
-	    }
-	    cv.setS(10);
-	    cv.setB(5);
-	    cv.setCategoryNum(3);
-	    PagingVO<JungBoardVO> noticeList = jungBoardService.selectList(cv);
-	    model.addAttribute("pv", noticeList);
-	    return "admin/notices";
-	}
-	*/
 	
 	/** 공지사항 쓰기 페이지 */
 	@GetMapping(value = "/noticeUpload")

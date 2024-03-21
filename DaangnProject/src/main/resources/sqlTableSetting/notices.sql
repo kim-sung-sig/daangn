@@ -7,5 +7,5 @@ CREATE TABLE notices(
 	title varchar2(500) NOT NULL,
 	content varchar2(3000) NOT NULL,
 	regDate timestamp DEFAULT sysdate,
-	private NUMBER DEFAULT 0
+	highlight NUMBER DEFAULT 0
 );
