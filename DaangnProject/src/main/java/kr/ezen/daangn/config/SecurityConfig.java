@@ -33,7 +33,7 @@ public class SecurityConfig {
 					// 회원가입 폼과 회원가입 완료는 누구나 접근 가능 
 					.requestMatchers("/member/login/useridcheck","/member/login","/member/logout","/member/join","/member/joinok","/member/send","/member/findUserName","/member/checkEmailAndUsername","/member/passwordUpdateByUsername","/member/login/usernicknamecheck").permitAll()
 					// 공지사항
-					.requestMatchers("/notice","/notice/detail/**").permitAll()
+					.requestMatchers("/notice/**").permitAll()
 					// 중고거래 리스트 사이트!
 					.requestMatchers("/fleamarket/**", "/fleamarketDetail/**", "/getfleamarketList").permitAll()
 					// 유저가쓴글보기

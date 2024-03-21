@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8" />
+	<title>공지사항 - 당근마켓</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css"/>
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/js/uikit-icons.min.js"></script>
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<link rel="stylesheet" href="/css/header.css">
+    <style type="text/css">
+    	a {text-decoration: none; color: inherit;}
+    	body {font-family: "Noto Sans KR"; font-weight: 300;}
+		main {padding: 76px 0; margin: 0 auto;}
+		.uk-container{width: 550px; font-weight: 400;}
+		
+		.detail-header{margin-top: 3.75rem; padding-bottom: 2rem; border-bottom: 1px solid #eee;}
+    	.detail-body{
+    		margin-top: 2rem;
+		    margin-bottom: 3.75rem;
+		    white-space: pre-line;
+		    line-height: 150%;
+		    font-size: 16px;
+		    font-weight: 400;
+		    letter-spacing: -0.01em;
+    	}
+    </style>
+</head>
+<body>
+	<div id="wrap">
+	    <th:block th:insert="~{/indexHeader.html}"></th:block>
+		<main>
+			<div class="uk-container">
+				<div class="detail-header">
+					<div class="notice-prefix" style="margin-bottom: 0.75rem; font-size: 1rem; font-weight: 700;">공지</div>
+					<div class="detail-title" style="margin-bottom: 0.5rem; font-size: 2rem; font-weight: 700;">[[${notice.title}]]</div>
+					<div class="detail-date" style="line-height: 136%;">[[${#dates.format(notice.regDate,'yyyy.MM.dd')}]]</div>
+				</div>
+				<div class="detail-body "><div><p>안녕하세요. 당근팀입니다.</p><p>전문가모드에서 제공되는 '상품 판매 늘리기' 캠페인 목표(카탈로그 상품 광고)의 게재 방식이 개선되어 안내드려요.</p><p><br></p><p><strong>적용일 : 2024년 3월 6일 (수)</strong></p><p><br></p><p><strong>무엇이 개선되었나요?</strong></p><p><br></p><p>전문가모드 상품 판매 늘리기(카탈로그 상품 광고) 캠페인 목표에서 '일반 게재' 게재 방식을 선택할 수 있어요.</p><p>기존에 설정한 게재 방식은 변동 없이 유지되기 때문에, 게재 방식을 일반 게재로 변경하고자 한다면 광고 그룹 수정을 통해 게재 방식을 변경해 주세요.</p><p>카탈로그 상품 광고를 진행하면서 노출량과 예산 소진을 빠르게 부스팅하고 싶다면 '빠른 게재'를,</p><p>캠페인 운영 기간 동안 시간대별로 고르게 예산을 소진하고 싶다면 '일반 게재'를 선택하여 광고 그룹을 셋팅해 주세요.</p><p><br></p><p><strong>[기존 게재 방식 설정 옵션]</strong></p><p><img src="https://dnvefa72aowie.cloudfront.net/business_center/contents/temp/1710221687562"></p><p><br></p><p><strong>[개선된 게재 방식 설정 옵션]</strong></p><p><img src="https://dnvefa72aowie.cloudfront.net/business_center/contents/temp/1710221704460"></p><p><br></p><p>항상 더 나은 서비스를 제공할 수 있도록 노력하겠습니다.</p><p><br></p><p>감사합니다.</p><p>당근팀 드림.</p></div></div>
+				<a href="/notice" class="uk-button uk-button-default">목록으로</a>
+			</div>
+		</main>
+    </div>
+	<script type="text/javascript">
+		$(function(){
+			
+		})
+		function view(idx){
+			location.href = '/notice/detatil/'+idx;
+		}
+	</script>
+</body>
+</html>

@@ -22,6 +22,7 @@
     	a {text-decoration: none; color: inherit;}
     	body {font-family: "Noto Sans KR"; font-weight: 300;}
 		main {padding: 76px 0; margin: 0 auto;}
+		.uk-container{width: 960px; font-weight: 400;}
 		.notice-nav{margin-bottom: 24px;}
 		.notice-nav a {
 		    display: inline-flex;
@@ -39,9 +40,11 @@
 		}
 		#highlight li {background: #FFF5F0;}
 		#highlight li:hover {background: #FFF5F0;}
+		#highlight .notice-type {color: #FF6F0F;}
+		#highlight .notice-type svg {fill: #FF6F0F;}
 		.tbody li {display: flex; cursor: pointer; transition: 0.3s;}
 		.tbody li:hover {background: #eee;}
-		.uk-container{width: 960px; font-weight: 400;}
+		
 		.notice-type{width: 108px; padding: 15px 24px; font-weight: 600;}
 		.notice-title{width: 664px; padding: 15px 0;}
 		.notice-regDate{width: 188px; padding: 15px 24px;}
@@ -64,7 +67,7 @@
 					</div>
 					<ul class="tbody" id="highlight" th:if="${not #lists.isEmpty(highLightList)}">
 						<li th:each="highLight : ${highLightList}" th:onclick="view([[${highLight.idx}]])">
-							<div class="notice-type">중요</div>
+							<div class="notice-type"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.66639 1.53331C8.99775 1.20195 9.53498 1.20195 9.86634 1.53331L14.5376 6.20452C14.8689 6.53588 14.8689 7.07311 14.5376 7.40446C13.9376 8.00444 12.3662 7.97587 12.3662 7.97587L10.4377 10.5043C10.4377 10.5043 10.9377 12.2042 9.73777 13.4042C9.40642 13.7355 8.86918 13.7355 8.53783 13.4042L6.30944 11.1758C6.27702 11.2048 1.82953 15.1809 1.35985 14.7112C0.890158 14.2415 4.86622 9.79404 4.89524 9.7616L2.66667 7.53303C2.33531 7.20168 2.33546 6.6643 2.66682 6.33294C3.86676 5.133 5.56668 5.63297 5.56668 5.63297L8.09514 3.70449C8.09514 3.70449 8.06642 2.13328 8.66639 1.53331Z" fill="var(--seed-scale-color-carrot-500)"></path></svg> 중요</div>
 							<div class="notice-title" style="text-align: left; padding-left: 5px;">[[${highLight.title}]]</div>
 							<div class="notice-regDate">[[${#dates.format(highLight.regDate,'yyyy.MM.dd')}]]</div>
 						</li>
@@ -93,7 +96,7 @@
 			
 		})
 		function view(idx){
-			location.href = '/notice/detatil/'+idx;
+			location.href = '/notice/detail/'+idx;
 		}
 	</script>
 </body>

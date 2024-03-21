@@ -40,7 +40,19 @@
 	
 	
 	<insert id="insert" parameterType="NoticesVO">
-    	insert into notices values(notices_idx_seq.nextval, #{title}, #{content}, sysdate, 0)
+    	<selectKey keyColumn="idx" keyProperty="idx" resultType="int" order="BEFORE">
+			select notices_idx_seq.nextval from dual
+		</selectKey>
+    	insert into
+    		notices
+    	values
+    		(
+    			#{idx, jdbcType=INTEGER}
+    			, #{title}
+    			, #{content}
+    			, sysdate
+    			, 0
+    		)
 	</insert>
 	
 	<update id="update" parameterType="hashmap">

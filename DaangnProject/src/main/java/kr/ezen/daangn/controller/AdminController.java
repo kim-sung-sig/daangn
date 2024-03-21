@@ -22,12 +22,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import jakarta.servlet.http.HttpSession;
 import kr.ezen.daangn.service.DaangnMainBoardService;
 import kr.ezen.daangn.service.DaangnMemberService;
+import kr.ezen.daangn.service.DaangnNoticesService;
 import kr.ezen.daangn.service.MailService;
 import kr.ezen.daangn.service.PopularService;
 import kr.ezen.daangn.service.VisitService;
 import kr.ezen.daangn.vo.CommonVO;
 import kr.ezen.daangn.vo.DaangnMainBoardVO;
 import kr.ezen.daangn.vo.DaangnMemberVO;
+import kr.ezen.daangn.vo.NoticesVO;
 import kr.ezen.daangn.vo.PagingVO;
 import kr.ezen.daangn.vo.PopularVO;
 import lombok.extern.slf4j.Slf4j;
@@ -312,10 +314,11 @@ public class AdminController {
 	//=====================================================================================================================
 	// 공지사항 관리
 	//=====================================================================================================================
-	
+	@Autowired
+	private DaangnNoticesService daangnNoticesService;
 	/** 공지사항 쓰기 페이지 */
 	@GetMapping(value = "/noticeUpload")
-	public String noticeUpload(HttpSession session, Model model, @RequestParam(value = "error", required = false) String error) {
+	public String noticeUpload(HttpSession session, Model model) {
 		if(session.getAttribute("user") == null) {
 	        return "redirect:/";
 	    }
@@ -324,9 +327,6 @@ public class AdminController {
 	        return "redirect:/";
 	    }
 	    model.addAttribute("name", memberVO.getName());
-	    if(error != null) {
-	    	model.addAttribute("error", error);
-	    }
 		return "admin/noticeUpload";
 	}
 	
@@ -335,90 +335,18 @@ public class AdminController {
 	public String noticeUploadOkGet() {
 		return "redirect:/";
 	}
-	/** 공지사항 쓰기 업로드 */
-	/*
-	@PostMapping(value = "/noticeUploadOk")
-	public String noticeUploadOkPost(HttpSession session, @ModelAttribute(value = "board") JungBoardVO boardVO, MultipartHttpServletRequest request) {
-		if(session.getAttribute("user") == null) {
-			return "redirect:/";
-		}
-		DaangnMemberVO memberVO = (DaangnMemberVO) session.getAttribute("user");
-		if(!memberVO.getRole().equals("ROLE_ADMIN")) {
-			return "redirect:/";
-		}
-		boardVO.setRef(memberVO.getIdx());
-		jungBoardService.insert(boardVO);
-		
-		String uploadPath = request.getServletContext().getRealPath("./upload/");
-		
-		 File file2 = new File(uploadPath);
-	     if (!file2.exists()) {
-	        file2.mkdirs();
-	     }
-	    log.info("서버 실제 경로 : " + uploadPath); // 확인용
-	    
-        List<MultipartFile> list = request.getFiles("file"); // form에 있는 name과 일치
-        String url = "";
-        String filepath = "";
-        try {
-           if (list != null && list.size() > 0) { // 받은 파일이 존재한다면
-              // 반복해서 받는다.
-              for (MultipartFile file : list) {
-                 // 파일이 없으면 처리하지 않는다.
-                 if (file != null && file.getSize() > 0) {
-                    // 저장파일의 이름 중복을 피하기 위해 저장파일이름을 유일하게 만들어 준다.
-                    String saveFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-                    // 파일 객체를 만들어 저장해 준다.
-                    File saveFile = new File(uploadPath, saveFileName);
-                    // 파일 복사
-                    FileCopyUtils.copy(file.getBytes(), saveFile);
-                    
-                    url = file.getOriginalFilename();	// original
-                    filepath = saveFileName;			// savefileName
-                    JungFileBoardVO fileBoardVO = new JungFileBoardVO();
-                    fileBoardVO.setUrl(url);
-                    fileBoardVO.setFilepath(filepath);
-                    fileBoardVO.setRef(boardVO.getIdx());
-                    jungFileBoardService.insert(fileBoardVO);
-                 }
-              }
-           }
-           return "redirect:/adm/notice/" + boardVO.getIdx(); // 글 하나보기로 이동!
-        } catch (Exception e) {
-           e.printStackTrace();
-        }
-		return "redirect:/adm/noticeUpload?error=failUpload"; // 업로드페이지로 돌아감!
-	}
-	*/
 	
-	/** 공지 사항 1개 보기 이것도 이관예정 + 고정된거 하나얻기 만들꺼*/
-	/*
-	@GetMapping(value = "/notice/{idx}")
-	public String notice(HttpSession session, Model model, @PathVariable(value = "idx") int idx) {
-		if(session.getAttribute("user") == null) {
-	        return "redirect:/";
-	    }
-		
-		DaangnMemberVO memberVO = (DaangnMemberVO) session.getAttribute("user");
-	    if(!memberVO.getRole().equals("ROLE_ADMIN")) {
-	        return "redirect:/";
-	    }
-	    
-	    model.addAttribute("name", memberVO.getNickName());
-	    
-	    JungBoardVO boardVO = jungBoardService.selectByIdx(idx);
-	    if (boardVO == null) {
-	        log.info("notice null or category num not matched");
-	        return "redirect:/adm/notices?error=notFound"; // 목록으로 돌아감!
-	    }
-	    model.addAttribute("board", boardVO);
-		return "admin/notice";
+	/** 공지사항 쓰기 업로드 */
+	@PostMapping(value = "/noticeUploadOk")
+	public String noticeUploadOkPost(HttpSession session, @ModelAttribute(value = "notice") NoticesVO nv) {
+		daangnNoticesService.insertNotices(nv);
+		log.info("noticeUploadOk 실행 => {}", nv);
+		return "redirect:/notice/detail/" + nv.getIdx(); // 업로드페이지로 돌아감!
 	}
-	*/
+	
 	/** 공지사항 수정하기 페이지 */
-	/*
-	@GetMapping(value = "/noticeUpdate/{idx}")
-	public String noticeUpdate(@PathVariable(value = "idx") int idx, HttpSession session, Model model, @RequestParam(value = "error", required = false) String error) {
+	@PostMapping(value = "/noticeUpdate")
+	public String noticeUpdate(HttpSession session, Model model, @RequestParam(value = "idx") int idx) {
 		if(session.getAttribute("user") == null) {
 	        return "redirect:/";
 	    }
@@ -426,18 +354,11 @@ public class AdminController {
 	    if(!memberVO.getRole().equals("ROLE_ADMIN")) {
 	        return "redirect:/";
 	    }
-	    JungBoardVO boardVO = jungBoardService.selectByIdx(idx);
-	    if(boardVO == null ||boardVO.getRef() != memberVO.getIdx()) {
-	    	return "redirect:/";
-	    }
-	    if(error != null) {
-	    	model.addAttribute("error", error);
-	    }
+	    NoticesVO nv = daangnNoticesService.getNoticesByIdx(idx);
 	    model.addAttribute("name", memberVO.getNickName());
-	    model.addAttribute("board", boardVO);
+	    model.addAttribute("notice", nv);
 		return "admin/noticeUpload";
 	}
-	*/
 	
 	/** 공지사항 수정하기 */
 	/*

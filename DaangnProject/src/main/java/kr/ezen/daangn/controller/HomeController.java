@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import jakarta.servlet.http.HttpSession;
 import kr.ezen.daangn.service.DaangnMemberService;
@@ -57,6 +58,14 @@ public class HomeController {
 	    model.addAttribute("highLightList", highLightList);
 	    log.info("highLightList => {}", highLightList);
 	    return "notices";
+	}
+	/** 공지사항 하나 보기 페이지 */
+	@GetMapping(value = "/notice/detail/{idx}")
+	public String noticeDetail(Model model, @PathVariable(value = "idx") int idx) {
+		NoticesVO notice = noticesService.getNoticesByIdx(idx);
+		model.addAttribute("notice", notice);
+		log.info("notice => {}", notice);
+		return "noticeDetail";
 	}
 	
 	

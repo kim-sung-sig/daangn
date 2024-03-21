@@ -109,23 +109,10 @@
         #buttonsBox input{ width: 200px;}
         #cancleBtn{background: #2F409F;}
         #deleteBtn{background: #E33950;}
+        label{cursor: pointer;}
     </style>
 </head>
 <body>
-<div th:if="${error != null}">
-	<div th:if="${error == 'failUpload'}">
-	    <script>
-	        alert("업로드 중 에러가 발생했습니다.");
-	    </script>	
-	</div>
-</div>
-<div th:if="${error != null}">
-	<div th:if="${error == 'failUpdate'}">
-	    <script>
-	        alert("수정 중 에러가 발생했습니다.");
-	    </script>	
-	</div>
-</div>
 <div id="wrap">
     <div id="content">
     	<!-- header -->
@@ -137,49 +124,34 @@
 	    
 	        <div id="right-area">
 	        	<!-- 쓰기 -->
-	        	<th:block th:if="${board == null}">
-		        	<h2>공지사항쓰기</h2>
+	        	<th:block th:if="${notice == null}">
+		        	<h2>공지사항 쓰기</h2>
 	        		<form action="/adm/noticeUploadOk" method="post" enctype="multipart/form-data" id="insertForm">
 				        <input class="uk-input" type="text" name="title" id="title" placeholder="글 제목을 입력해 주세요." required="required"/>
-				        <input type="hidden" name="categoryNum" value="3">
-				        <!-- 파일 선택 버튼 -->
-				        <div id="file-drop-area">
-				            <div class="file-icon uk-margin-bottom" uk-icon="icon: cloud-upload"></div>
-				            <div class="file-drag-text">이곳에 파일을 드래그하거나<br>클릭하여 파일을 선택하세요.</div>
-				        </div>
-				        <!-- 파일 드래그 앤 드롭 영역을 위한 파일 입력란 -->
-				        <input type="file" id="fileInput" multiple hidden/>
-				        <!-- 파일 정보를 표시할 영역 -->
-				        <div id="file-display-area"></div>
-				        <div id="files"></div>
+				        <label for="r1"><input id="r1" type="radio" name="highlight" value="1"/> 중요 </label>
+				        <label for="r2"><input id="r2" type="radio" name="highlight" value="0"/> 공지</label>
+				        <!-- ckEditor 자리 -->
 				        <textarea class="uk-textarea" name="content" id="content2" placeholder="내용을 입력해 주세요." rows="10" required="required" style="resize: none"></textarea>
+				        
 				        <div id="buttonsBox" style="width: 100%; display: flex; justify-content: end; gap:20px;">
 					        <input type="submit" id="submitBtn" value="글 올리기"/>
-					        <input type="button" id="cancleBtn" onclick="window.location.href='/adm/notices'" value="취소"/>			        
+					        <input type="button" id="cancleBtn" onclick="window.location.href='/notice'" value="취소"/>			        
 				        </div>
 				    </form>
 	        	</th:block>
+	        	
 	        	<!-- 수정 -->
-	        	<th:block th:if="${board != null}">
+	        	<th:block th:if="${notice != null}">
 		        	<h2>공지사항쓰기(수정)</h2>
 	        		<form action="/adm/noticeUpdateOk" method="post" enctype="multipart/form-data" id="insertForm">
-				        <input type="hidden" name="idx" th:value="${board.idx}"/>
-				        <input class="uk-input" type="text" name="title" id="title" placeholder="글 제목을 입력해 주세요." required="required" th:value="${board.title}"/>
-				        <!-- 파일 선택 버튼 -->
-				        <div id="file-drop-area">
-				            <div class="file-icon uk-margin-bottom" uk-icon="icon: cloud-upload"></div>
-				            <div class="file-drag-text">이곳에 파일을 드래그하거나<br>클릭하여 파일을 선택하세요.</div>
-				        </div>
-				        <!-- 파일 드래그 앤 드롭 영역을 위한 파일 입력란 -->
-				        <input type="file" id="fileInput" multiple hidden/>
-				        <!-- 파일 정보를 표시할 영역 -->
-				        <div id="file-display-area"></div>
-				        <div id="files"></div>
-				        <textarea class="uk-textarea" name="content" id="content2" placeholder="내용을 입력해 주세요." rows="10" required="required" style="resize: none">[[${board.title}]]</textarea>
+				        <input type="hidden" name="idx" th:value="${notice.idx}"/>
+				        <input class="uk-input" type="text" name="title" id="title" placeholder="글 제목을 입력해 주세요." required="required" th:value="${notice.title}"/>
+						
+				        <textarea class="uk-textarea" name="content" id="content2" placeholder="내용을 입력해 주세요." rows="10" required="required" style="resize: none">[[${notice.title}]]</textarea>
 				        <div id="buttonsBox" style="width: 100%; display: flex; justify-content: end; gap:20px;">
 					        <input type="submit" id="updateBtn" value="수정"/>
-					        <input type="button" id="deleteBtn" th:onclick="fdeleteBtn([[${board.idx}]])" value="삭제"/>
-					        <input type="button" id="cancleBtn" th:onclick="fcancleBtn([[${board.idx}]])" value="취소"/>			        
+					        <input type="button" id="deleteBtn" th:onclick="fdeleteBtn([[${notice.idx}]])" value="삭제"/>
+					        <input type="button" id="cancleBtn" th:onclick="fcancleBtn([[${notice.idx}]])" value="취소"/>			        
 				        </div>
 				    </form>
 	        	</th:block>
@@ -191,7 +163,7 @@
 		function fcancleBtn(idx){
 			const result = confirm('게시글을 수정을 취소하시겠습니까?');
 			if(result){
-				location.href = '/adm/notice/'+idx;				
+				location.href = '/notice/detail/'+idx;				
 			}
 		}
 		function fdeleteBtn(idx){
@@ -202,124 +174,18 @@
 					let data = res.data;
 					if(data==1){
 						alert('게시글이 성공적으로 삭제되었습니다.');
-						window.location.href="/adm/notices";				
+						window.location.href="/notice";				
 					} else {
 		            	alert('게시글 삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
 					}
 				})
 				.catch(e => {
 					console.error('게시글 삭제 중 오류가 발생했습니다:', e);
-		            alert('게시글 삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
+		            alert('공지사항 삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
 				})			
 			}
 		}
 		$(function(){
-			// 파일 선택 버튼 클릭 시 파일 선택 창 열기
-	        $("#file-drop-area").click(function () {
-	            $("#fileInput").click();
-	        });
-	
-	        // 파일 선택 창에서 파일을 선택했을 때 및 파일 추가 함수
-	        function handleFileSelect(files) {
-	            const fileBox = document.querySelector("#files");
-	            const currentFileCount = fileBox.querySelectorAll('input[type="file"]').length;
-	
-	            if (currentFileCount < 4) {
-	                for (let i = 0; i < Math.min(4 - currentFileCount, files.length); i++) {
-	                    const fileInfo = document.createElement('input');
-	                    fileInfo.setAttribute("type", "file");
-	                    fileInfo.setAttribute("name", "file");
-	                    
-	                    // 파일을 input에 추가
-	                    const fileList = new DataTransfer();
-	                    fileList.items.add(files[i]);
-	                    const newFileList = fileList.files;
-	                    fileInfo.files = newFileList;
-	
-	                    fileBox.appendChild(fileInfo);
-	                
-	                }
-	                console.log(files);
-	                showFileInfo();
-	            } else {
-	                alert("더 이상 파일을 추가할 수 없습니다.");
-	            }
-	        }
-	
-	        // 파일 선택 창에서 파일을 선택했을 때
-	        $("#fileInput").change(function() {
-	            // 선택한 파일 정보를 화면에 출력
-	            const files = Array.from($(this)[0].files);
-	            handleFileSelect(files);
-	           
-	        });
-	
-	        // 드래그 앤 드롭 영역 설정
-	        const fileDropArea = document.getElementById('file-drop-area');
-	
-	        // dragover 이벤트 처리
-	        fileDropArea.addEventListener('dragover', function(e) {
-	            e.preventDefault();
-	            e.stopPropagation();
-	            fileDropArea.classList.add('highlight');
-	        });
-	
-	        // dragleave 이벤트 처리
-	        fileDropArea.addEventListener('dragleave', function(e) {
-	            e.preventDefault();
-	            e.stopPropagation();
-	            fileDropArea.classList.remove('highlight');
-	        });
-	
-	        // drop 이벤트 처리
-	        fileDropArea.addEventListener('drop', function(e) {
-	            e.preventDefault();
-	            fileDropArea.classList.remove('highlight');
-	            const files = e.dataTransfer.files;
-	            handleFileSelect(files);
-	        });
-	
-	        // 파일 정보를 화면에 출력하는 함수
-	        function showFileInfo() {
-	            const fileDisplayArea = document.getElementById('file-display-area');
-	            fileDisplayArea.innerHTML = ''; // 출력 영역 초기화
-	
-	            const files = document.querySelectorAll('#files input[type="file"]');
-	            files.forEach(fileInput => {
-	                if (fileInput.files.length > 0) {
-	                    const file = fileInput.files[0];
-	                    const fileInfo = document.createElement('div');
-	                    fileInfo.classList.add('file-info'); // 파일 정보를 감싸는 div 요소에 file-info 클래스 추가
-	
-	                    const thumbnail = document.createElement('img');
-	                    thumbnail.classList.add('thumbnail');
-	                    thumbnail.src = URL.createObjectURL(file);
-	                    fileInfo.appendChild(thumbnail);
-	
-	                    const fileInfoText = document.createElement('span');
-	                    fileInfoText.textContent = `${file.name} (${file.type}) - ${file.size} bytes`;
-	                    fileInfo.appendChild(fileInfoText);
-	
-	                    // 삭제 버튼 추가
-	                    const deleteBtn = document.createElement('input');
-	                    deleteBtn.setAttribute('type', 'button');
-	                    deleteBtn.value = 'Delete';
-	                    deleteBtn.setAttribute('id','delete-btn');
-	                    deleteBtn.addEventListener("click", function(){
-	                        const fileInfos = $('#file-display-area').children('.file-info'); // #file-display-area의 모든 .file-info 요소를 가져옴
-	                        const index = fileInfos.index($(this).closest('.file-info')); // 현재 클릭된 .file-info 요소의 인덱스를 가져옴
-	                        console.log("Index of clicked file-info: " + index);
-	                        
-	                        $(this).closest('.file-info').remove();
-	                        $("#files").children().eq(index).remove();
-	                    });
-	                    fileInfo.appendChild(deleteBtn);
-	
-	                    fileDisplayArea.appendChild(fileInfo); // 파일 정보를 출력 영역에 추가
-	                }
-	            });
-	        }
-	        
 	     	// 폼체크
 	        $("#insertForm").submit(function () {
 	            let value = $("#title").val();
