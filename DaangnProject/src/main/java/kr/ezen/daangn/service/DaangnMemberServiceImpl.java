@@ -1,6 +1,8 @@
 package kr.ezen.daangn.service;
 
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -201,7 +203,20 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 	//=========================================================
 	@Override
 	public PagingVO<DaangnMemberVO> getUsers(CommonVO cv) {
-		return null;
+		PagingVO<DaangnMemberVO> pv = null;
+		try {
+			HashMap<String, Object> map = new HashMap<>();
+			map.put("search", cv.getSearch());
+			int totalCount = daangnMemberDAO.selectCountUser(map);
+			pv = new PagingVO<>(totalCount, cv.getCurrentPage(), cv.getSizeOfPage(), cv.getSizeOfBlock());
+			map.put("startNo", pv.getStartNo());
+			map.put("endNo", pv.getEndNo());
+			List<DaangnMemberVO> list = daangnMemberDAO.selectUser(map);
+			pv.setList(list);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return pv;
 	}
 
 }

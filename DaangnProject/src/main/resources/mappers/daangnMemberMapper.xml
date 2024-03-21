@@ -86,7 +86,7 @@
 		select
 			count(*)
 		from
-			jung_member
+			daangn_member
 		<where>
 			<if test="search != null">
 				username like '%' || #{search} || '%'

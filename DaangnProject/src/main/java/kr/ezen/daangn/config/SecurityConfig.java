@@ -27,17 +27,19 @@ public class SecurityConfig {
 		http.authorizeHttpRequests((authorize) -> {
 			authorize
 					// mainPage
-					.requestMatchers("/", "/dbinit", "/getfleamarketList").permitAll()
+					.requestMatchers("/", "/dbinit").permitAll()
 					// 지정 주소에 대한 권한 설정 **은 하위폴더 포함 모두
 					.requestMatchers("/css/**", "/js/**", "/img/**", "/upload/**").permitAll()
 					// 회원가입 폼과 회원가입 완료는 누구나 접근 가능 
 					.requestMatchers("/member/login/useridcheck","/member/login","/member/logout","/member/join","/member/joinok","/member/send","/member/findUserName","/member/checkEmailAndUsername","/member/passwordUpdateByUsername","/member/login/usernicknamecheck").permitAll()
-					.requestMatchers("/user/**").permitAll()
+					// 공지사항
+					.requestMatchers("/notice","/notice/detail/**").permitAll()
 					// 중고거래 리스트 사이트!
-					.requestMatchers("/fleamarket/**","/fleamarketDetail/**").permitAll()
+					.requestMatchers("/fleamarket/**", "/fleamarketDetail/**", "/getfleamarketList").permitAll()
+					// 유저가쓴글보기
+					.requestMatchers("/user/**").permitAll()
+					// 뉴스
 					.requestMatchers("/news/**").permitAll()
-					// 생활꿀팁 리스트 사이트!
-					.requestMatchers("/smartLivingTips").permitAll()
 					// 지정 주소에 대한 권한 설정 : hasRole(권한)은 지정 권한이 있는 사용자만 접근이 가능하다.
 					.requestMatchers("/adm", "/adm/**").hasRole("ADMIN")
 					// 그 이외의 요청은 인증된 사용자만 접근이 가능하다.

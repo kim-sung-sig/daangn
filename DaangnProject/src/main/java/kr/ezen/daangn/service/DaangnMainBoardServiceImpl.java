@@ -96,6 +96,7 @@ public class DaangnMainBoardServiceImpl implements DaangnMainBoardService{
 			map.put("startNo", pv.getStartNo() + "");
 			map.put("endNo", pv.getEndNo() + "");
 			List<DaangnMainBoardVO> list = daangnMainBoardDAO.selectList(map);
+			log.info("list => {}", list);
 			for(DaangnMainBoardVO boardVO : list) {
 				boardVO.setMember(daangnMemberService.selectByIdx(boardVO.getUserRef()));				// 유저정보
 				boardVO.setBoardFileList(daangnBoardFileDAO.selectFileByBoardIdx(boardVO.getIdx()));	// 파일

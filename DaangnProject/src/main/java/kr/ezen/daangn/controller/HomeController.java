@@ -1,5 +1,7 @@
 package kr.ezen.daangn.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,7 +18,9 @@ import kr.ezen.daangn.vo.CommonVO;
 import kr.ezen.daangn.vo.DaangnMemberVO;
 import kr.ezen.daangn.vo.NoticesVO;
 import kr.ezen.daangn.vo.PagingVO;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Controller
 @Configuration
 public class HomeController {
@@ -49,6 +53,9 @@ public class HomeController {
 	    cv.setB(5);
 	    PagingVO<NoticesVO> noticeList = noticesService.getPagingList(cv);
 	    model.addAttribute("pv", noticeList);
+	    List<NoticesVO> highLightList = noticesService.selectByHighlight();
+	    model.addAttribute("highLightList", highLightList);
+	    log.info("highLightList => {}", highLightList);
 	    return "notices";
 	}
 	

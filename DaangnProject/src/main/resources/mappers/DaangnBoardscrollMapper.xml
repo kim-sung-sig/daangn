@@ -8,77 +8,73 @@
 		from
 			(
 				select
-					daangn_board.*
-					, (
-						SELECT
-							categoryName
-						FROM
-							daangn_category
-						WHERE
-							daangn_category.categoryIdx = daangn_board.categoryRef
-					) AS categoryName
-					, (
-						SELECT
-							statusName
-						FROM
-							daangn_status
-						WHERE
-							daangn_status.statusIdx = daangn_board.statusRef
-					) AS statusName
-					, (
-						SELECT
-							COUNT(*)
-						FROM
-							daangn_like_tb 
-						WHERE
-							daangn_like_tb.boardIdx = daangn_board.idx
-					) AS countLike
-					, (
-						SELECT
-							COUNT(*)
-						FROM
-							chatRoom
-						WHERE
-							chatRoom.boardIdx = daangn_board.idx
-					) AS chatRoomCount
+					db.*
+					, c.categoryName AS categoryName
+					, s.statusName AS statusName
+					, COALESCE(dlt.countLike, 0) AS countLike
+					, COALESCE(cr.chatRoomCount, 0) AS chatRoomCount
 				from
-					daangn_board
+					daangn_board db
+				JOIN
+				    daangn_category c ON db.categoryRef = c.categoryIdx
+				JOIN
+				    daangn_status s ON db.statusRef = s.statusIdx
+				LEFT JOIN
+				    (
+				        SELECT 
+				            boardIdx,
+				            COUNT(*) AS countLike
+				        FROM 
+				            daangn_like_tb
+				        GROUP BY 
+				            boardIdx
+				    ) dlt ON dlt.boardIdx = db.idx
+				LEFT JOIN
+				    (
+				        SELECT 
+				            boardIdx,
+				            COUNT(*) AS chatRoomCount
+				        FROM 
+				            chatRoom
+				        GROUP BY 
+				            boardIdx
+				    ) cr ON cr.boardIdx = db.idx
 				where
 					<![CDATA[
-						daangn_board.idx < #{lastItemIdx}
+						db.idx < #{lastItemIdx}
 					]]>
 					<if test="userRef != null">
-						and userRef = #{userRef}
+						and db.userRef = #{userRef}
 					</if>
 		            <if test="statusRef != null">
-		                and statusRef = #{statusRef}
+		                and db.statusRef = #{statusRef}
 		            </if>
 		            <if test="statusRef == null">
-		                AND <![CDATA[statusRef <> 3]]>
+		                AND <![CDATA[ db.statusRef <> 3]]>
 		            </if>
 					<if test="categoryRef != null">
-		                and categoryRef = #{categoryRef}
+		                and db.categoryRef = #{categoryRef}
 		            </if>
 					<if test="search != null">
 		                AND (
-		                    SUBJECT LIKE '%' || #{search} || '%'
-		                    OR CONTENT LIKE '%' || #{search} || '%'
+		                    db.SUBJECT LIKE '%' || #{search} || '%'
+		                    OR db.CONTENT LIKE '%' || #{search} || '%'
 		                )
 		            </if>
 		            <if test="region != null">
-		                AND LOC LIKE '%' || #{region} || '%'
+		                AND db.LOC LIKE '%' || #{region} || '%'
 		            </if>
 		            <if test="gu != null">
-		                AND LOC LIKE '%' || #{gu} || '%'
+		                AND db.LOC LIKE '%' || #{gu} || '%'
 		            </if>
 		            <if test="dong != null">
-		                AND LOC LIKE '%' || #{dong} || '%'
+		                AND db.LOC LIKE '%' || #{dong} || '%'
 		            </if>
 		            <if test="boardRef != null">
-		            	AND <![CDATA[daangn_board.idx <> #{boardRef}]]>
+		            	AND <![CDATA[db.idx <> #{boardRef}]]>
 		            </if>
 				order by
-					daangn_board.idx DESC
+					db.idx DESC
 			) Q
 		where
 			<![CDATA[

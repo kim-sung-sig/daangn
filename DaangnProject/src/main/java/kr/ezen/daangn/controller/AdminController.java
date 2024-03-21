@@ -64,6 +64,7 @@ public class AdminController {
     	List<DaangnMemberVO> memberList = userpv.getList().stream().limit(10).toList();
     	// 2. 최근 게시물 한 10개 정도만?
     	PagingVO<DaangnMainBoardVO> pv = daangnMainBoardService.selectList(new CommonVO()); // 10개 리스트
+    	log.info("admin pv => {}", pv);
     	List<DaangnMainBoardVO> boardList = pv.getList().stream().limit(12).toList();
     	
     	model.addAttribute("name",memberVO.getName());

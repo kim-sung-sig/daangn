@@ -10,8 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <!-- ChartJs -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- UIkit CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.17.11/dist/css/uikit.min.css"/>
     <!-- UIkit JS -->
@@ -21,20 +19,35 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<link rel="stylesheet" href="/css/header.css">
     <style type="text/css">
+    	a {text-decoration: none; color: inherit;}
     	body {font-family: "Noto Sans KR"; font-weight: 300;}
 		main {padding: 76px 0; margin: 0 auto;}
-		.tbody li {display: flex;}
-		.tbody li div{padding: 15px 0;}
+		.notice-nav{margin-bottom: 24px;}
+		.notice-nav a {
+		    display: inline-flex;
+		    -webkit-box-align: center;
+		    align-items: center;
+		    border: 1px solid #eee;
+		    border-radius: 6.25rem;
+		    padding: 0.5rem 0.75rem;
+		    font-size: 0.875rem;
+		    cursor: pointer;
+		}
+		.notice-nav a.selected {
+			color: #fff;
+			background: #333;
+		}
+		#highlight li {background: #FFF5F0;}
+		#highlight li:hover {background: #FFF5F0;}
+		.tbody li {display: flex; cursor: pointer; transition: 0.3s;}
+		.tbody li:hover {background: #eee;}
 		.uk-container{width: 960px; font-weight: 400;}
-		.notice-type{width: 108px;}
-		.notice-title{width: 664px;}
-		.notice-regDate{width: 188px;}
+		.notice-type{width: 108px; padding: 15px 24px; font-weight: 600;}
+		.notice-title{width: 664px; padding: 15px 0;}
+		.notice-regDate{width: 188px; padding: 15px 24px;}
     </style>
 </head>
 <body>
-	<div style="position: fixed; right: 20px; bottom: 20px;">
-		<a class="uk-button" id="writeBtn" href="/adm/noticeUpload">공지사항쓰기</a>
-	</div>
 	<div id="wrap">
 	    <th:block th:insert="~{/indexHeader.html}"></th:block>
 		<main>
@@ -44,16 +57,33 @@
 					<div>등록된 공지사항이 존재하지 않습니다.</div>
 				</th:block>
 				<th:block th:if="${not #lists.isEmpty(pv.list)}">
+					<div class="notice-nav">
+						<a class="notice-tag selected" href="/notice">전체</a>
+						<a class="notice-tag " href="/notice?categoryId=3">공지</a>
+						<a class="notice-tag " href="/notice?categoryId=4">이벤트</a>
+					</div>
+					<ul class="tbody" id="highlight" th:if="${not #lists.isEmpty(highLightList)}">
+						<li th:each="highLight : ${highLightList}" th:onclick="view([[${highLight.idx}]])">
+							<div class="notice-type">중요</div>
+							<div class="notice-title" style="text-align: left; padding-left: 5px;">[[${highLight.title}]]</div>
+							<div class="notice-regDate">[[${#dates.format(highLight.regDate,'yyyy.MM.dd')}]]</div>
+						</li>
+					</ul>
 					<ul class="tbody">
-						<li th:each="board, vs: ${pv.list}">
-							<div class="notice-type">[[${pv.totalCount - (pv.currentPage-1)*pv.sizeOfPage - vs.index}]]</div>
-							<div class="notice-title" style="text-align: left; padding-left: 5px;"><a th:onclick="view([[${board.idx}]])">[공지] [[${board.title}]]</a></div>
+						<li th:each="board, vs: ${pv.list}" th:onclick="view([[${board.idx}]])">
+							<div class="notice-type">공지</div>
+							<div class="notice-title" style="text-align: left; padding-left: 5px;">[[${board.title}]]</div>
 							<div class="notice-regDate">[[${#dates.format(board.regDate,'yyyy.MM.dd')}]]</div>
 						</li>
 					</ul>
-					<div id="page" style="display: flex; align-items: center;justify-content: center;">
+					<div id="page" style="display: flex; align-items: center;justify-content: center; margin-top: 24px;">
 						[(${pv.pageList})]
 					</div>
+					<th:block th:if="${session.user != null && session.user.role == 'ROLE_ADMIN'}">
+						<div style="text-align: right;">
+							<a class="uk-button uk-button-default" style="margin-right: 30px;border-radius: 10px;" id="writeBtn" href="/adm/noticeUpload">공지사항쓰기</a>
+						</div>					
+					</th:block>
 				</th:block>
 			</div>
 		</main>

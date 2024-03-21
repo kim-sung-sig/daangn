@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "./mybatis-3-mapper.dtd" >
 <mapper namespace="kr.ezen.daangn.dao.DaangnMainBoardDAO">
 	
-	<!-- 조회하기 페이징처리및 서치도 가능하게 -->
+	<!-- 관리자용 페이징처리 및 서치도 가능하게 -->
 	<select id="selectList" parameterType="hashmap" resultType="DaangnMainBoardVO">
 		select
 			R.*
@@ -13,43 +13,47 @@
 				from
 					(
 						select
-							b.*,
-						    c.categoryName,
-						    s.statusName
+							db.*
+							, c.categoryName AS categoryName
+							, s.statusName AS statusName
+							, COALESCE(dlt.countLike, 0) AS countLike
+							, COALESCE(cr.chatRoomCount, 0) AS chatRoomCount
 						from
-							daangn_board b
+							daangn_board db
 						JOIN
-						    daangn_category c ON b.categoryRef = c.categoryIdx
+						    daangn_category c ON db.categoryRef = c.categoryIdx
 						JOIN
-						    daangn_status s ON b.statusRef = s.statusIdx
+						    daangn_status s ON db.statusRef = s.statusIdx
+						LEFT JOIN
+						    (
+						        SELECT 
+						            boardIdx,
+						            COUNT(*) AS countLike
+						        FROM 
+						            daangn_like_tb
+						        GROUP BY 
+						            boardIdx
+						    ) dlt ON dlt.boardIdx = db.idx
+						LEFT JOIN
+						    (
+						        SELECT 
+						            boardIdx,
+						            COUNT(*) AS chatRoomCount
+						        FROM 
+						            chatRoom
+						        GROUP BY 
+						            boardIdx
+						    ) cr ON cr.boardIdx = db.idx
 						<where>
-					        <trim prefix="AND" suffixOverrides="AND">
-					            <if test="region != null">
-					                LOC LIKE '%' || #{region} || '%' AND
-					            </if>
-					            <if test="gu != null">
-					                LOC LIKE '%' || #{gu} || '%' AND
-					            </if>
-					            <if test="dong != null">
-					                LOC LIKE '%' || #{dong} || '%' AND
-					            </if>
-					            <if test="search != null">
-					                (
-					                    SUBJECT LIKE '%' || #{search} || '%'
-					                    OR CONTENT LIKE '%' || #{search} || '%'
-					                )
-					                AND
-					            </if>
-					            <if test="categoryNum != null">
-					                categoryRef = #{categoryNum}
-					            </if>
-					            <if test="statusNum != null">
-					                statusRef = #{statusNum}
-					            </if>
-					        </trim>
+				            <if test="search != null">
+				                (
+				                    SUBJECT LIKE '%' || #{search} || '%'
+				                    OR CONTENT LIKE '%' || #{search} || '%'
+				                )
+				            </if>
 				   		</where>
 						order by
-							idx desc
+							db.idx DESC
 					) Q
 				where
 					<![CDATA[
@@ -68,32 +72,12 @@
 		from
 			daangn_board
 		<where>
-	        <trim prefix="AND" suffixOverrides="AND">
-	            <if test="region != null">
-	                LOC LIKE '%' || #{region} || '%' AND
-	            </if>
-	            <if test="gu != null">
-	                LOC LIKE '%' || #{gu} || '%' AND
-	            </if>
-	            <if test="dong != null">
-	                LOC LIKE '%' || #{dong} || '%' AND
-	            </if>
-	            <if test="search != null">
-	                (
-	                    SUBJECT LIKE '%' || #{search} || '%'
-	                    OR CONTENT LIKE '%' || #{search} || '%'
-	                )
-	                AND
-	            </if>
-	            <if test="categoryNum != null">
-	                categoryRef = #{categoryNum}
-	                AND
-	            </if>
-	            <if test="statusNum != null">
-	                statusRef = #{statusNum}
-	                AND
-	            </if>
-	        </trim>
+            <if test="search != null">
+                (
+                    SUBJECT LIKE '%' || #{search} || '%'
+                    OR CONTENT LIKE '%' || #{search} || '%'
+                )
+            </if>
    		</where>
 	</select>
 	

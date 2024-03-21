@@ -70,26 +70,26 @@
 					        <tr>
 					            <th>No</th>
 					            <th>아이디</th>
-					            <th>이메일</th>
 					            <th>이름</th>
 					            <th>닉네임</th>
+					            <th>가입일</th>
+					            <th>마지막접속일</th>
+					            <th>이메일</th>
+					            <th>이메일수신</th>
 					            <th>권한</th>
-					            <th>생일</th>
-					            <th>휴대폰번호</th>
-					            <th>성별</th>
 					        </tr>
 					    </thead>
 					    <tbody>
 					    	<tr th:each="user : ${users}">
-					    		<td>[[${user.idx}]]번째로 가입한 회원</td>
+					    		<td>[[${user.idx}]]</td>
 					    		<td>[[${user.username}]]</td>
-					    		<td>[[${user.email}]]</td>
 					    		<td>[[${user.name}]]</td>
 					    		<td>[[${user.nickName}]]</td>
+					    		<td>[[${#dates.format(user.signUpDate, 'yy.MM.dd')}]]</td>
+					    		<td>[[${#dates.format(user.lastLoginDate, 'yy.MM.dd')}]]</td>
+					    		<td>[[${user.email}]]</td>
+					    		<td>[[${user.emailOk}]]</td>
 					    		<td>[[${user.role}]]</td>
-					    		<td>[[${#dates.format(user.birthDate, 'yyyy-MM-dd HH:mm')}]]</td>
-					    		<td>[[${user.phone}]]</td>
-					    		<td>[[${user.gender==1 ? '남' : '여'}]]</td>
 					    	</tr>
 					    </tbody>
 					</table>
@@ -106,10 +106,13 @@
 					        <tr>
 					            <th>No</th>
 					            <th>카테고리</th>
+					            <th>상품상태</th>
 					            <th>제목</th>
-					            <th>닉네임</th>
+					            <th>판매장소</th>
+					            <th>작성자</th>
 					            <th>조회수</th>
 					            <th>좋아요</th>
+					            <th>채팅수</th>
 					            <th>게시일</th>
 					        </tr>
 					    </thead>
@@ -117,11 +120,14 @@
 					    	<tr th:each="board : ${boards}">
 					    		<td>[[${board.idx}]]</td>
 					    		<td>[[${board.categoryName}]]</td>
-					    		<td style="max-width: 500px;text-align: left;overflow: hidden;text-overflow: ellipsis;">[[${board.title}]]</td>
+					    		<td>[[${board.statusName}]]</td>
+					    		<td style="max-width: 500px;text-align: left;overflow: hidden;text-overflow: ellipsis;">[[${board.subject}]]</td>
+					    		<td>[[${board.loc}]]</td>
 					    		<td>[[${board.member.nickName}]]</td>
 					    		<td>[[${board.readCount}]]</td>
-					    		<td>[[${board.commentCount}]]</td>
-					    		<td>[[${#dates.format(board.regDate, 'yyyy-MM-dd HH:mm')}]]</td>
+					    		<td>[[${board.countLike}]]</td>
+					    		<td>[[${board.chatRoomCount}]]</td>
+					    		<td>[[${#dates.format(board.regDate, 'yy.MM.dd hh:mm')}]]</td>
 					    	</tr>
 					    </tbody>
 					</table>
