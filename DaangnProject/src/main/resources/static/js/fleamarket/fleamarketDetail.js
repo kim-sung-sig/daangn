@@ -148,6 +148,19 @@ $(function(){
 		    form.submit();
 		}
 	})
+	
+	
+	let uv = $("#userVal").val();
+	let score = 6.5 * (uv - 3) + 36.5;
+ 	console.log(score);
+	score = score.toFixed(1);
+	$("#userValBox").html(`
+		<div><span style="font-weight:400;">매너온도</span> ${score} °C</div>
+			<div style="position: relative; width: 100%; height: 5px; border-radius: 3px; background: #eee; overflow: hidden;">
+		    <div style="position: absolute;top: 0; left: 0; width: ${uv/6 *100}%; height: 100%; background: #FF8A3D;"></div>
+		</div>`
+	);
+	
 })
 
 

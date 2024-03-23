@@ -34,6 +34,9 @@
 		    font-weight: 400;
 		    letter-spacing: -0.01em;
     	}
+    	
+    	#notice-active{color: #FF6F0F;}
+    	#notice-active svg{fill: #FF6F0F;}
     </style>
 </head>
 <body>
@@ -41,19 +44,36 @@
 	    <th:block th:insert="~{/indexHeader.html}"></th:block>
 		<main>
 			<div class="uk-container">
+				<input type="hidden" id="idx" th:value="${notice.idx}"/>
 				<div class="detail-header">
-					<div class="notice-prefix" style="margin-bottom: 0.75rem; font-size: 1rem; font-weight: 700;">공지</div>
+					<div class="notice-prefix" th:if="${notice.highlight == 0}" style="margin-bottom: 0.75rem; font-size: 1rem; font-weight: 700;">공지</div>
+					<div class="notice-prefix" id="notice-active" th:if="${notice.highlight == 1}" style="margin-bottom: 0.75rem; font-size: 1rem; font-weight: 700;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.66639 1.53331C8.99775 1.20195 9.53498 1.20195 9.86634 1.53331L14.5376 6.20452C14.8689 6.53588 14.8689 7.07311 14.5376 7.40446C13.9376 8.00444 12.3662 7.97587 12.3662 7.97587L10.4377 10.5043C10.4377 10.5043 10.9377 12.2042 9.73777 13.4042C9.40642 13.7355 8.86918 13.7355 8.53783 13.4042L6.30944 11.1758C6.27702 11.2048 1.82953 15.1809 1.35985 14.7112C0.890158 14.2415 4.86622 9.79404 4.89524 9.7616L2.66667 7.53303C2.33531 7.20168 2.33546 6.6643 2.66682 6.33294C3.86676 5.133 5.56668 5.63297 5.56668 5.63297L8.09514 3.70449C8.09514 3.70449 8.06642 2.13328 8.66639 1.53331Z" fill="var(--seed-scale-color-carrot-500)"></path></svg> 중요</div>
 					<div class="detail-title" style="margin-bottom: 0.5rem; font-size: 2rem; font-weight: 700;">[[${notice.title}]]</div>
 					<div class="detail-date" style="line-height: 136%;">[[${#dates.format(notice.regDate,'yyyy.MM.dd')}]]</div>
 				</div>
-				<div class="detail-body "><div><p>안녕하세요. 당근팀입니다.</p><p>전문가모드에서 제공되는 '상품 판매 늘리기' 캠페인 목표(카탈로그 상품 광고)의 게재 방식이 개선되어 안내드려요.</p><p><br></p><p><strong>적용일 : 2024년 3월 6일 (수)</strong></p><p><br></p><p><strong>무엇이 개선되었나요?</strong></p><p><br></p><p>전문가모드 상품 판매 늘리기(카탈로그 상품 광고) 캠페인 목표에서 '일반 게재' 게재 방식을 선택할 수 있어요.</p><p>기존에 설정한 게재 방식은 변동 없이 유지되기 때문에, 게재 방식을 일반 게재로 변경하고자 한다면 광고 그룹 수정을 통해 게재 방식을 변경해 주세요.</p><p>카탈로그 상품 광고를 진행하면서 노출량과 예산 소진을 빠르게 부스팅하고 싶다면 '빠른 게재'를,</p><p>캠페인 운영 기간 동안 시간대별로 고르게 예산을 소진하고 싶다면 '일반 게재'를 선택하여 광고 그룹을 셋팅해 주세요.</p><p><br></p><p><strong>[기존 게재 방식 설정 옵션]</strong></p><p><img src="https://dnvefa72aowie.cloudfront.net/business_center/contents/temp/1710221687562"></p><p><br></p><p><strong>[개선된 게재 방식 설정 옵션]</strong></p><p><img src="https://dnvefa72aowie.cloudfront.net/business_center/contents/temp/1710221704460"></p><p><br></p><p>항상 더 나은 서비스를 제공할 수 있도록 노력하겠습니다.</p><p><br></p><p>감사합니다.</p><p>당근팀 드림.</p></div></div>
+				<div class="detail-body ">[(${notice.content})]</div>
 				<a href="/notice" class="uk-button uk-button-default">목록으로</a>
+				<th:block th:if="${session.user != null && session.user.role == 'ROLE_ADMIN'}">
+					<a id="updateBtn" class="uk-button uk-button-default">수정하기</a>				
+				</th:block>
 			</div>
 		</main>
     </div>
 	<script type="text/javascript">
 		$(function(){
-			
+			$("#updateBtn").click(function(){
+				const idx = $("#idx").val();
+				const form = document.createElement('form');
+			    form.method = 'POST';
+			    form.action = '/adm/noticeUpdate';
+			    const idxInput = document.createElement('input');
+			    idxInput.type = 'hidden';
+			    idxInput.name = 'idx';
+			    idxInput.value = idx;
+			    form.appendChild(idxInput);
+			    document.body.appendChild(form);
+			    form.submit();
+			})
 		})
 		function view(idx){
 			location.href = '/notice/detatil/'+idx;

@@ -59,28 +59,14 @@ public class DaangnNoticesServiceImpl implements DaangnNoticesService{
 	}
 
 	@Override
-	public int updateNotices(int idx, String title, String content) {
+	public int updateNotices(NoticesVO nv) {
 		int result = 0;
 		try {
 			HashMap<String, String> map = new HashMap<>();
-			map.put("idx", idx + "");
-			map.put("title", title);
-			map.put("content", content);
-			noticesDAO.update(map);
-			result = 1;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
-
-	@Override
-	public int updateHighLight(int idx, int highlight) {
-		int result = 0;
-		try {
-			HashMap<String, String> map = new HashMap<>();
-			map.put("idx", idx + "");
-			map.put("highlight", highlight + "");
+			map.put("idx", nv.getIdx() + "");
+			map.put("title", nv.getTitle());
+			map.put("content", nv.getContent());
+			map.put("highlight", nv.getHighlight() + "");
 			noticesDAO.update(map);
 			result = 1;
 		} catch (SQLException e) {

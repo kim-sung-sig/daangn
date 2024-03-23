@@ -207,6 +207,9 @@ public class DaangnMemberServiceImpl implements DaangnMemberService{
 		try {
 			HashMap<String, Object> map = new HashMap<>();
 			map.put("search", cv.getSearch());
+			if(cv.getEmailOk() != null) {
+				map.put("emailOk", cv.getEmailOk());
+			}
 			int totalCount = daangnMemberDAO.selectCountUser(map);
 			pv = new PagingVO<>(totalCount, cv.getCurrentPage(), cv.getSizeOfPage(), cv.getSizeOfBlock());
 			map.put("startNo", pv.getStartNo());

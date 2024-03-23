@@ -37,13 +37,6 @@
 	        <div id="right-area">
 	        	<h3>회원상태보기</h3>
 	        	<div style="display: flex; justify-content: end; align-items: center;">
-        			<label for="" style="margin-right:10px;">정렬기준</label>
-	        		<div class="uk-inline" style="margin-right:40px;">
-	        			<select id="sort" class="uk-select">
-	        				<option value="">최신순</option>
-	        				<option value="">이름순</option>
-	        			</select>
-	        		</div>
 					<label style="margin-right:10px;">검색</label>
 					<form action="" method="get">
 						<div class="uk-inline">
@@ -58,15 +51,14 @@
 				        <tr>
 				            <th>No</th>
 				            <th>아이디</th>
-				            <th>이메일</th>
 				            <th>이름</th>
 				            <th>닉네임</th>
+				            <th>가입일</th>
+				            <th>마지막접속일</th>
+				            <th>이메일</th>
+				            <th>이메일수신</th>
 				            <th>주소</th>
 				            <th>권한</th>
-				            <th>생일</th>
-				            <th>휴대폰번호</th>
-				            <th>성별</th>
-				            <th>게시글수</th>
 				        </tr>
 				    </thead>
 				    <tbody>
@@ -74,17 +66,16 @@
 				    		<td colspan="10" style="text-align: center;">등록된 유저기록이 없습니다.</td>
 				    	</tr>
 				    	<tr th:each="user, vs : ${pv.list}">
-				    		<td>[[${pv.totalCount - (pv.currentPage-1)*pv.sizeOfPage - vs.index}]]</td>
+				    		<td>[[${user.idx}]]</td>
 				    		<td>[[${user.username}]]</td>
-				    		<td>[[${user.email}]]</td>
 				    		<td>[[${user.name}]]</td>
 				    		<td>[[${user.nickName}]]</td>
+				    		<td>[[${#dates.format(user.signUpDate, 'yy.MM.dd')}]]</td>
+				    		<td>[[${#dates.format(user.lastLoginDate, 'yy.MM.dd')}]]</td>
+				    		<td>[[${user.email}]]</td>
+				    		<td>[[${user.emailOk==0 ? 'O' : 'X'}]]</td>
 				    		<td>[[${user.stAddress}]] , [[${user.dtAddress}]]</td>
 				    		<td>[[${user.role}]]</td>
-				    		<td>[[${#dates.format(user.birthDate, 'yyyy-MM-dd')}]]</td>
-				    		<td>[[${user.phone}]]</td>
-				    		<td style="text-align: center;">[[${user.gender==1 ? '남' : '여'}]]</td>
-				    		<td style="text-align: center;">[[${user.boardCount}]]</td>
 				    	</tr>
 				    </tbody>
 				</table>

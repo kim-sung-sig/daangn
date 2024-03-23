@@ -68,7 +68,7 @@ public class PopularServiceImpl implements PopularService{
 		return pv;
 	}
 	
-	/** 인기게시물 얻기 (나중에 스크롤 페이징 예정.....) */
+	/** 인기게시물 얻기 */
 	@Override
 	public List<DaangnMainBoardVO> findPopularBoard() {
 		List<DaangnMainBoardVO> list = null;
@@ -84,6 +84,7 @@ public class PopularServiceImpl implements PopularService{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		log.info("list => {}", list);
 		return list;
 	}
 	

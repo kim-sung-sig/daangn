@@ -51,7 +51,7 @@
     			, #{title}
     			, #{content}
     			, sysdate
-    			, 0
+    			, #{highlight}
     		)
 	</insert>
 	
@@ -59,13 +59,11 @@
 		UPDATE
 			notices
 		SET
-			<if test="title != null">
-				title = #{title}, content = #{content}
-			</if>
-			<if test="highlight != null">
-				highlight = #{highlight}	
-			</if>
-		where idx = #{idx}			
+			title = #{title}
+			, content = #{content}
+			, highlight = #{highlight}
+		WHERE
+			idx = #{idx}			
 	</update>
 	
 	<select id="selectByHighlight" resultType="NoticesVO">

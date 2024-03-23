@@ -63,9 +63,14 @@
 							daangn_member
 						<where>
 							<if test="search != null">
-								username like '%' || #{search} || '%'
-								or name like '%' || #{search} || '%'
-								or nickName like '%' || #{search} || '%'
+								(
+									username like '%' || #{search} || '%'
+									or name like '%' || #{search} || '%'
+									or nickName like '%' || #{search} || '%'
+								)
+							</if>
+							<if test="emailOk != null">
+								and emailOk = 0
 							</if>
 						</where>
 						order by

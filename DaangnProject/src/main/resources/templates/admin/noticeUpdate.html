@@ -77,14 +77,19 @@
 	        <div id="right-area">
 	        	<div style="width: 550px; margin: auto;">
 		        	<!-- 쓰기 -->
-		        	<h2>공지사항 쓰기</h2>
-	        		<form action="/adm/noticeUploadOk" method="POST" id="insertForm">
-				        <input class="uk-input" type="text" name="title" id="title" placeholder="글 제목을 입력해 주세요." required="required"/>
-				        <label for="r1" style="color: #FF6F0F"><input class="uk-radio" id="r1" type="radio" name="highlight" value="1" checked="checked"/><svg style="fill: #FF6F0F" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.66639 1.53331C8.99775 1.20195 9.53498 1.20195 9.86634 1.53331L14.5376 6.20452C14.8689 6.53588 14.8689 7.07311 14.5376 7.40446C13.9376 8.00444 12.3662 7.97587 12.3662 7.97587L10.4377 10.5043C10.4377 10.5043 10.9377 12.2042 9.73777 13.4042C9.40642 13.7355 8.86918 13.7355 8.53783 13.4042L6.30944 11.1758C6.27702 11.2048 1.82953 15.1809 1.35985 14.7112C0.890158 14.2415 4.86622 9.79404 4.89524 9.7616L2.66667 7.53303C2.33531 7.20168 2.33546 6.6643 2.66682 6.33294C3.86676 5.133 5.56668 5.63297 5.56668 5.63297L8.09514 3.70449C8.09514 3.70449 8.06642 2.13328 8.66639 1.53331Z" fill="var(--seed-scale-color-carrot-500)"></path></svg> 중요</label>
-				        <label for="r2"><input class="uk-radio" id="r2" type="radio" name="highlight" value="0"/> 공지</label>
+		        	<h2>공지사항 수정</h2>
+		        	<input type="hidden" id="contentText" th:value="${notice.content}">
+	        		<form action="/adm/noticeUpdateOk" method="POST" id="insertForm">
+	        			<input type="hidden" name="idx" id="idx" th:value="${notice.idx}">
+				        <input class="uk-input" type="text" name="title" id="title" th:value="${notice.title}" placeholder="글 제목을 입력해 주세요." required="required"/>
+				        <label for="r1"><input id="r1" type="radio" name="highlight" value="1" th:checked="${notice.highlight == 1}"/> 중요 </label>
+				        <label for="r2"><input id="r2" type="radio" name="highlight" value="0" th:checked="${notice.highlight == 0}"/> 공지</label>
+				        
 				        <textarea id="summernote" name="content"></textarea>
+				        
 				        <div id="buttonsBox" style="width: 100%; display: flex; justify-content: end; gap:20px;">
-					        <input type="submit" id="submitBtn" value="글 올리기"/>
+					        <input type="submit" id="submitBtn" value="수정하기"/>
+					        <input type="button" id="deleteBtn" value="삭제하기"/>
 					        <input type="button" id="cancleBtn" onclick="window.location.href='/notice'" value="취소"/>			        
 				        </div>
 				    </form>
@@ -125,6 +130,9 @@
 				}
 			});
 			
+			const noticeContent = $("#contentText").val();
+	        $('#summernote').summernote('code', noticeContent);
+			
 			// 실제 업로드되는 서버의 파일을 Ajax로 호출해 줘야한다.
 			function sendFile(file, el) {
 				// 폼 작성
@@ -145,6 +153,27 @@
 		        	}
 		      	});
 		    }
+			
+			$("#deleteBtn").click(function(){
+				const result = confirm('공지사항을 삭제하시겠습니까?');
+				if(result){
+					const idx = $("#idx").val();
+					axios.delete(`/adm/noticeDelete/${idx}`)
+					.then(res => {
+					    const data = res.data;
+					    if(data == "1"){
+					    	alert("성공적으로 삭제되었습니다.");
+					    	location.href = '/notice';
+					    } else {
+					    	alert("문제가 발생했습니다. 잠시후 다시 시도해주세요.");
+					    }
+					})
+					.catch(err => {
+					    console.error(err);
+					});
+				}
+			})
+			
 			
 	     	// 폼체크
 	        $("#insertForm").submit(function () {

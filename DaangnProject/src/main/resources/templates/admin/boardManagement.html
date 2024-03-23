@@ -64,47 +64,50 @@
 	        	<table id="incident_list_table" class="uk-table uk-table-hover uk-table-divider uk-table-middle uk-table-small">
 					<colgroup>
 						<col width="45px" />
-						<col width="120px" />
+						<col width="90px" />
+						<col width="90px" />
+						<col width="200px" />
 						<col width="200px" />
 						<col width="95px" />
-						<col width="90px" />
 						<col width="60px" />
 						<col width="60px" />
+						<col width="60px" />
+						<col width="120px" />
 					</colgroup>
 					<thead>
 						<tr>
-							<th class="" style="line-height: 2">NO</th>
-							<th class="" >
-								<select class="uk-select" id="selectBox" style="height: 25px" onchange="handleCategoryChange()">
-					                <option value="0">카테고리</option>
-					                <option th:each="category : ${categoryList}" th:value="${category}" th:selected="${(category == '블로그' ? 1 : category == '자료실' ? 2 : 4) == categoryNum}">[[${category}]]</option>
-					            </select>
-							</th>
-							<th class="" style="line-height: 2">제목</th>
-							<th class="" style="line-height: 2">글쓴이</th>
-							<th class="" style="line-height: 2">게시일</th>
-							<th class="" style="line-height: 2">조회수</th>
-							<th class="" style="line-height: 2">좋아요</th>
+							<th>No</th>
+				            <th>카테고리</th>
+				            <th>상품상태</th>
+				            <th>제목</th>
+				            <th>판매장소</th>
+				            <th>작성자</th>
+				            <th>조회수</th>
+				            <th>좋아요</th>
+				            <th>채팅수</th>
+				            <th>게시일</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:if="${#lists.isEmpty(pv.list)}">
 							<td colspan="8">등록된 글이 없습니다.</td>
 			    		</tr>
-							<tr th:each="vo, vs : ${pv.list}" th:onclick="view(this)" style="cursor: pointer;">
-								<td style="display: none;" class="idx">[[${vo.idx}]]</td>
+							<tr th:each="board, vs : ${pv.list}" th:onclick="view([[${board.idx}]])" style="cursor: pointer;">
 								<td>[[${pv.totalCount - (pv.currentPage-1)*pv.sizeOfPage - vs.index}]]</td>
-								<td class="categoryName">[[${vo.categoryName}]]</td>
-								<td>[[${vo.title}]]</td>
-								<td>[[${vo.member.nickName}]]</td>
-								<td th:text="${#dates.format(vo.regDate, 'yy-MM-dd')}"></td>
-								<td>[[${vo.readCount}]]</td>
-								<td>[[${vo.countHeart}]]</td>
+								<td>[[${board.categoryName}]]</td>
+					    		<td>[[${board.statusName}]]</td>
+					    		<td style="max-width: 500px;text-align: left;overflow: hidden;text-overflow: ellipsis;">[[${board.subject}]]</td>
+					    		<td>[[${board.loc}]]</td>
+					    		<td>[[${board.member.nickName}]]</td>
+					    		<td>[[${board.readCount}]]</td>
+					    		<td>[[${board.countLike}]]</td>
+					    		<td>[[${board.chatRoomCount}]]</td>
+					    		<td>[[${#dates.format(board.regDate, 'yy.MM.dd')}]]</td>
 							</tr>
 						</th:block>
 					</tbody>
 				</table>
-				<div style="display: flex; align-items: center;justify-content: center;">
+				<div id="page" style="display: flex; align-items: center;justify-content: center;">
 					[(${pv.pageList})]
 				</div>
 	        </div>
@@ -130,67 +133,10 @@
 	})
 
 
-	function view(obj) {
-		// 클래스 이름이 idx인 요소의 텍스트 가져오기
-		let idxText = obj.querySelector('.idx').innerHTML;
-		// 클래스 이름이 categoryName인 요소의 텍스트 가져오기
-		let categoryNameText = obj.querySelector('.categoryName').innerHTML;
-		switch (categoryNameText) {
-			case "블로그": // 블로그 카테고리 선택 시
-		    	// 블로그 페이지로 이동
-		    	location.href = `/blog/${idxText}`;
-		    	break;
-		    
-			case "자료실": // 자료실 카테고리 선택 시
-		    	// 자료실 페이지로 이동
-		    	location.href = `/fileboard/blog/${idxText}`;
-		    	break;
-		    
-			case "Gallery": // 갤러리 카테고리 선택 시
-		    	// 갤러리 페이지로 이동
-		    	location.href = `/gallery/${idxText}`;
-		    	break;
-			default:
-		    	// 기본적으로 수행할 동작
-		    	break;
-		}
+	function view(idx) {
+	    window.open(`/fleamarketDetail/${idx}`, '_blank');
 	}
 	
-	function handleCategoryChange() {
-	    // 선택한 카테고리의 값을 가져옴
-	    var selectedCategory = document.getElementById("selectBox").value;
-	
-	    // 선택한 카테고리에 따라 동작을 수행
-	    switch (selectedCategory) {
-	        case "0":   //전체 보기
-	            // 전체 페이지로 이동
-	            location.href = `?p=1`;
-	            break;
-	            
-	        case "블로그": // 블로그 카테고리 선택 시
-	            // 블로그 페이지로 이동
-	            location.href = `?p=1&categoryNum=1`;
-	            break;
-	            
-	        case "자료실": // 자료실 카테고리 선택 시
-	            // 자료실 페이지로 이동
-	            location.href = `?p=1&categoryNum=2`;
-	            break;
-	            
-	        case "QnA": // 갤러리 카테고리 선택 시
-	            // 갤러리 페이지로 이동
-	            location.href = `?p=1&categoryNum=5`;
-	            break;
-	            
-	        case "Gallery": // 갤러리 카테고리 선택 시
-	            // 갤러리 페이지로 이동
-	            location.href = `?p=1&categoryNum=4`;
-	            break;
-	        default:
-	            // 기본적으로 수행할 동작
-	            break;
-	   }
-	}
 
 </script>
 </body>

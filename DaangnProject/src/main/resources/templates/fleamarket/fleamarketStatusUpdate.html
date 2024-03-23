@@ -143,9 +143,21 @@
 				<th:block th:if="${rv == null}">
 					<form action="/fleamarketStatusUpdateOk" method="post" id="submitForm2">
 						<main>
+							<div id="ItemBox" style="width: 100%; height: 100px;padding: 10px; display: flex;">
+								<div id="ItemImgBox" style="width: 80px; height: 80px; background: #333; border-radius: 20px; margin-right: 10px;">
+									
+								</div>
+								<div id="ItemInfo">
+									<p style="margin: 0; font-size: 13px; color: #ccc; font-weight: 400;">거래한물건</p>
+									<p id="ItemTitle" style="margin: 0; font-size: 16px; font-weight: 500;">[[${board.subject}]]</p>
+									<span id="ItemPrice">[[${#numbers.formatInteger(board.price, 0, 'COMMA')}]]원</span>
+								</div>
+							</div>
+							<hr style="margin: 0;" />
 							<input type="hidden" name="boardRef" th:value="${board.idx}">
 							<input type="hidden" name="statusRef" value="3">
-							<p style="padding-top: 20px; font-weight: 400;"><span class="highlight">어떤 유저</span>와 <span class="highlight">거래</span>를 하셨나요?</p>
+							
+							<p style="font-weight: 400;"><span class="highlight">어떤 유저</span>와 <span class="highlight">거래</span>를 하셨나요?</p>
 							<p style="font-weight: 400;">유저 닉네임</p>
 							<select id="userIdx" name="userIdx" class="uk-select">
 								<option value="0">유저를 선택해주세요.</option>
@@ -156,7 +168,34 @@
 								유저에게 유저평을 남겨주세요!
 								<br /> -당근마켓-
 							</p>
-							<textarea id="content" name="content" class="uk-textarea" style="resize: none; width: 100%; height: 200px;" placeholder="유저평을 남겨주세요!"></textarea>
+							<div id="imgBox" style="width: 100%; display: flex; justify-content: space-around; margin-bottom: 30px;">
+								<label for="s1"><img src="/img/s1.png" alt="" /></label>
+								<label for="s2"><img src="/img/s2.png" alt="" /></label>
+								<label for="s3" class="active"><img src="/img/s3.png" alt="" /></label>
+								<div style="display: none;">
+									<input id="s1" type="radio" name="score" value="1">
+									<input id="s2" type="radio" name="score" value="3">
+									<input id="s3" type="radio" name="score" value="5" checked="checked">
+								</div>							
+							</div>
+							<div id="commentBox">
+								<div class="checkbox">
+								    <input type="radio" name="content" id="c1" value="친절하고 메너가 좋아요." class="checkbox2" checked="checked">
+								    <label for="c1">친절하고 메너가 좋아요.</label>
+								</div>
+								<div class="checkbox">
+								    <input type="radio" name="content" id="c2" value="시간 약속을 잘 지켜요." class="checkbox2">
+								    <label for="c2">시간 약속을 잘 지켜요.</label>
+								</div>
+								<div class="checkbox">
+								    <input type="radio" name="content" id="c3" value="응답이 빨라요." class="checkbox2">
+								    <label for="c3">응답이 빨라요.</label>
+								</div>
+								<div class="checkbox">
+								    <input type="radio" name="content" id="c4" value="응답이 빨라요." class="checkbox2">
+								    <label for="c4">제가 있는곳까지 와서 거래했어요.</label>
+								</div>
+							</div>
 						</main>
 						<div id="footer">
 							<div id="footerInner">

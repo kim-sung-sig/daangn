@@ -27,6 +27,7 @@ public class CommonVO {
 	private Integer statusNum;
 	//
 	private Integer userRef;
+	private String emailOk;
 	
 	
 	// 페이징
@@ -80,5 +81,8 @@ public class CommonVO {
 	}
 	public void setUserRef(Integer userRef) {
 		this.userRef = userRef;
+	}
+	public void setEmailOk(String emailOk) {
+		this.emailOk = emailOk;
 	}
 }

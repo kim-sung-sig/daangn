@@ -50,15 +50,12 @@
 					        	<th><input type="checkbox" id="AllCheck"/></th>
 					            <th>No</th>
 					            <th>아이디</th>
-					            <th>이메일</th>
 					            <th>이름</th>
 					            <th>닉네임</th>
+					            <th>이메일</th>
+					            <th>이메일수신</th>
 					            <th>주소</th>
 					            <th>권한</th>
-					            <th>생일</th>
-					            <th>휴대폰번호</th>
-					            <th>성별</th>
-					            <th>게시글수</th>
 					        </tr>
 					    </thead>
 					    <tbody>
@@ -191,21 +188,19 @@
 		})
 		.then(function (res) {
 			const data = res.data;
-			console.log(data.length);
 			if(data.length == 0){
-				alert("등록된 유저가 없습니다.");
 				$(".uk-table tbody").html(`<td colspan="11" style="text-align: center;">등록된 유저가 없습니다.</td>`);
 				return;
 			}
 			content=``;
 			data.forEach(x=>{
-				const date = new Date(x.birthDate);
-				const formattedDate = new Intl.DateTimeFormat('ko-KR', {
-				    year: 'numeric',
-				    month: '2-digit',
-				    day: '2-digit'
-				}).format(date);
-				if (checkedUser.includes(''+x.idx)) {
+				const disabled = x.emailOk==1
+				console.log(disabled);
+				if(disabled){
+					content += `
+						<tr>
+	                    	<td><input type="checkbox" name="checking" value="${x.idx}" disabled/></td>`
+				} else if (checkedUser.includes(''+x.idx)){
 					content +=`
 						<tr>
 		                    <td><input type="checkbox" name="checking" value="${x.idx}" checked/></td>`
@@ -217,15 +212,12 @@
 				content +=`
 	                    <td>${x.idx}</td>
 	                    <td>${x.username}</td>
-	                    <td>${x.email}</td>
 	                    <td>${x.name}</td>
 	                    <td>${x.nickName}</td>
+	                    <td>${x.email}</td>
+	                    <td>${x.emailOk == 0 ? 'O' : 'X'}</td>
 	                    <td>${x.stAddress}, ${x.dtAddress}</td>
 	                    <td>${x.role}</td>
-	                    <td>${formattedDate}</td>
-	                    <td>${x.phone}</td>
-	                    <td>${x.gender == 1 ? '남' : '여'}</td>
-	                    <td>${x.boardCount}</td>
 	                </tr>
 				`
 			})

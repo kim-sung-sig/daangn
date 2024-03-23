@@ -124,7 +124,7 @@
 				    		<div class="grid-nickname">[[${p.member.nickName}]]</div>
 				    		<div class="grid-boardIdx">[[${p.board.idx}]]</div>
 				    		<div class="grid-category">[[${p.board.categoryName}]]</div>
-				    		<div class="grid-title"><a th:onclick="view([[${p.board.idx}]], [[${p.board.categoryNum}]])">[[${p.board.title}]]</a></div>
+				    		<div class="grid-title"><a th:onclick="view([[${p.board.idx}]], [[${p.board.categoryRef}]])">[[${p.board.subject}]]</a></div>
 				    		<div class="grid-interection">[[${p.interaction == 1 ? '조회' : p.interaction == 2 ? '댓글' : p.interaction == 3 ? '좋아요' : '좋아요취소'}]]</div>
 				    		<div class="grid-time">[[${#dates.format(p.interaction_time,'yy-MM-dd hh:mm:ss')}]]</div>
 	       				</li>

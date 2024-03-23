@@ -1,5 +1,6 @@
 package kr.ezen.daangn.controller;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -7,18 +8,25 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import kr.ezen.daangn.service.DaangnMainBoardService;
 import kr.ezen.daangn.service.DaangnMemberService;
@@ -49,6 +57,8 @@ public class AdminController {
 	private PopularService popularService;
 	@Autowired
 	private VisitService visitService;
+	@Autowired
+	private DaangnNoticesService daangnNoticesService;
 	
 	//=========================================================================================================================================
 	// 관리자 메인페이지
@@ -61,18 +71,16 @@ public class AdminController {
     	if(!memberVO.getRole().equals("ROLE_ADMIN")) {
     		return "redirect:/";
     	}
+    	log.info("관리자 홈 실행");
     	// 1. 회원수 및 회원목록 한 5개 정도만?
     	PagingVO<DaangnMemberVO> userpv = daangnMemberService.getUsers(new CommonVO());
     	List<DaangnMemberVO> memberList = userpv.getList().stream().limit(10).toList();
     	// 2. 최근 게시물 한 10개 정도만?
     	PagingVO<DaangnMainBoardVO> pv = daangnMainBoardService.selectList(new CommonVO()); // 10개 리스트
-    	log.info("admin pv => {}", pv);
     	List<DaangnMainBoardVO> boardList = pv.getList().stream().limit(12).toList();
-    	
     	model.addAttribute("name",memberVO.getName());
     	model.addAttribute("users", memberList);
     	model.addAttribute("boards", boardList);
-    	
 		return "admin/admin"; // 관리자 메인페이지
 	}
 	//=========================================================================================================================================
@@ -113,13 +121,14 @@ public class AdminController {
 	
 	
 	@PostMapping(value = "/pagedUsers")
-	@ResponseBody()
+	@ResponseBody
 	public List<DaangnMemberVO> pagingUser(@RequestBody Map<String, String> map){
 		CommonVO cv = new CommonVO();
 		cv.setP(Integer.parseInt(map.get("currentPage")));
 		cv.setSearch(map.get("search"));
 		cv.setS(20);
 		cv.setB(5);
+		cv.setEmailOk("0");
 		PagingVO<DaangnMemberVO> pv = daangnMemberService.getUsers(cv);
 		return pv.getList();
 	}
@@ -131,6 +140,7 @@ public class AdminController {
 		cv.setSearch((String) map.get("search"));
 		cv.setS(20);
 		cv.setB(5);
+		cv.setEmailOk("0");
 		PagingVO<DaangnMemberVO> pv = daangnMemberService.getUsers(cv);
 		return pv.getTotalCount();
 	}
@@ -235,6 +245,7 @@ public class AdminController {
 	    model.addAttribute("name", memberVO.getName());
 		cv.setS(30);
 		PagingVO<PopularVO> pv = popularService.getUserTrendAnalysis(cv);
+		log.info("pv => {}", pv);
 		model.addAttribute("pv", pv);
 		model.addAttribute("cv", cv);
 		return "admin/userTrendAnalysis";
@@ -314,8 +325,6 @@ public class AdminController {
 	//=====================================================================================================================
 	// 공지사항 관리
 	//=====================================================================================================================
-	@Autowired
-	private DaangnNoticesService daangnNoticesService;
 	/** 공지사항 쓰기 페이지 */
 	@GetMapping(value = "/noticeUpload")
 	public String noticeUpload(HttpSession session, Model model) {
@@ -328,6 +337,41 @@ public class AdminController {
 	    }
 	    model.addAttribute("name", memberVO.getName());
 		return "admin/noticeUpload";
+	}
+	/** 썸머노트를 사용할때 사진을 올리는 주소 */
+	@PostMapping(value = "/notice/fileUpload")
+	@ResponseBody
+	public Map<String, Object> fileUpload(HttpServletRequest request, @RequestPart(value = "file", required = false) MultipartFile file) {
+		// json 데이터로 등록
+		// {"uploaded" : 1, "fileName" : "test.jpg", "url" : "/img/test.jpg"}
+		// 이런 형태로 리턴이 나가야함.
+		String uploadPath = request.getServletContext().getRealPath("/upload/");
+		// 파일 객체 생성
+		File file2 = new File(uploadPath);
+		if (!file2.exists()) {
+			file2.mkdirs();
+		}
+		log.info("서버 실제 경로 : " + uploadPath);
+		String saveName = "";
+		String saveFileName = "";
+		if (file != null && file.getSize() > 0) { // 파일이 넘어왔다면
+			try {
+				saveFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+				log.info("saveFileName => {}", saveFileName);
+				// 파일 객체를 만들어 저장해 준다.
+				File saveFile = new File(uploadPath, saveFileName);
+				// 파일 복사
+				FileCopyUtils.copy(file.getBytes(), saveFile);
+				saveName = request.getContextPath() + "/upload/" + saveFileName;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		Map<String, Object> map = new HashMap<>();
+		map.put("uploaded", 1);
+		map.put("fileName", saveFileName);
+		map.put("url", saveName);
+		return map;
 	}
 	
 	/** 공지사항 쓰기 get 방지 주소 */
@@ -344,7 +388,7 @@ public class AdminController {
 		return "redirect:/notice/detail/" + nv.getIdx(); // 업로드페이지로 돌아감!
 	}
 	
-	/** 공지사항 수정하기 페이지 */
+	/** 공지사항 수정하기 페이지 (완) */
 	@PostMapping(value = "/noticeUpdate")
 	public String noticeUpdate(HttpSession session, Model model, @RequestParam(value = "idx") int idx) {
 		if(session.getAttribute("user") == null) {
@@ -357,62 +401,28 @@ public class AdminController {
 	    NoticesVO nv = daangnNoticesService.getNoticesByIdx(idx);
 	    model.addAttribute("name", memberVO.getNickName());
 	    model.addAttribute("notice", nv);
-		return "admin/noticeUpload";
+		return "admin/noticeUpdate";
+	}
+	
+	@GetMapping(value = "/noticeUpdateOk")
+	public String noticeUpdateOkGet() {
+		return "redirect:/";
 	}
 	
 	/** 공지사항 수정하기 */
-	/*
 	@PostMapping(value = "/noticeUpdateOk")
-	@Transactional
-	public String noticeUpdateOk(HttpSession session, MultipartHttpServletRequest request, @ModelAttribute(value = "board") JungBoardVO boardVO) {
-		if(session.getAttribute("user") == null) {
-			return "redirect:/";
-		}
-		DaangnMemberVO memberVO = (DaangnMemberVO) session.getAttribute("user");
-		if(!memberVO.getRole().equals("ROLE_ADMIN")) {
-			return "redirect:/";
-		}
-		jungFileBoardService.deleteByRef(boardVO.getIdx());			// 파일 지우고
-		jungBoardService.update(boardVO);							// 게시글 업데이트하고
-		String uploadPath = request.getServletContext().getRealPath("./upload/");
-		
-		 File file2 = new File(uploadPath);
-	     if (!file2.exists()) {
-	        file2.mkdirs();
-	     }
-	    log.info("서버 실제 경로 : " + uploadPath); // 확인용
-	    
-        List<MultipartFile> list = request.getFiles("file"); // form에 있는 name과 일치
-        String url = "";
-        String filepath = "";
-        try {
-           if (list != null && list.size() > 0) { // 받은 파일이 존재한다면
-              // 반복해서 받는다.
-              for (MultipartFile file : list) {
-                 // 파일이 없으면 처리하지 않는다.
-                 if (file != null && file.getSize() > 0) {
-                    // 저장파일의 이름 중복을 피하기 위해 저장파일이름을 유일하게 만들어 준다.
-                    String saveFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-                    // 파일 객체를 만들어 저장해 준다.
-                    File saveFile = new File(uploadPath, saveFileName);
-                    // 파일 복사
-                    FileCopyUtils.copy(file.getBytes(), saveFile);
-                    
-                    url = file.getOriginalFilename();	// original
-                    filepath = saveFileName;			// savefileName
-                    JungFileBoardVO fileBoardVO = new JungFileBoardVO();
-                    fileBoardVO.setUrl(url);
-                    fileBoardVO.setFilepath(filepath);
-                    fileBoardVO.setRef(boardVO.getIdx());
-                    jungFileBoardService.insert(fileBoardVO);
-                 }
-              }
-           }
-           return "redirect:/adm/notice/" + boardVO.getIdx(); // 글 하나보기로 이동!
-        } catch (Exception e) {
-           e.printStackTrace();
-        }
-		return "redirect:/adm/noticeUpdate/"+boardVO.getIdx()+"?error=failUpdate"; // 업로드페이지로 돌아감!
+	public String noticeUpdateOkPost(HttpSession session, @ModelAttribute(value = "notice") NoticesVO nv) {
+		daangnNoticesService.updateNotices(nv);
+		log.info("noticeUploadOk 실행 => {}", nv);
+		return "redirect:/notice/detail/" + nv.getIdx(); // 업로드페이지로 돌아감!
 	}
-	*/
+	
+	@DeleteMapping(value = "/noticeDelete/{idx}")
+	@ResponseBody
+	public String noticeDeleteOk(@PathVariable(value = "idx") int idx) {
+		log.info("noticeDeleteOk 실행 => {}", idx);
+		int result = daangnNoticesService.deleteByIdx(idx);
+		log.info("noticeDeleteOk 리턴 => {}", result);
+		return result + "";
+	}
 }

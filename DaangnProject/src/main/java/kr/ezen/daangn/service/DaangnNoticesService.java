@@ -17,10 +17,7 @@ public interface DaangnNoticesService {
 	int insertNotices(NoticesVO nv);
 	
 	// 공지사항 수정하기
-	int updateNotices(int idx, String title, String content);
-	
-	// 공지사항 중요표시하기 highlight => (0 , 1)
-	int updateHighLight(int idx, int highlight);
+	int updateNotices(NoticesVO nv);
 	
 	// 고정 공지 얻기
 	List<NoticesVO> selectByHighlight();

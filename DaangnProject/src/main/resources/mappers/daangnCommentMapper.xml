@@ -8,7 +8,7 @@
 	
 	<!-- 댓글 평점 합계 계산하기 -->
 	<select id="selectScoreByUserIdx" parameterType="int" resultType="float">
-		select NVL(AVG(score), 0) from Daangn_comment where userIdx = #{userIdx}
+		select NVL(AVG(score), 3) from Daangn_comment where userIdx = #{userIdx}
 	</select>
 	
 	<!-- 1. userIdx에 해당하는 댓글 주기 (고려사항 페이징)-->

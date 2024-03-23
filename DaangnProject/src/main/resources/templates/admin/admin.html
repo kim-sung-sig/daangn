@@ -88,7 +88,7 @@
 					    		<td>[[${#dates.format(user.signUpDate, 'yy.MM.dd')}]]</td>
 					    		<td>[[${#dates.format(user.lastLoginDate, 'yy.MM.dd')}]]</td>
 					    		<td>[[${user.email}]]</td>
-					    		<td>[[${user.emailOk}]]</td>
+					    		<td>[[${user.emailOk == 0 ? 'O' : 'X'}]]</td>
 					    		<td>[[${user.role}]]</td>
 					    	</tr>
 					    </tbody>

@@ -127,38 +127,27 @@ public class PagingVO<T> {
 	public String getPageList() {
 		StringBuffer sb = new StringBuffer();
 		if(totalCount>0) {
-			sb.append("<nav aria-label='Page navigation example'>");
-			sb.append("<ul class='pagination pagination-sm justify-content-center'>");
-			
+			sb.append("<ul class='uk-pagination' uk-margin>");
 			// 이전 : 시작페이지가 1보다 클때만 이전이 있다.
-			if(startPage>1) {
-				sb.append("<li class='page-item'>");
-				sb.append("<a class='page-link' href='?p=" + (startPage-1) + "&s=" + sizeOfPage + "&b=" +sizeOfBlock + "' aria-label='Previous'>");
-				sb.append("<span aria-hidden='true'>&laquo;</span>");
-				sb.append("</a>");
+			if(startPage > 1) {
+				sb.append("<li><a href='?p=" + (startPage-1) + "'><span uk-pagination-previous></span></a></li>");
 			}
 			// 페이지 이동
-			for(int i=startPage;i<=endPage;i++) {
+			for (int i = startPage; i <= endPage; i++) {
 				if(i==currentPage) { // 현재 페이지는 링크를 걸지 않는다.
-					sb.append("<li class='page-item active'  aria-current='page'><a class='page-link'>" + i + "</a></li>");
-				}else {
-					sb.append("<li class='page-item'><a class='page-link' href='?p=" + i + "&s=" + sizeOfPage + "&b=" + sizeOfBlock +"'>" + i + "</a></li>");
+					sb.append("<li><a class='active' href=''>" + i + "</a></li>");
+				} else {
+					sb.append("<li><a href='?p=" + i +"'>" + i + "</a></li>");
 				}
 			}
 			// 다음 : 끝페이지가 전체페이지 수 보다 적을때만 다음이 있다.
-			if(endPage<totalPage) {
-				sb.append("<li class='page-item'>");
-				sb.append("<a class='page-link' href='?p=" + (endPage+1) + "&s=" + sizeOfPage + "&b=" +sizeOfBlock + "' aria-label='Next'>");
-				sb.append("<span aria-hidden='true'>&raquo;</span>");
-				sb.append("</a>");
-				sb.append("</li>");
+			if(endPage < totalPage) {
+				sb.append("<li><a href='?p="+(endPage+1)+"'><span uk-pagination-next></span></a></li>");
 			}
-			
 			sb.append("</ul>");
-			sb.append("</nav>");
 		}
 		return sb.toString();
-	}
+   }
 
 	public String getPageList2() {
 		StringBuffer sb = new StringBuffer();

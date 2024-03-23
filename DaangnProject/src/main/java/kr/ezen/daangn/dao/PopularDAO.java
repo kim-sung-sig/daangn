@@ -15,7 +15,7 @@ public interface PopularDAO {
 	void insertPopular(PopularVO p) throws SQLException;
 	
 	/**
-	 * 12시간 사이의 조회, 댓글, 좋아요를 기준으로 점수가 높은 board의 Idx를 리턴하는 메서드
+	 * 12시간 사이의 조회, 댓글, 좋아요를 기준으로 점수가 높은 board의 Idx 20개를 리턴하는 메서드
 	 * @return 점수가 높은 board의 Idx를 리턴
 	 */
 	List<Integer> findPopularBoard() throws SQLException;
